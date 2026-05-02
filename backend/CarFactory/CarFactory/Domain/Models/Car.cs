@@ -35,7 +35,12 @@ public class Car
         }
     }
 
-    public Car( IColor color, ICarcase carcase, IEngine engine, IGearbox gearbox, IWheel wheels )
+    public Car(
+        IColor color,
+        ICarcase carcase,
+        IEngine engine,
+        IGearbox gearbox,
+        IWheel wheels )
     {
         Color = color ?? throw new ArgumentNullException( nameof( color ) );
         Carcase = carcase ?? throw new ArgumentNullException( nameof( carcase ) );
