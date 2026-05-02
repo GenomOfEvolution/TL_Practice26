@@ -2,13 +2,16 @@
 
 using Domain.Contracts;
 
-public sealed class Car
+public class Car
 {
     public IColor Color { get; }
     public ICarcase Carcase { get; }
     public IEngine Engine { get; }
     public IGearbox Gearbox { get; }
     public IWheel Wheels { get; }
+
+    private const float _secondsPerMinute = 60f;
+    private const float _mpsToKmh = 3.6f;
 
     /// <summary>
     /// Максимальная кинематическая скорость в км/ч.
@@ -20,18 +23,19 @@ public sealed class Car
             var totalRatio = Gearbox.TopGearRatio * Gearbox.FinalDriveRatio;
 
             if ( Engine.MaxRPM <= 0 || totalRatio <= 0 || Wheels.RadiusMeters <= 0 )
+            {
                 return 0f;
+            }
 
             float wheelRPM = Engine.MaxRPM / totalRatio;
-            float circumference = 2.0f * ( float )Math.PI * Wheels.RadiusMeters;
+            float wheelCircumference = 2 * ( float )Math.PI * Wheels.RadiusMeters;
+            float speedMetersPerSecond = ( wheelRPM * wheelCircumference ) / _secondsPerMinute;
 
-            // m/s => km/h
-            float speedMps = ( wheelRPM * circumference ) / 60f;
-            return speedMps * 3.6f;
+            return speedMetersPerSecond * _mpsToKmh;
         }
     }
 
-    internal Car( IColor color, ICarcase carcase, IEngine engine, IGearbox gearbox, IWheel wheels )
+    public Car( IColor color, ICarcase carcase, IEngine engine, IGearbox gearbox, IWheel wheels )
     {
         Color = color ?? throw new ArgumentNullException( nameof( color ) );
         Carcase = carcase ?? throw new ArgumentNullException( nameof( carcase ) );
