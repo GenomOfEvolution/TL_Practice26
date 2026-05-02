@@ -2,6 +2,14 @@
 
 namespace Casino.Models;
 
+public enum OptionHandleResult
+{
+    Succes = 0,
+    InvalidOption,
+    InvlaidDepositValue,
+    InvalidBet,
+}
+
 public class CasinoGame
 {
     private double _balance = 0;
@@ -12,8 +20,9 @@ public class CasinoGame
     public OptionHandleResult Play()
     {
         Console.Write( "Введите ставку: " );
-        string strBet = Console.ReadLine();
-        if ( !TryParseDouble( strBet, out double bet ) || bet <= 0d || bet > _balance )
+        string userInput = Console.ReadLine();
+
+        if ( !IsValidBet( userInput, out double bet ) )
         {
             return OptionHandleResult.InvalidBet;
         }
@@ -34,19 +43,6 @@ public class CasinoGame
         }
 
         return OptionHandleResult.Succes;
-    }
-
-    private static double CalculateWinAmount( double bet, int seed )
-    {
-        const int multiplicator = 25;
-        const int normalizer = 17;
-        double winPercent = multiplicator * ( seed % normalizer );
-        if ( winPercent <= 0 )
-        {
-            return 0;
-        }
-
-        return bet * ( winPercent / 100 );
     }
 
     public OptionHandleResult ShowBalance()
@@ -80,6 +76,25 @@ public class CasinoGame
         return OptionHandleResult.Succes;
     }
 
+    private bool IsValidBet( string rawInput, out double parsedBet )
+    {
+        parsedBet = 0d;
+        return TryParseDouble( rawInput, out parsedBet ) && parsedBet > 0d && parsedBet <= _balance;
+    }
+
+    private static double CalculateWinAmount( double bet, int seed )
+    {
+        const int multiplicator = 25;
+        const int normalizer = 17;
+        double winPercent = multiplicator * ( seed % normalizer );
+        if ( winPercent <= 0 )
+        {
+            return 0;
+        }
+
+        return bet * ( winPercent / 100 );
+    }
+
     private static bool TryParseDouble( string input, out double value )
     {
         if ( string.IsNullOrWhiteSpace( input ) )
@@ -90,12 +105,4 @@ public class CasinoGame
         string normalized = input.Trim().Replace( ',', '.' );
         return double.TryParse( normalized, NumberStyles.Float, CultureInfo.InvariantCulture, out value );
     }
-}
-
-public enum OptionHandleResult
-{
-    Succes = 0,
-    InvalidOption,
-    InvlaidDepositValue,
-    InvalidBet,
 }
