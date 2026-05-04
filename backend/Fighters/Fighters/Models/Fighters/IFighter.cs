@@ -1,4 +1,5 @@
 ﻿using Fighters.Models.Armors;
+using Fighters.Models.Damage;
 using Fighters.Models.Weapons;
 
 namespace Fighters.Models.Fighters;
@@ -7,13 +8,21 @@ public interface IFighter
 {
     string Name { get; }
 
-    public int GetCurrentHealth();
-    public int GetMaxHealth();
-    public int CalculateDamage();
-    public int CalculateArmor();
+    int Strength { get; }
+    int Dexterity { get; }
+    int Intelligence { get; }
+    IArmor? EquippedArmor { get; }
+    IWeapon? EquippedWeapon { get; }
 
-    public void SetArmor( IArmor armor );
-    public void SetWeapon( IWeapon weapon );
+    int GetCurrentHealth();
+    int GetMaxHealth();
+    int CalculateDamage();
 
-    public void TakeDamage( int damage );
+    int CalculateArmor();
+
+    void SetArmor( IArmor armor );
+    void SetWeapon( IWeapon weapon );
+
+    void Act();
+    void TakeDamage( DamageStats damage );
 }

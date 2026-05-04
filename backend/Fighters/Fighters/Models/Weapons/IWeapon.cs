@@ -1,6 +1,18 @@
-﻿namespace Fighters.Models.Weapons;
+﻿using Fighters.Models.Damage;
+using Fighters.Models.Item;
 
-public interface IWeapon
+namespace Fighters.Models.Weapons;
+
+public enum WeaponType
 {
-    public int Damage { get; }
+    Melee,
+    Ranged,
+    Magic,
+}
+
+public interface IWeapon : IItem
+{
+    ItemStats Stats { get; set; }
+    DamageStats Damage { get; set; }
+    WeaponType WeaponType { get; set; }
 }

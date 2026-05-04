@@ -1,6 +1,11 @@
-﻿namespace Fighters.Models.Armors;
+﻿using Fighters.Models.Damage;
+using Fighters.Models.Fighters;
+using Fighters.Models.Item;
 
-public interface IArmor
+namespace Fighters.Models.Armors;
+
+public interface IArmor : IItem
 {
-    public int Armor { get; }
+    DamageStats ModifyWeaponDamage( DamageStats baseDamage, IFighter wielder ) => baseDamage;
+    DamageStats ModifyIncomingDamage( DamageStats baseDamage, IFighter weilder ) => baseDamage;
 }
