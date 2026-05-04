@@ -2,14 +2,6 @@
 
 namespace Casino.Models;
 
-public enum OptionHandleResult
-{
-    Succes = 0,
-    InvalidOption,
-    InvlaidDepositValue,
-    InvalidBet,
-}
-
 public class CasinoGame
 {
     private double _balance = 0;
@@ -42,13 +34,14 @@ public class CasinoGame
             _balance -= bet;
         }
 
-        return OptionHandleResult.Succes;
+        return OptionHandleResult.Success;
     }
 
     public OptionHandleResult ShowBalance()
     {
         Console.WriteLine( $"Ваш текущий баланс: {_balance}" );
-        return OptionHandleResult.Succes;
+
+        return OptionHandleResult.Success;
     }
 
     public OptionHandleResult MakeDeposit()
@@ -67,18 +60,20 @@ public class CasinoGame
 
         _balance += deposit;
 
-        return OptionHandleResult.Succes;
+        return OptionHandleResult.Success;
     }
 
     public OptionHandleResult Exit()
     {
         _isGameFinished = true;
-        return OptionHandleResult.Succes;
+
+        return OptionHandleResult.Success;
     }
 
     private bool IsValidBet( string rawInput, out double parsedBet )
     {
         parsedBet = 0d;
+
         return TryParseDouble( rawInput, out parsedBet ) && parsedBet > 0d && parsedBet <= _balance;
     }
 
@@ -100,9 +95,11 @@ public class CasinoGame
         if ( string.IsNullOrWhiteSpace( input ) )
         {
             value = 0;
+
             return false;
         }
         string normalized = input.Trim().Replace( ',', '.' );
+
         return double.TryParse( normalized, NumberStyles.Float, CultureInfo.InvariantCulture, out value );
     }
 }

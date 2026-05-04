@@ -2,15 +2,15 @@
 
 namespace Casino.Menu;
 
-public class CasinoMenu
+public class CasinoUI
 {
     private readonly CasinoGame _casino;
-    private readonly Dictionary<string, MenuOption> _optionHandlers;
+    private readonly Dictionary<string, MenuOption> _menuOptionHandlers;
 
-    public CasinoMenu( CasinoGame casino )
+    public CasinoUI( CasinoGame casino )
     {
         _casino = casino;
-        _optionHandlers = new Dictionary<string, MenuOption>
+        _menuOptionHandlers = new Dictionary<string, MenuOption>
         {
             [ "1" ] = new MenuOption( "Пополнить баланс ", _casino.MakeDeposit ),
             [ "2" ] = new MenuOption( "Показать баланс ", _casino.ShowBalance ),
@@ -33,7 +33,7 @@ public class CasinoMenu
 
     private OptionHandleResult HandleOption( string option )
     {
-        if ( _optionHandlers.TryGetValue( option, out var menuOption ) )
+        if ( _menuOptionHandlers.TryGetValue( option, out MenuOption menuOption ) )
         {
             return menuOption.Handler();
         }
@@ -43,7 +43,7 @@ public class CasinoMenu
 
     private void PrintMenu()
     {
-        foreach ( KeyValuePair<string, MenuOption> kvp in _optionHandlers )
+        foreach ( KeyValuePair<string, MenuOption> kvp in _menuOptionHandlers )
         {
             Console.WriteLine( $"{kvp.Key} - {kvp.Value.Description}" );
         }

@@ -2,5 +2,5 @@
 using Casino.Menu;
 
 var casino = new CasinoGame();
-var menu = new CasinoMenu( casino );
+var menu = new CasinoUI( casino );
 menu.Run();
