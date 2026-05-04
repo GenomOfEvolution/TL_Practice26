@@ -1,2 +1,4 @@
-﻿var orderManager = new OrderManager.Models.OrderManager();
+﻿using OrderProcessor = OrderManager.Models.OrderManager;
+
+var orderManager = new OrderProcessor();
 orderManager.ProcessOrder();

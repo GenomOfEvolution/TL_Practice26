@@ -44,6 +44,7 @@ public class OrderManager
         Console.Write( "Подтвердите заказ (Y/N): " );
 
         string input = Console.ReadLine();
+
         return string.Equals( input, confirmPhrase, StringComparison.CurrentCultureIgnoreCase );
     }
 
@@ -64,7 +65,9 @@ public class OrderManager
         string productName = Console.ReadLine();
 
         if ( string.IsNullOrEmpty( productName ) )
+        {
             throw new Exception( "Имя товара не должно быть пустым!" );
+        }
 
         return productName;
     }
@@ -75,7 +78,9 @@ public class OrderManager
         string address = Console.ReadLine();
 
         if ( string.IsNullOrEmpty( address ) )
+        {
             throw new Exception( "Адрес доставки не должен быть пустым!" );
+        }
 
         return address;
     }
@@ -84,7 +89,9 @@ public class OrderManager
     {
         Console.Write( "Введите количество товара: " );
         if ( !int.TryParse( Console.ReadLine(), out int amount ) || amount <= 0 )
+        {
             throw new Exception( "Количество товара должно быть целым числом > 0!" );
+        }
 
         return amount;
     }
@@ -95,7 +102,9 @@ public class OrderManager
         string name = Console.ReadLine();
 
         if ( string.IsNullOrEmpty( name ) )
+        {
             throw new Exception( "Имя не должно быть пустым!" );
+        }
 
         return name;
     }
