@@ -1,5 +1,8 @@
 ﻿namespace Fighters.Models.Item;
 
+/// <summary>
+/// Ограничения для статов оружия - [0; 50]
+/// </summary>
 public class ItemStats
 {
     private const int MIN_STAT_VALUE = 0;

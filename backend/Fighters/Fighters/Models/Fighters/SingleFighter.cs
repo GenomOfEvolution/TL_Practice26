@@ -50,9 +50,11 @@ public class SingleFighter : IFighter
 
     public int GetMaxHealth()
     {
-        return _stats.Strength * STR_HEALTH_MULT
-            + _stats.Dexterity * DEX_HEALTH_MULT
-            + _stats.Intelligence * INT_HEALTH_MULT;
+        FighterStats raceBonusStats = _race.GetStatBonus();
+
+        return ( _stats.Strength + raceBonusStats.Strength ) * STR_HEALTH_MULT
+            + ( _stats.Dexterity + raceBonusStats.Dexterity ) * DEX_HEALTH_MULT
+            + ( _stats.Intelligence + raceBonusStats.Intelligence ) * INT_HEALTH_MULT;
     }
 
     public void SetArmor( IArmor armor )

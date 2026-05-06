@@ -17,6 +17,8 @@ public class Fists : IWeapon
         MinDamage = 50,
         MaxDamage = 60,
         Type = DamageType.Physic,
+        CritChance = 0.1f,
+        CritDamage = 2.0f,
     };
 
     public WeaponType WeaponType => WeaponType.Melee;

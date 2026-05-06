@@ -37,7 +37,10 @@ public class GameManager
             _battleLogger.LogRoundEnd();
         }
 
-        return firstFighter.IsAlive() ? firstFighter : secondFighter;
+        IFighter winner = firstFighter.IsAlive() ? firstFighter : secondFighter;
+        _battleLogger.LogWinner( winner );
+
+        return winner;
     }
 
     private void ExecuteTurn( IFighter attacker, IFighter defender )

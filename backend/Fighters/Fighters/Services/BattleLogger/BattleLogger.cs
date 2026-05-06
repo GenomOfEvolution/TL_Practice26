@@ -20,20 +20,6 @@ public class BattleLogger : IBattleLogger
         Console.WriteLine( $"Боец {defender.Name} теряет {damage} здоровья!" );
     }
 
-    private string LogDamage( DamageStats damage )
-    {
-        return $"{damage.MinDamage} - {damage.MaxDamage} ({GetTypeNameRu( damage.Type )} урон)";
-    }
-
-    private static string GetTypeNameRu( DamageType type ) => type switch
-    {
-        DamageType.Physic => "физический",
-        DamageType.Magic => "магический",
-        DamageType.Pure => "чистый",
-        DamageType.Poison => "токсичный",
-        _ => type.ToString()
-    };
-
     public void LogRoundStart()
     {
         string roundText = $" Раунд {_round} ";
@@ -51,4 +37,23 @@ public class BattleLogger : IBattleLogger
         Console.WriteLine( _roundBorder );
         _round++;
     }
+
+    public void LogWinner( IFighter winner )
+    {
+        Console.WriteLine( $"Победитель: {winner.Name}!!!" );
+    }
+
+    private string LogDamage( DamageStats damage )
+    {
+        return $"{damage.MinDamage} - {damage.MaxDamage} ({GetTypeNameRu( damage.Type )} урон)";
+    }
+
+    private static string GetTypeNameRu( DamageType type ) => type switch
+    {
+        DamageType.Physic => "физический",
+        DamageType.Magic => "магический",
+        DamageType.Pure => "чистый",
+        DamageType.Poison => "токсичный",
+        _ => type.ToString()
+    };
 }

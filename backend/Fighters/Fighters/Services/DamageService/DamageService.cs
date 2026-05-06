@@ -18,11 +18,21 @@ public class DamageService : IDamageService
 
     public int CalculateReceivedDamage( DamageStats incomingDamage, IFighter target )
     {
-        DamageStats recievedDamage = incomingDamage;
-        recievedDamage = target.EquippedArmor.ModifyIncomingDamage( recievedDamage, target );
-        recievedDamage = target.Race.ModifyIncomingDamage( recievedDamage, target );
+        var modifiedDamage = target.EquippedArmor.ModifyIncomingDamage( incomingDamage, target );
+        modifiedDamage = target.Race.ModifyIncomingDamage( modifiedDamage, target );
 
-        return _randomService.Next( recievedDamage.MinDamage, recievedDamage.MaxDamage );
+        float resistance = target.EquippedArmor.Resistances
+            .GetValueOrDefault( modifiedDamage.Type, 0f );
+
+        float damageMultiplier = 1f - resistance;
+
+        int minDmg = ( int )( modifiedDamage.MinDamage * damageMultiplier );
+        int maxDmg = ( int )( modifiedDamage.MaxDamage * damageMultiplier );
+
+        minDmg = Math.Max( 1, minDmg );
+        maxDmg = Math.Max( 1, maxDmg );
+
+        return _randomService.Next( minDmg, maxDmg + 1 );
     }
 
     public DamageStats CalculateAttackDamage( IFighter attacker )
@@ -31,14 +41,38 @@ public class DamageService : IDamageService
         weaponDamage = attacker.Race.ModifyWeaponDamage( weaponDamage, attacker );
         weaponDamage = attacker.EquippedArmor.ModifyWeaponDamage( weaponDamage, attacker );
 
-        return weaponDamage;
+        return TryApplyCrit( weaponDamage );
+    }
+
+    private DamageStats TryApplyCrit( DamageStats damage )
+    {
+        if ( damage.CritChance <= 0 )
+        {
+            return damage;
+        }
+
+        if ( _randomService.NextDouble() <= damage.CritChance )
+        {
+            return new DamageStats
+            {
+                MinDamage = ( int )( damage.MinDamage * damage.CritDamage ),
+                MaxDamage = ( int )( damage.MaxDamage * damage.CritDamage ),
+                Type = damage.Type,
+                CritChance = damage.CritChance,
+                CritDamage = damage.CritDamage
+            };
+        }
+
+        return damage;
     }
 
     private DamageStats CalculateWeaponDamage( IWeapon weapon, IFighter itemHolder )
     {
-        double strengthBonus = CalculateStatBonus( itemHolder.Stats.Strength, weapon.Stats.Strength );
-        double dexterityBonus = CalculateStatBonus( itemHolder.Stats.Dexterity, weapon.Stats.Dexterity );
-        double intelligenceBonus = CalculateStatBonus( itemHolder.Stats.Intelligence, weapon.Stats.Intelligence );
+        FighterStats raceBonus = itemHolder.Race.GetStatBonus();
+
+        double strengthBonus = CalculateStatBonus( itemHolder.Stats.Strength + raceBonus.Strength, weapon.Stats.Strength );
+        double dexterityBonus = CalculateStatBonus( itemHolder.Stats.Dexterity + raceBonus.Dexterity, weapon.Stats.Dexterity );
+        double intelligenceBonus = CalculateStatBonus( itemHolder.Stats.Intelligence + raceBonus.Intelligence, weapon.Stats.Intelligence );
 
         double totalMultiplier = strengthBonus + dexterityBonus + intelligenceBonus;
 
@@ -46,7 +80,9 @@ public class DamageService : IDamageService
         {
             MinDamage = ( int )Math.Max( 1, Math.Round( weapon.Damage.MinDamage * totalMultiplier ) ),
             MaxDamage = ( int )Math.Max( 1, Math.Round( weapon.Damage.MaxDamage * totalMultiplier ) ),
-            Type = weapon.Damage.Type
+            Type = weapon.Damage.Type,
+            CritChance = weapon.Damage.CritChance,
+            CritDamage = weapon.Damage.CritDamage,
         };
     }
 

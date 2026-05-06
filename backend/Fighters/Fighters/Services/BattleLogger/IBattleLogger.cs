@@ -10,5 +10,5 @@ public interface IBattleLogger
 
     void LogAttack( IFighter firstFighter, IFighter secondFighter, DamageStats damage );
     void LogDamageTaken( IFighter damageReciever, int damage );
-
+    void LogWinner( IFighter winner );
 }

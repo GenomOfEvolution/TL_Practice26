@@ -21,7 +21,7 @@ public class GameManagerTests
         mockRandom
             .Setup( r => r.Next( It.IsAny<int>(), It.IsAny<int>() ) )
             .Returns<int, int>( ( min, max ) => max );
-        mockRandom.Setup( r => r.NextDouble() ).Returns( 0.5 );
+        mockRandom.Setup( r => r.NextDouble() ).Returns( 1.0 );
 
         var damageService = new DamageService( mockRandom.Object );
         var gameManager = new GameManager( new BattleLogger(), damageService );
@@ -44,7 +44,7 @@ public class GameManagerTests
         mockRandom
             .Setup( r => r.Next( It.IsAny<int>(), It.IsAny<int>() ) )
             .Returns<int, int>( ( min, max ) => max );
-        mockRandom.Setup( r => r.NextDouble() ).Returns( 0.5 );
+        mockRandom.Setup( r => r.NextDouble() ).Returns( 1.0 );
 
         var damageService = new DamageService( mockRandom.Object );
         var gameManager = new GameManager( new BattleLogger(), damageService );

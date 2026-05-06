@@ -6,8 +6,7 @@ namespace Fighters.Models.Armors;
 
 public class NoArmor : IArmor
 {
-    public IReadOnlyDictionary<DamageType, float> Resistances => throw new NotImplementedException();
-
+    public IReadOnlyDictionary<DamageType, float> Resistances => new Dictionary<DamageType, float>();
     public string Name => "Без брони";
 
     public string Description => "Ваш боец практически голый!";
