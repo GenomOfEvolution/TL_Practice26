@@ -6,6 +6,7 @@ namespace Fighters.Models.Armors;
 
 public interface IArmor : IItem
 {
-    DamageStats ModifyWeaponDamage( DamageStats baseDamage, IFighter wielder ) => baseDamage;
-    DamageStats ModifyIncomingDamage( DamageStats baseDamage, IFighter weilder ) => baseDamage;
+    IReadOnlyDictionary<DamageType, float> Resistances { get; }
+    DamageStats ModifyWeaponDamage( DamageStats baseDamage, IFighter wielder );
+    DamageStats ModifyIncomingDamage( DamageStats baseDamage, IFighter weilder );
 }

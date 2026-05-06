@@ -7,12 +7,10 @@ public interface IRace
 {
     string Name { get; }
 
-    int GetStrengthBonus() => 0;
-    int GetIntelegenceBonus() => 0;
-    int GetDexterityBonus() => 0;
+    FighterStats GetStatBonus();
 
-    DamageStats ModifyWeaponDamage( DamageStats baseDamage, IFighter wielder ) => baseDamage;
-    DamageStats ModifyIncomingDamage( DamageStats baseDamage, IFighter weilder ) => baseDamage;
+    DamageStats ModifyWeaponDamage( DamageStats baseDamage, IFighter wielder );
+    DamageStats ModifyIncomingDamage( DamageStats baseDamage, IFighter weilder );
 
-    int GetInitiativeModifier() => 0;
+    int GetInitiativeModifier();
 }

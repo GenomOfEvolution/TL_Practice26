@@ -9,10 +9,6 @@
 
   <ItemGroup>
     <Folder Include="Extensions\" />
-    <Folder Include="Models\Fighters\" />
-    <Folder Include="Models\Armors\" />
-    <Folder Include="Models\Races\" />
-    <Folder Include="Models\Weapons\" />
   </ItemGroup>
 
 </Project>
