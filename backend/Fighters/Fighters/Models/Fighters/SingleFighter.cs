@@ -1,5 +1,6 @@
 ﻿using Fighters.Models.Armors;
 using Fighters.Models.Races;
+using Fighters.Models.Specialities;
 using Fighters.Models.Weapons;
 using Fighters.Models.Weapons.MeleeWeapons;
 
@@ -14,6 +15,7 @@ public class SingleFighter : IFighter
     private readonly IRace _race = new HumanRace();
     private IArmor _armor = new NoArmor();
     private IWeapon _weapon = new Fists();
+    private readonly ISpeciality _speciality = new NoSpeciality();
     private readonly string _name;
 
     private FighterStats _stats;
@@ -24,12 +26,14 @@ public class SingleFighter : IFighter
         string name,
         FighterStats fighterStats,
         IRace race,
+        ISpeciality speciality,
         IArmor armor,
         IWeapon weapon )
     {
         _name = name;
         _stats = fighterStats;
         _race = race;
+        _speciality = speciality;
         _armor = armor;
         _weapon = weapon;
 
@@ -42,6 +46,8 @@ public class SingleFighter : IFighter
     public IArmor EquippedArmor => _armor;
     public IWeapon EquippedWeapon => _weapon;
     public IRace Race => _race;
+
+    public ISpeciality Speciality => _speciality;
 
     public int GetCurrentHealth()
     {

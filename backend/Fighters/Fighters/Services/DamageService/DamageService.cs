@@ -37,7 +37,9 @@ public class DamageService : IDamageService
 
     public DamageStats CalculateAttackDamage( IFighter attacker )
     {
-        DamageStats weaponDamage = CalculateWeaponDamage( attacker.EquippedWeapon, attacker );
+        IWeapon specialityWeapon = attacker.Speciality.ModifyWeaponStats( attacker.EquippedWeapon, attacker );
+
+        DamageStats weaponDamage = CalculateWeaponDamage( specialityWeapon, attacker );
         weaponDamage = attacker.Race.ModifyWeaponDamage( weaponDamage, attacker );
         weaponDamage = attacker.EquippedArmor.ModifyWeaponDamage( weaponDamage, attacker );
 

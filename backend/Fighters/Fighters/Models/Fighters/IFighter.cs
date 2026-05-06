@@ -1,5 +1,6 @@
 ﻿using Fighters.Models.Armors;
 using Fighters.Models.Races;
+using Fighters.Models.Specialities;
 using Fighters.Models.Weapons;
 
 namespace Fighters.Models.Fighters;
@@ -12,6 +13,7 @@ public interface IFighter
     IArmor EquippedArmor { get; }
     IWeapon EquippedWeapon { get; }
     IRace Race { get; }
+    ISpeciality Speciality { get; }
 
     int GetCurrentHealth();
     int GetMaxHealth();
