@@ -56,4 +56,23 @@ public class BattleLogger : IBattleLogger
         DamageType.Poison => "токсичный",
         _ => type.ToString()
     };
+
+    public void LogBattleStart( List<IFighter> allFighters )
+    {
+        Console.WriteLine( "Начало битвы!" );
+    }
+
+    public void LogBattleEnd( List<IFighter> winners )
+    {
+        string winnersInfo = winners == null || winners.Count == 0
+       ? "Никто не выжил."
+       : string.Join( "\n", winners.Select( f => $"- {f.Name} (HP: {f.GetCurrentHealth()}/{f.GetMaxHealth()})" ) );
+
+        Console.WriteLine(
+        $"""
+        Вот они, наши победители:
+        {winnersInfo}
+        """
+        );
+    }
 }

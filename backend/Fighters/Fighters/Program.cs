@@ -6,10 +6,12 @@ using Fighters.Models.Specialities;
 using Fighters.Models.Weapons.MeleeWeapons;
 using Fighters.Services.BattleLogger;
 using Fighters.Services.DamageService;
+using Fighters.Services.InitiativeService;
 
 var randService = new DefaultRandomService();
 var damageService = new DamageService( randService );
-var gameManager = new GameManager( new BattleLogger(), damageService );
+var initiativeService = new InitiativeService( randService );
+var gameManager = new GameManager( new BattleLogger(), damageService, initiativeService );
 
 var fighterA = new SingleFighter(
     "FighterA",

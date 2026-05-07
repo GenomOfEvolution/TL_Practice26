@@ -3,6 +3,9 @@ using Fighters.Models.Damage;
 using Fighters.Models.Fighters;
 using Fighters.Services.BattleLogger;
 using Fighters.Services.DamageService;
+using Fighters.Services.InitiativeService;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Fighters.Models.GameManager;
 
@@ -10,42 +13,112 @@ public class GameManager
 {
     private readonly IBattleLogger _battleLogger;
     private readonly IDamageService _damageService;
+    private readonly IInitiativeService _initiativeService;
 
-    public GameManager( IBattleLogger battleLogger, IDamageService damageService )
+    public GameManager(
+        IBattleLogger battleLogger,
+        IDamageService damageService,
+        IInitiativeService initiativeService )
     {
         _battleLogger = battleLogger;
         _damageService = damageService;
+        _initiativeService = initiativeService;
     }
 
-    public IFighter Play( IFighter firstFighter, IFighter secondFighter )
+    public IEnumerable<IFighter> Play( IFighter firstFighter, IFighter secondFighter )
     {
-        IFighter turnFirst = firstFighter;
-        IFighter turnSecond = secondFighter;
+        IEnumerable<IFighter> winners = Play(
+            [ firstFighter ],
+            [ secondFighter ] );
 
-        while ( firstFighter.IsAlive() && secondFighter.IsAlive() )
+        return winners;
+    }
+
+    public IEnumerable<IFighter> Play( IFighter soloFighter, IEnumerable<IFighter> teamMembers )
+    {
+        IEnumerable<IFighter> winners = Play(
+            [ soloFighter ],
+            teamMembers );
+
+        return winners;
+    }
+
+    public IEnumerable<IFighter> Play( IEnumerable<IFighter> teamMembers, IFighter soloFighter )
+    {
+        IEnumerable<IFighter> winners = Play(
+            teamMembers,
+            [ soloFighter ] );
+
+        return winners;
+    }
+
+    public IEnumerable<IFighter> Play(
+        IEnumerable<IFighter> sideA,
+        IEnumerable<IFighter> sideB )
+    {
+        List<IFighter> fightersA = [ .. sideA ];
+        List<IFighter> fightersB = [ .. sideB ];
+
+        if ( !( fightersA.Count > 0 ) || !( fightersB.Count > 0 ) )
+        {
+            throw new System.ArgumentException(
+                "Каждая сторона боя должна содержать хотя бы одного бойца." );
+        }
+
+        List<IFighter> allFighters = [ .. fightersA, .. fightersB ];
+        HashSet<IFighter> sideASet = [ .. fightersA ];
+        HashSet<IFighter> sideBSet = [ .. fightersB ];
+
+        _battleLogger.LogBattleStart( allFighters );
+
+        while ( sideASet.Any( f => f.IsAlive() ) && sideBSet.Any( f => f.IsAlive() ) )
         {
             _battleLogger.LogRoundStart();
 
-            ExecuteTurn( turnFirst, turnSecond );
-            if ( !turnSecond.IsAlive() )
+            IReadOnlyList<IFighter> turnOrder = _initiativeService.DetermineTurnOrder( allFighters );
+
+            for ( int i = 0; i < turnOrder.Count; i++ )
             {
-                _battleLogger.LogRoundEnd();
-                break;
+                IFighter attacker = turnOrder[ i ];
+
+                if ( !attacker.IsAlive() )
+                {
+                    continue;
+                }
+
+                HashSet<IFighter> currentSide = sideASet.Contains( attacker ) ? sideASet : sideBSet;
+                HashSet<IFighter> enemySide = currentSide == sideASet ? sideBSet : sideASet;
+                List<IFighter> validTargets = [ .. enemySide.Where( f => f.IsAlive() ) ];
+
+                if ( validTargets.Count == 0 )
+                {
+                    break;
+                }
+
+                IFighter target = SelectTarget( attacker, validTargets );
+                ExecuteTurn( attacker, target );
+
+                if ( !enemySide.Any( f => f.IsAlive() ) )
+                {
+                    break;
+                }
             }
 
-            ExecuteTurn( turnSecond, turnFirst );
             _battleLogger.LogRoundEnd();
         }
 
-        IFighter winner = firstFighter.IsAlive() ? firstFighter : secondFighter;
-        _battleLogger.LogWinner( winner );
+        List<IFighter> winners = allFighters.Where( f => f.IsAlive() ).ToList();
+        _battleLogger.LogBattleEnd( winners );
 
-        return winner;
+        return winners;
     }
 
     private void ExecuteTurn( IFighter attacker, IFighter defender )
     {
-        if ( !attacker.IsAlive() || !defender.IsAlive() ) return;
+        if ( !attacker.IsAlive() || !defender.IsAlive() )
+        {
+            return;
+        }
 
         DamageStats rawDamage = _damageService.CalculateAttackDamage( attacker );
         _battleLogger.LogAttack( attacker, defender, rawDamage );
@@ -54,5 +127,10 @@ public class GameManager
         _battleLogger.LogDamageTaken( defender, receivedDamage );
 
         defender.TakeDamage( receivedDamage );
+    }
+
+    private IFighter SelectTarget( IFighter attacker, IList<IFighter> candidates )
+    {
+        return candidates.OrderBy( f => f.GetCurrentHealth() ).First();
     }
 }

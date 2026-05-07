@@ -6,6 +6,7 @@ using Fighters.Models.Specialities;
 using Fighters.Models.Weapons.MeleeWeapons;
 using Fighters.Services.BattleLogger;
 using Fighters.Services.DamageService;
+using Fighters.Services.InitiativeService;
 using Fighters.Services.RandomService;
 using Moq;
 
@@ -25,7 +26,8 @@ public class GameManagerTests
         mockRandom.Setup( r => r.NextDouble() ).Returns( 1.0 );
 
         var damageService = new DamageService( mockRandom.Object );
-        var gameManager = new GameManager( new BattleLogger(), damageService );
+        var intiativeService = new InitiativeService( mockRandom.Object );
+        var gameManager = new GameManager( new BattleLogger(), damageService, intiativeService );
 
         var fighterA = CreateFighter( "FighterA" );
         var fighterB = CreateFighter( "FighterB" );
@@ -34,7 +36,7 @@ public class GameManagerTests
         var winner = gameManager.Play( fighterA, fighterB );
 
         // Assert
-        Assert.Equal( fighterA.Name, winner.Name );
+        Assert.Equal( fighterA.Name, winner.First().Name );
     }
 
     [Fact]
@@ -48,7 +50,8 @@ public class GameManagerTests
         mockRandom.Setup( r => r.NextDouble() ).Returns( 1.0 );
 
         var damageService = new DamageService( mockRandom.Object );
-        var gameManager = new GameManager( new BattleLogger(), damageService );
+        var intiativeService = new InitiativeService( mockRandom.Object );
+        var gameManager = new GameManager( new BattleLogger(), damageService, intiativeService );
 
         var fighterA = CreateFighter( "FighterA" );
         var fighterB = CreateFighter( "FighterB" );

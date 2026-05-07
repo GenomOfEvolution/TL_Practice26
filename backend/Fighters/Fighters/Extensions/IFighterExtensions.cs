@@ -1,9 +1,8 @@
 ﻿using Fighters.Models.Fighters;
 
-namespace Fighters.Extensions
+namespace Fighters.Extensions;
+
+public static class IFighterExtensions
 {
-    public static class IFighterExtensions
-    {
-        public static bool IsAlive( this IFighter fighter ) => fighter.GetCurrentHealth() > 0;
-    }
+    public static bool IsAlive( this IFighter fighter ) => fighter.GetCurrentHealth() > 0;
 }
