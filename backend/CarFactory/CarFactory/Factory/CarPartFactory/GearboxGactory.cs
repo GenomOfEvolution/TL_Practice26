@@ -1,11 +1,11 @@
 ﻿using CarFactory.Domain.Components.Gearboxes;
 using CarFactory.Domain.Contracts;
 
-namespace CarFactory.Factory;
+namespace CarFactory.Factory.CarPartFactory;
 
-public static class GearboxFactory
+public class GearboxFactory : ICarPartFactory<IGearbox>
 {
-    public static IGearbox Create( int choice ) => choice switch
+    public IGearbox Create( int choice ) => choice switch
     {
         1 => new SportsManualGearbox(),
         2 => new EVSingleSpeedReducer(),
@@ -13,7 +13,7 @@ public static class GearboxFactory
         _ => throw new ArgumentOutOfRangeException( nameof( choice ), "Неверный выбор КПП" )
     };
 
-    public static void PrintMenu()
+    public void PrintMenu()
     {
         Console.WriteLine( "\n=== Выберите коробку передач ===" );
         Console.WriteLine( "1. Спортивная МКПП" );

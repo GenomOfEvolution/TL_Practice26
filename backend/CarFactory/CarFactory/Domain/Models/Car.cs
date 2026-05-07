@@ -20,7 +20,7 @@ public class Car
     {
         get
         {
-            var totalRatio = Gearbox.TopGearRatio * Gearbox.FinalDriveRatio;
+            float totalRatio = Gearbox.TopGearRatio * Gearbox.FinalDriveRatio;
 
             if ( Engine.MaxRPM <= 0 || totalRatio <= 0 || Wheels.RadiusMeters <= 0 )
             {

@@ -1,11 +1,11 @@
 ﻿using CarFactory.Domain.Contracts;
 using CarFactory.Domain.Components.Colors;
 
-namespace CarFactory.Factory;
+namespace CarFactory.Factory.CarPartFactory;
 
-public static class ColorFactory
+public class ColorFactory : ICarPartFactory<IColor>
 {
-    public static IColor Create( int choice ) => choice switch
+    public IColor Create( int choice ) => choice switch
     {
         1 => new BlackColor(),
         2 => new WhiteColor(),
@@ -13,7 +13,7 @@ public static class ColorFactory
         _ => throw new ArgumentOutOfRangeException( nameof( choice ), "Неверный выбор цвета" )
     };
 
-    public static void PrintMenu()
+    public void PrintMenu()
     {
         Console.WriteLine( "\n=== Выберите цвет ===" );
         Console.WriteLine( "1. Чёрный" );

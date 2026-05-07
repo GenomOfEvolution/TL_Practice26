@@ -5,53 +5,63 @@ using CarFactory.Domain.Components.Gearboxes;
 using CarFactory.Domain.Components.Wheels;
 using CarFactory.Domain.Contracts;
 using CarFactory.Domain.Models;
+using CarFactory.Factory.CarPartFactory;
 
 namespace CarFactory.Factory;
 
-public enum CarPreset
+public class VehicleFactory
 {
-    SportCar = 0,
-    Electrical,
-    Truck,
-};
+    private readonly ICarPartFactory<IColor> _colorFactory;
+    private readonly ICarPartFactory<ICarcase> _carcaseFactory;
+    private readonly ICarPartFactory<IEngine> _engineFactory;
+    private readonly ICarPartFactory<IGearbox> _gearboxFactory;
+    private readonly ICarPartFactory<IWheel> _wheelFactory;
 
-public static class VehicleFactory
-{
     private const int _minUserInput = 1;
     private const int _maxUserInput = 3;
-    public static Car BuildFromUserInput()
+
+    public VehicleFactory(
+        ICarPartFactory<IColor> colorFactory,
+        ICarPartFactory<ICarcase> carcaseFactory,
+        ICarPartFactory<IEngine> engineFactory,
+        ICarPartFactory<IGearbox> gearboxFactory,
+        ICarPartFactory<IWheel> wheelFactory )
     {
-        ColorFactory.PrintMenu();
-        IColor color = ColorFactory.Create( ReadChoice( _minUserInput, _maxUserInput ) );
+        _colorFactory = colorFactory;
+        _carcaseFactory = carcaseFactory;
+        _engineFactory = engineFactory;
+        _gearboxFactory = gearboxFactory;
+        _wheelFactory = wheelFactory;
+    }
 
-        CarcaseFactory.PrintMenu();
-        ICarcase carcase = CarcaseFactory.Create( ReadChoice( _minUserInput, _maxUserInput ) );
+    public Car BuildFromUserInput()
+    {
+        _colorFactory.PrintMenu();
+        IColor color = _colorFactory.Create( ReadChoice( _minUserInput, _maxUserInput ) );
 
-        EngineFactory.PrintMenu();
-        IEngine engine = EngineFactory.Create( ReadChoice( _minUserInput, _maxUserInput ) );
+        _carcaseFactory.PrintMenu();
+        ICarcase carcase = _carcaseFactory.Create( ReadChoice( _minUserInput, _maxUserInput ) );
 
-        GearboxFactory.PrintMenu();
-        IGearbox gearbox = GearboxFactory.Create( ReadChoice( _minUserInput, _maxUserInput ) );
+        _engineFactory.PrintMenu();
+        IEngine engine = _engineFactory.Create( ReadChoice( _minUserInput, _maxUserInput ) );
 
-        WheelFactory.PrintMenu();
-        IWheel wheels = WheelFactory.Create( ReadChoice( _minUserInput, _maxUserInput ) );
+        _gearboxFactory.PrintMenu();
+        IGearbox gearbox = _gearboxFactory.Create( ReadChoice( _minUserInput, _maxUserInput ) );
 
-        return new Car(
-            color,
-            carcase,
-            engine,
-            gearbox,
-            wheels );
+        _wheelFactory.PrintMenu();
+        IWheel wheels = _wheelFactory.Create( ReadChoice( _minUserInput, _maxUserInput ) );
+
+        return new Car( color, carcase, engine, gearbox, wheels );
     }
 
     public static Car BuildPreset( CarPreset preset ) => preset switch
     {
         CarPreset.SportCar => new Car(
-           new WhiteColor(),
-           new SportcarCarcase(),
-           new V8SportsEngine(),
-           new SportsManualGearbox(),
-           new SportLowProfileWheel() ),
+            new WhiteColor(),
+            new SportcarCarcase(),
+            new V8SportsEngine(),
+            new SportsManualGearbox(),
+            new SportLowProfileWheel() ),
 
         CarPreset.Electrical => new Car(
             new GrayColor(),
@@ -77,6 +87,7 @@ public static class VehicleFactory
         {
             Console.Write( "Неверный ввод. " );
         }
+
         return choice;
     }
 

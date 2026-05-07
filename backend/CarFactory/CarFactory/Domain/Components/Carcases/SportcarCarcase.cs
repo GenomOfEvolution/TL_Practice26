@@ -4,5 +4,5 @@ namespace CarFactory.Domain.Components.Carcases;
 
 public class SportcarCarcase : ICarcase
 {
-    public string Name => "Спортирвный корпус";
+    public string Name => "Спортивный корпус";
 }

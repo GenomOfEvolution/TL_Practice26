@@ -1,11 +1,11 @@
 ﻿using CarFactory.Domain.Components.Wheels;
 using CarFactory.Domain.Contracts;
 
-namespace CarFactory.Factory;
+namespace CarFactory.Factory.CarPartFactory;
 
-public static class WheelFactory
+public class WheelFactory : ICarPartFactory<IWheel>
 {
-    public static IWheel Create( int choice ) => choice switch
+    public IWheel Create( int choice ) => choice switch
     {
         1 => new SportLowProfileWheel(),
         2 => new OffRoadAllTerrainWheel(),
@@ -13,7 +13,7 @@ public static class WheelFactory
         _ => throw new ArgumentOutOfRangeException( nameof( choice ), "Неверный выбор колёс" )
     };
 
-    public static void PrintMenu()
+    public void PrintMenu()
     {
         Console.WriteLine( "\n=== Выберите колёса ===" );
         Console.WriteLine( "1. Низкий профиль" );

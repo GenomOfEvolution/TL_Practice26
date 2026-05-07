@@ -1,11 +1,11 @@
 ﻿using CarFactory.Domain.Components.Engines;
 using CarFactory.Domain.Contracts;
 
-namespace CarFactory.Factory;
+namespace CarFactory.Factory.CarPartFactory;
 
-public static class EngineFactory
+public class EngineFactory : ICarPartFactory<IEngine>
 {
-    public static IEngine Create( int choice ) => choice switch
+    public IEngine Create( int choice ) => choice switch
     {
         1 => new V8SportsEngine(),
         2 => new ElectricTractionMotor(),
@@ -13,7 +13,7 @@ public static class EngineFactory
         _ => throw new ArgumentOutOfRangeException( nameof( choice ), "Неверный выбор двигателя" )
     };
 
-    public static void PrintMenu()
+    public void PrintMenu()
     {
         Console.WriteLine( "\n=== Выберите двигатель ===" );
         Console.WriteLine( "1. Бензиновый V8 (спорт) — 8500 об/мин" );
