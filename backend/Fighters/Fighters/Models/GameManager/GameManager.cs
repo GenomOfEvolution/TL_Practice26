@@ -4,8 +4,6 @@ using Fighters.Models.Fighters;
 using Fighters.Services.BattleLogger;
 using Fighters.Services.DamageService;
 using Fighters.Services.InitiativeService;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Fighters.Models.GameManager;
 
@@ -129,8 +127,8 @@ public class GameManager
         defender.TakeDamage( receivedDamage );
     }
 
-    private IFighter SelectTarget( IFighter attacker, IList<IFighter> candidates )
+    private static IFighter SelectTarget( IFighter attacker, IList<IFighter> candidates )
     {
-        return candidates.OrderBy( f => f.GetCurrentHealth() ).First();
+        return attacker.Speciality.SelectTarget( candidates );
     }
 }

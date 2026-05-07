@@ -5,13 +5,8 @@ namespace Fighters.Models.Specialities;
 
 public class NoSpeciality : ISpeciality
 {
-    public IWeapon ModifyWeaponStats( IWeapon weapon, IFighter weaponHolder )
+    public IFighter SelectTarget( IList<IFighter> candidates )
     {
-        IWeapon modifiedWeapon = weapon;
-
-        modifiedWeapon.Damage.MinDamage += 1;
-        modifiedWeapon.Damage.MaxDamage += 1;
-
-        return modifiedWeapon;
+        return candidates.First();
     }
 }

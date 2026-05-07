@@ -6,7 +6,7 @@ namespace Fighters.Models.Specialities;
 public interface ISpeciality
 {
     /// <summary>
-    /// Модифицирует базовые статы оружия
+    /// Выбирает свою стратегию атаки
     /// </summary>
-    IWeapon ModifyWeaponStats( IWeapon weapon, IFighter weaponHolder );
+    IFighter SelectTarget( IList<IFighter> candidates );
 }
