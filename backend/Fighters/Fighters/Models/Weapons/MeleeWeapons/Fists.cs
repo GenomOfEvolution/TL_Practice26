@@ -24,7 +24,6 @@ public class Fists : IWeapon
     public WeaponType WeaponType => WeaponType.Melee;
 
     public string Name => "Кулаки";
-
     public string Description => "Да я тебя одной левой!";
 
     public ItemRarity Rarity => ItemRarity.Common;
