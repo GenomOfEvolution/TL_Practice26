@@ -2,13 +2,15 @@
 
 public class FighterTeam : IFighterTeam
 {
+    private List<IFighter> _fighters = [];
+
     public void AddFighter( IFighter fighter )
     {
-        throw new NotImplementedException();
+        _fighters.Add( fighter );
     }
 
     public IEnumerable<IFighter> GetMembers()
     {
-        throw new NotImplementedException();
+        return _fighters;
     }
 }

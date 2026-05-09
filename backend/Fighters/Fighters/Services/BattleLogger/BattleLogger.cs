@@ -43,20 +43,6 @@ public class BattleLogger : IBattleLogger
         Console.WriteLine( $"Победитель: {winner.Name}!!!" );
     }
 
-    private string LogDamage( DamageStats damage )
-    {
-        return $"{damage.MinDamage} - {damage.MaxDamage} ({GetTypeNameRu( damage.Type )} урон)";
-    }
-
-    private static string GetTypeNameRu( DamageType type ) => type switch
-    {
-        DamageType.Physic => "физический",
-        DamageType.Magic => "магический",
-        DamageType.Pure => "чистый",
-        DamageType.Poison => "токсичный",
-        _ => type.ToString()
-    };
-
     public void LogBattleStart( List<IFighter> allFighters )
     {
         Console.WriteLine( "Начало битвы!" );
@@ -75,4 +61,36 @@ public class BattleLogger : IBattleLogger
         """
         );
     }
+
+    public void LogInitiativeOrder( IReadOnlyList<IFighter> participants )
+    {
+        string title = " Инициатива ";
+        int leftPad = ( BorderWidth - title.Length ) / 2;
+        int rightPad = BorderWidth - title.Length - leftPad;
+        string border = $"{new string( '=', leftPad )}{title}{new string( '=', rightPad )}";
+
+        Console.WriteLine( border );
+        Console.WriteLine( "Порядок хода:" );
+
+        for ( int i = 0; i < participants.Count; i++ )
+        {
+            Console.WriteLine( $"{i + 1} - {participants[ i ].Name}" );
+        }
+
+        Console.WriteLine( border );
+    }
+
+    private string LogDamage( DamageStats damage )
+    {
+        return $"{damage.MinDamage} - {damage.MaxDamage} ({GetTypeNameRu( damage.Type )} урон)";
+    }
+
+    private static string GetTypeNameRu( DamageType type ) => type switch
+    {
+        DamageType.Physic => "физический",
+        DamageType.Magic => "магический",
+        DamageType.Pure => "чистый",
+        DamageType.Poison => "токсичный",
+        _ => type.ToString()
+    };
 }

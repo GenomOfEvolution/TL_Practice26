@@ -23,33 +23,6 @@ public class GameManager
         _initiativeService = initiativeService;
     }
 
-    public IEnumerable<IFighter> Play( IFighter firstFighter, IFighter secondFighter )
-    {
-        IEnumerable<IFighter> winners = Play(
-            [ firstFighter ],
-            [ secondFighter ] );
-
-        return winners;
-    }
-
-    public IEnumerable<IFighter> Play( IFighter soloFighter, IEnumerable<IFighter> teamMembers )
-    {
-        IEnumerable<IFighter> winners = Play(
-            [ soloFighter ],
-            teamMembers );
-
-        return winners;
-    }
-
-    public IEnumerable<IFighter> Play( IEnumerable<IFighter> teamMembers, IFighter soloFighter )
-    {
-        IEnumerable<IFighter> winners = Play(
-            teamMembers,
-            [ soloFighter ] );
-
-        return winners;
-    }
-
     public IEnumerable<IFighter> Play(
         IEnumerable<IFighter> sideA,
         IEnumerable<IFighter> sideB )
@@ -68,12 +41,12 @@ public class GameManager
         HashSet<IFighter> sideBSet = [ .. fightersB ];
 
         _battleLogger.LogBattleStart( allFighters );
+        IReadOnlyList<IFighter> turnOrder = _initiativeService.DetermineTurnOrder( allFighters );
+        _battleLogger.LogInitiativeOrder( turnOrder );
 
         while ( sideASet.Any( f => f.IsAlive() ) && sideBSet.Any( f => f.IsAlive() ) )
         {
             _battleLogger.LogRoundStart();
-
-            IReadOnlyList<IFighter> turnOrder = _initiativeService.DetermineTurnOrder( allFighters );
 
             for ( int i = 0; i < turnOrder.Count; i++ )
             {
