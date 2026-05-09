@@ -1,8 +1,9 @@
-﻿using Fighters.Models.Armors;
+﻿using Fighters.Factories;
+using Fighters.Models.Armors;
 using Fighters.Models.Fighters;
 using Fighters.Models.GameManager;
-using Fighters.Models.Races;
-using Fighters.Models.Specialities;
+using Fighters.Models.ItemCatalog;
+using Fighters.Models.Weapons;
 using Fighters.Models.Weapons.MeleeWeapons;
 using Fighters.Services.BattleLogger;
 using Fighters.Services.DamageService;
@@ -13,23 +14,24 @@ var damageService = new DamageService( randService );
 var initiativeService = new InitiativeService( randService );
 var gameManager = new GameManager( new BattleLogger(), damageService, initiativeService );
 
-var fighterA = new SingleFighter(
-    "FighterA",
-    new FighterStats { Strength = 10, Dexterity = 10, Intelligence = 10 },
-    new HumanRace(),
-    new NoSpeciality(),
-    new NoArmor(),
-    new Fists()
+IItemCatalog<IWeapon> weapnCatalog = new WeaponCatalog(
+[
+    new( new Fists(), 0 ),
+] );
+
+IItemCatalog<IArmor> armorCatalog = new ArmorCatalog( [
+    new (new NoArmor(), 0),
+] );
+
+FighterFactory factory = new(
+    new RaceFactory(),
+    new FighterStatFactory(),
+    new WeaponFactory( weapnCatalog ),
+    new ArmorFactory( armorCatalog ),
+    pointsPerFighter: 20
 );
 
-var fighterB = new SingleFighter(
-    "FighterB",
-    new FighterStats { Strength = 10, Dexterity = 10, Intelligence = 10 },
-    new HumanRace(),
-    new NoSpeciality(),
-    new NoArmor(),
-    new Fists()
-);
+IFighter fighterA = factory.CreateFighter();
+IFighter fighterB = factory.CreateFighter();
 
-// Act
-var winner = gameManager.Play( fighterA, fighterB );
+gameManager.Play( fighterA, fighterB );

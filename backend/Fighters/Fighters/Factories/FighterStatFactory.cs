@@ -6,10 +6,7 @@ namespace Fighters.Factories;
 
 public class FighterStatFactory : IPointRestrictedFactory<FighterStats>
 {
-    private readonly IPointsBudget _budget;
-
-    public FighterStatFactory( IPointsBudget budget ) => _budget = budget;
-
+    private IPointsBudget _budget = new SharedPointsBudget( 0 );
     public FighterStats Create( int choice ) =>
         TryCreate( choice, out var stats )
             ? stats
@@ -17,10 +14,8 @@ public class FighterStatFactory : IPointRestrictedFactory<FighterStats>
 
     public int RemainingPoints => _budget.RemainingPoints;
 
-    public void PrintMenu()
-    {
-        Console.WriteLine( $"[Осталось очков: {RemainingPoints}]" );
-    }
+    public void PrintMenu() =>
+        Console.WriteLine( $"Осталось очков на всё: {RemainingPoints}" );
 
     public bool TryCreate( int choice, out FighterStats item )
     {
@@ -31,28 +26,33 @@ public class FighterStatFactory : IPointRestrictedFactory<FighterStats>
             return false;
         }
 
-        FighterStats stats = CreateStatsInteractive();
+        int initialBudget = RemainingPoints;
+        FighterStats stats = CreateStatsInteractive( initialBudget );
 
         int totalCost = stats.Strength + stats.Dexterity + stats.Intelligence;
-        if ( totalCost > RemainingPoints + _spentPoints )
+        if ( totalCost > initialBudget )
         {
             return false;
         }
 
+        if ( !_budget.TrySpend( totalCost ) )
+        {
+            return false;
+        }
 
-        _spentPoints += totalCost;
         item = stats;
 
         return true;
     }
 
-    private FighterStats CreateStatsInteractive()
+    private FighterStats CreateStatsInteractive( int initialBudget )
     {
         Console.WriteLine( "\nРаспределите очки характеристик:" );
 
-        int strength = GetStatValue( "Сила" );
-        int dexterity = GetStatValue( "Ловкость" );
-        int intelligence = GetStatValue( "Интеллект" );
+        PrintMenu();
+        int strength = GetStatValue( "Сила", initialBudget );
+        int dexterity = GetStatValue( "Ловкость", initialBudget - strength );
+        int intelligence = GetStatValue( "Интеллект", initialBudget - strength - dexterity );
 
         return new FighterStats
         {
@@ -62,18 +62,17 @@ public class FighterStatFactory : IPointRestrictedFactory<FighterStats>
         };
     }
 
-    private int GetStatValue( string statName )
+    private int GetStatValue( string statName, int maxAllowed )
     {
-        int points = 0;
         bool isValidInput = false;
+        int points = 0;
 
         while ( !isValidInput )
         {
-            PrintMenu();
-            Console.Write( $"Сколько очков потратить на \"{statName}\"? (от 0 до {RemainingPoints}): " );
+            Console.Write( $"Сколько очков потратить на \"{statName}\"? (от 0 до {maxAllowed}): " );
             string? input = Console.ReadLine();
 
-            if ( int.TryParse( input, out points ) && points >= 0 && points <= RemainingPoints )
+            if ( int.TryParse( input, out points ) && points >= 0 && points <= maxAllowed )
             {
                 isValidInput = true;
             }
@@ -84,5 +83,10 @@ public class FighterStatFactory : IPointRestrictedFactory<FighterStats>
         }
 
         return points;
+    }
+
+    public void SetBudget( IPointsBudget budget )
+    {
+        _budget = budget;
     }
 }

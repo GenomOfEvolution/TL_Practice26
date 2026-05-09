@@ -8,7 +8,7 @@ public class RaceFactory : IFighterComponentFactory<IRace>
     public IRace Create( int choice ) => choice switch
     {
         1 => new HumanRace(),
-        _ => throw new ArgumentOutOfRangeException( nameof( choice ), "Такой рассы нет в списке" )
+        _ => throw new ArgumentOutOfRangeException( "Такой рассы нет в списке" )
     };
 
     public void PrintMenu()

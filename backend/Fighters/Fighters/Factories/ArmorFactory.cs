@@ -8,13 +8,12 @@ namespace Fighters.Factories;
 public class ArmorFactory : IPointRestrictedFactory<IArmor>
 {
     private readonly IItemCatalog<IArmor> _catalog;
-    private readonly IPointsBudget _budget;
+    private IPointsBudget _budget = new SharedPointsBudget( 0 );
     private IReadOnlyList<CatalogEntry<IArmor>>? _cachedAvailable;
 
-    public ArmorFactory( IItemCatalog<IArmor> catalog, IPointsBudget budget )
+    public ArmorFactory( IItemCatalog<IArmor> catalog )
     {
         _catalog = catalog;
-        _budget = budget;
     }
 
     public IArmor Create( int choice ) =>
@@ -46,5 +45,10 @@ public class ArmorFactory : IPointRestrictedFactory<IArmor>
         item = selectedEntry.Item;
 
         return true;
+    }
+
+    public void SetBudget( IPointsBudget budget )
+    {
+        _budget = budget;
     }
 }
