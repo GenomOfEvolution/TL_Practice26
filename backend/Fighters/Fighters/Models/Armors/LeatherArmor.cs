@@ -10,10 +10,10 @@ public class LeatherArmor : IArmor
     private static readonly IReadOnlyDictionary<DamageType, float> _resistances =
         new ReadOnlyDictionary<DamageType, float>( new Dictionary<DamageType, float>
         {
-            { DamageType.Physic, 0.90f },
-            { DamageType.Magic,  1.00f },
-            { DamageType.Pure,   1.00f },
-            { DamageType.Poison, 1.00f }
+            { DamageType.Physic, 0.10f },
+            { DamageType.Magic,  0.00f },
+            { DamageType.Pure,   0.00f },
+            { DamageType.Poison, 0.00f }
         } );
 
     public IReadOnlyDictionary<DamageType, float> Resistances => _resistances;

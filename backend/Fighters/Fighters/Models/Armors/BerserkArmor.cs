@@ -10,10 +10,10 @@ public class BerserkArmor : IArmor
     private static readonly IReadOnlyDictionary<DamageType, float> _resistances =
         new ReadOnlyDictionary<DamageType, float>( new Dictionary<DamageType, float>
         {
-            { DamageType.Physic, 1.00f },
-            { DamageType.Magic,  1.00f },
-            { DamageType.Pure,   1.00f },
-            { DamageType.Poison, 1.00f }
+            { DamageType.Physic, 0.50f },
+            { DamageType.Magic,  0.50f },
+            { DamageType.Pure,   0.00f },
+            { DamageType.Poison, 0.50f }
         } );
 
     public IReadOnlyDictionary<DamageType, float> Resistances => _resistances;
