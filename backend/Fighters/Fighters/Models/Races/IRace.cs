@@ -6,6 +6,7 @@ namespace Fighters.Models.Races;
 public interface IRace
 {
     string Name { get; }
+    string Description { get; }
 
     FighterStats GetStatBonus();
 

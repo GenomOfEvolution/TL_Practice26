@@ -5,19 +5,31 @@ namespace Fighters.Factories;
 
 public class RaceFactory : IFighterComponentFactory<IRace>
 {
-    public IRace Create( int choice ) => choice switch
+    private readonly List<IRace> _races =
+    [
+        new HumanRace(),
+        new DrowRace(),
+        new GnomeRace(),
+        new GoblinRace(),
+        new StoneGiantRace(),
+    ];
+
+    public IRace Create( int choice )
     {
-        1 => new HumanRace(),
-        _ => throw new ArgumentOutOfRangeException( "Такой рассы нет в списке" )
-    };
+        if ( choice < 0 || choice > _races.Count )
+        {
+            throw new ArgumentOutOfRangeException( "Такой расы в списке нет" );
+        }
+
+        return _races[ choice ];
+    }
 
     public void PrintMenu()
     {
-        Console.WriteLine(
-        $"""
-        Список доступных рас:
-        1. Человек - получает небольшой бонус ко всем атрибутам
-        """
-        );
+        Console.WriteLine( "Список доступных рас:" );
+        for ( int i = 0; i < _races.Count; i++ )
+        {
+            Console.WriteLine( $"[{i}] {_races[ i ].Name} - {_races[ i ].Description}" );
+        }
     }
 }

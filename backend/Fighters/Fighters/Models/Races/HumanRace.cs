@@ -6,29 +6,20 @@ namespace Fighters.Models.Races;
 public class HumanRace : IRace
 {
     public string Name => "Человек";
+    public string Description => "получает небольшой бонус ко всем атрибутам";
 
     public int GetInitiativeModifier()
     {
         return 3;
     }
 
-    public FighterStats GetStatBonus()
+    public FighterStats GetStatBonus() => new()
     {
-        return new FighterStats
-        {
-            Strength = 3,
-            Dexterity = 3,
-            Intelligence = 3,
-        };
-    }
+        Strength = 3,
+        Dexterity = 3,
+        Intelligence = 3,
+    };
 
-    public DamageStats ModifyIncomingDamage( DamageStats baseDamage, IFighter weilder )
-    {
-        return baseDamage;
-    }
-
-    public DamageStats ModifyWeaponDamage( DamageStats baseDamage, IFighter wielder )
-    {
-        return baseDamage;
-    }
+    public DamageStats ModifyIncomingDamage( DamageStats baseDamage, IFighter weilder ) => baseDamage;
+    public DamageStats ModifyWeaponDamage( DamageStats baseDamage, IFighter wielder ) => baseDamage;
 }

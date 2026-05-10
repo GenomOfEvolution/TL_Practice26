@@ -9,6 +9,9 @@ public class DamageService : IDamageService
 {
     private const double WEAPON_STAT_BONUS = 0.05d;
     private const double WEAPON_STAT_BONUS_OVER_CAP = 0.005d;
+    private const double STRENGTH_EXTRA_BONUS = 1.01d;
+    private const float INT_CRIT_CHANCE_BONUS = 0.025f;
+
     private IRandomService _randomService;
 
     public DamageService( IRandomService randomService )
@@ -41,17 +44,18 @@ public class DamageService : IDamageService
         weaponDamage = attacker.Race.ModifyWeaponDamage( weaponDamage, attacker );
         weaponDamage = attacker.EquippedArmor.ModifyWeaponDamage( weaponDamage, attacker );
 
-        return TryApplyCrit( weaponDamage );
+        return TryApplyCrit( weaponDamage, attacker );
     }
 
-    private DamageStats TryApplyCrit( DamageStats damage )
+    private DamageStats TryApplyCrit( DamageStats damage, IFighter attacker )
     {
-        if ( damage.CritChance <= 0 )
+        float critChanceTotal = damage.CritChance + attacker.Stats.Intelligence * INT_CRIT_CHANCE_BONUS;
+        if ( critChanceTotal <= 0 )
         {
             return damage;
         }
 
-        if ( _randomService.NextDouble() <= damage.CritChance )
+        if ( _randomService.NextDouble() <= critChanceTotal )
         {
             return new DamageStats
             {
@@ -75,11 +79,12 @@ public class DamageService : IDamageService
         double intelligenceBonus = CalculateStatBonus( itemHolder.Stats.Intelligence + raceBonus.Intelligence, weapon.Stats.Intelligence );
 
         double totalMultiplier = strengthBonus + dexterityBonus + intelligenceBonus;
+        double extraStrengthMult = totalMultiplier + strengthBonus * STRENGTH_EXTRA_BONUS;
 
         return new DamageStats
         {
             MinDamage = ( int )Math.Max( 1, Math.Round( weapon.Damage.MinDamage * totalMultiplier ) ),
-            MaxDamage = ( int )Math.Max( 1, Math.Round( weapon.Damage.MaxDamage * totalMultiplier ) ),
+            MaxDamage = ( int )Math.Max( 1, Math.Round( weapon.Damage.MaxDamage * extraStrengthMult ) ),
             Type = weapon.Damage.Type,
             CritChance = weapon.Damage.CritChance,
             CritDamage = weapon.Damage.CritDamage,
