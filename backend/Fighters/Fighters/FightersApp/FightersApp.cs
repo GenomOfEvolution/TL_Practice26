@@ -71,6 +71,7 @@ public class FightersApp
 
         var factory = new FighterFactory(
             new RaceFactory(),
+            new SpecialityFactory(),
             new FighterStatFactory(),
             new WeaponFactory( weaponCatalog ),
             new ArmorFactory( armorCatalog ),

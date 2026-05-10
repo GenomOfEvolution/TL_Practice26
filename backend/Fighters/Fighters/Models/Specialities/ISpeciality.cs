@@ -1,10 +1,12 @@
 ﻿using Fighters.Models.Fighters;
-using Fighters.Models.Weapons;
 
 namespace Fighters.Models.Specialities;
 
 public interface ISpeciality
 {
+    string Name { get; }
+    string Description { get; }
+
     /// <summary>
     /// Выбирает свою стратегию атаки
     /// </summary>

@@ -11,6 +11,7 @@ namespace Fighters.Factories;
 public class FighterFactory : IFighterFactory
 {
     private readonly IFighterComponentFactory<IRace> _raceFactory;
+    private readonly IFighterComponentFactory<ISpeciality> _specialityFactory;
     private readonly IPointRestrictedFactory<FighterStats> _statsFactory;
     private readonly IPointRestrictedFactory<IWeapon> _weaponFactory;
     private readonly IPointRestrictedFactory<IArmor> _armorFactory;
@@ -19,6 +20,7 @@ public class FighterFactory : IFighterFactory
 
     public FighterFactory(
         IFighterComponentFactory<IRace> raceFactory,
+        IFighterComponentFactory<ISpeciality> specialityFactory,
         IPointRestrictedFactory<FighterStats> statsFactory,
         IPointRestrictedFactory<IWeapon> weaponFactory,
         IPointRestrictedFactory<IArmor> armorFactory,
@@ -29,6 +31,7 @@ public class FighterFactory : IFighterFactory
         _weaponFactory = weaponFactory;
         _armorFactory = armorFactory;
         _pointsPerFighter = pointsPerFighter;
+        _specialityFactory = specialityFactory;
     }
 
     public IFighter CreateFighter()
@@ -39,8 +42,11 @@ public class FighterFactory : IFighterFactory
         IPointsBudget budget = new SharedPointsBudget( _pointsPerFighter );
         UpdateFactoriesBudget( budget );
 
-        IRace race = SelectRace();
-        Console.WriteLine( $"Раса: {race.Name}" );
+        IRace race = SelectComponent( "Выберите расу (номер): ", _raceFactory, new HumanRace() );
+        Console.WriteLine( $"Раса: {race.Name}\n" );
+
+        ISpeciality speciality = SelectComponent( "Выберите класс (номер): ", _specialityFactory, new NoSpeciality() );
+        Console.WriteLine( $"Класс: {speciality.Name}\n" );
 
         FighterStats stats = _statsFactory.Create( 0 );
         Console.WriteLine( $"Статы распределены. Осталось очков: {budget.RemainingPoints}\n" );
@@ -55,7 +61,7 @@ public class FighterFactory : IFighterFactory
             name: name,
             fighterStats: stats,
             race: race,
-            speciality: new NoSpeciality(),
+            speciality: speciality,
             armor: armor,
             weapon: weapon
         );
@@ -79,19 +85,23 @@ public class FighterFactory : IFighterFactory
         _statsFactory.SetBudget( budget );
     }
 
-    private IRace SelectRace()
+    private T SelectComponent<T>(
+        string prompt,
+        IFighterComponentFactory<T> factory,
+        T defaultValue
+    ) where T : class
     {
         bool isValid = false;
-        IRace race = new HumanRace();
+        T? result = defaultValue;
 
-        _raceFactory.PrintMenu();
+        factory.PrintMenu();
         while ( !isValid )
         {
-            int choice = ReadInt( "Выберите расу (номер): " );
+            int choice = ReadInt( prompt );
 
             try
             {
-                race = _raceFactory.Create( choice );
+                result = factory.Create( choice );
                 isValid = true;
             }
             catch ( Exception ex )
@@ -100,7 +110,7 @@ public class FighterFactory : IFighterFactory
             }
         }
 
-        return race;
+        return result!;
     }
 
     private T SelectPointRestricted<T>( string name, IPointRestrictedFactory<T> factory )

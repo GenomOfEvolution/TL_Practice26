@@ -47,7 +47,7 @@ public class FighterStatFactory : IPointRestrictedFactory<FighterStats>
 
     private FighterStats CreateStatsInteractive( int initialBudget )
     {
-        Console.WriteLine( "\nРаспределите очки характеристик:" );
+        Console.WriteLine( "Распределите очки характеристик:" );
 
         PrintMenu();
         int strength = GetStatValue( "Сила", initialBudget );
