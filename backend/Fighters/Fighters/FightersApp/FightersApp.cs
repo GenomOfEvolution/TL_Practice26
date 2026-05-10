@@ -61,7 +61,12 @@ public class FightersApp
 
         IItemCatalog<IArmor> armorCatalog = new ArmorCatalog(
         [
-            new(new NoArmor(), 0),
+            new( new NoArmor(), 0 ),
+            new( new BerserkArmor(), 40 ),
+            new( new GlassArmor(), 15 ),
+            new( new KnightArmor(), 10 ),
+            new( new LeatherArmor(), 5 ),
+            new( new WitchDoctorArmor(), 35 ),
         ] );
 
         var factory = new FighterFactory(
@@ -69,7 +74,7 @@ public class FightersApp
             new FighterStatFactory(),
             new WeaponFactory( weaponCatalog ),
             new ArmorFactory( armorCatalog ),
-            pointsPerFighter: 67
+            pointsPerFighter: 100
         );
 
         int teamACount = ReadFighterCount( "A" );

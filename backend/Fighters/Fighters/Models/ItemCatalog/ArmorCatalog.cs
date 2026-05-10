@@ -42,6 +42,7 @@ public class ArmorCatalog : IItemCatalog<IArmor>
                 $"""
                 [{i}] {entry.Item.Name} — {entry.Price} очк.
                 - Описание: {entry.Item.Description}
+                - [{entry.Item.Rarity}]
                 """
             );
         }
@@ -51,6 +52,8 @@ public class ArmorCatalog : IItemCatalog<IArmor>
     {
         return _entries
             .Where( e => e.Price <= maxPoints )
+            .OrderBy( e => e.Item.Rarity )
+            .ThenBy( e => e.Price )
             .ToList()
             .AsReadOnly();
     }

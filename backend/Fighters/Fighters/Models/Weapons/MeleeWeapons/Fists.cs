@@ -14,8 +14,8 @@ public class Fists : IWeapon
 
     public DamageStats Damage => new()
     {
-        MinDamage = 50,
-        MaxDamage = 60,
+        MinDamage = 10,
+        MaxDamage = 20,
         Type = DamageType.Physic,
         CritChance = 0.1f,
         CritDamage = 2.0f,

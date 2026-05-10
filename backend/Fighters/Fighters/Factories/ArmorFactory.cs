@@ -27,7 +27,7 @@ public class ArmorFactory : IPointRestrictedFactory<IArmor>
 
     public bool TryCreate( int choice, out IArmor item )
     {
-        _cachedAvailable ??= _catalog.GetAvailable( _budget.RemainingPoints );
+        _cachedAvailable = _catalog.GetAvailable( _budget.RemainingPoints );
 
         if ( choice < 0 || choice >= _cachedAvailable.Count )
         {

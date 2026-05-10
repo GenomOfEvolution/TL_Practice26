@@ -34,7 +34,7 @@ public class WeaponFactory : IPointRestrictedFactory<IWeapon>
 
     public bool TryCreate( int choice, out IWeapon item )
     {
-        _cachedAvailable ??= _catalog.GetAvailable( _pointsBudget.RemainingPoints );
+        _cachedAvailable = _catalog.GetAvailable( _pointsBudget.RemainingPoints );
 
         if ( choice < 0 || choice >= _cachedAvailable.Count )
         {
