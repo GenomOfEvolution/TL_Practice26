@@ -30,6 +30,7 @@ public class WeaponCatalog : IItemCatalog<IWeapon>
         if ( available.Count == 0 )
         {
             Console.WriteLine( "Нет доступного оружия за эти очки." );
+
             return;
         }
 
@@ -41,6 +42,7 @@ public class WeaponCatalog : IItemCatalog<IWeapon>
                 $"""
                 [{i}] {entry.Item.Name} — {entry.Price} очк.
                 - Описание: {entry.Item.Description}
+                - [{entry.Item.Rarity}], [{entry.Item.WeaponType}]
                 """
             );
         }
@@ -50,6 +52,8 @@ public class WeaponCatalog : IItemCatalog<IWeapon>
     {
         return _entries
             .Where( e => e.Price <= maxPoints )
+            .OrderBy( e => e.Item.WeaponType )
+            .ThenBy( e => e.Price )
             .ToList()
             .AsReadOnly();
     }

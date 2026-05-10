@@ -84,9 +84,9 @@ public class FighterFactory : IFighterFactory
         bool isValid = false;
         IRace race = new HumanRace();
 
+        _raceFactory.PrintMenu();
         while ( !isValid )
         {
-            _raceFactory.PrintMenu();
             int choice = ReadInt( "Выберите расу (номер): " );
 
             try
@@ -108,9 +108,9 @@ public class FighterFactory : IFighterFactory
         bool isValid = false;
         T? item = default;
 
+        factory.PrintMenu();
         while ( !isValid )
         {
-            factory.PrintMenu();
             int choice = ReadInt( $"Выберите {name} (номер): " );
 
             if ( factory.TryCreate( choice, out item ) )

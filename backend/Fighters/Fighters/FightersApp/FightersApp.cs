@@ -4,7 +4,9 @@ using Fighters.Models.Fighters;
 using Fighters.Models.GameManager;
 using Fighters.Models.ItemCatalog;
 using Fighters.Models.Weapons;
+using Fighters.Models.Weapons.MagicWeapons;
 using Fighters.Models.Weapons.MeleeWeapons;
+using Fighters.Models.Weapons.RangedWeapons;
 using Fighters.Services.BattleLogger;
 using Fighters.Services.DamageService;
 using Fighters.Services.InitiativeService;
@@ -22,17 +24,39 @@ public class FightersApp
 
         IItemCatalog<IWeapon> weaponCatalog = new WeaponCatalog(
         [
-            new(new Fists(), 0),
-            new(new WoodenSword(), 5),
-            new(new Club(), 8),
-            new(new Dagger(), 8),
-            new(new GrassBlade(), 15),
-            new(new HuntingKnife(), 15),
-            new(new ReinforcedClub(), 15),
-            new(new TheSeparator(), 25),
-            new(new CeremonialKnife(), 25),
-            new(new DragonSlayer(), 32),
-            new(new MonoBlade(), 40)
+            // Оружия ближнего боя
+            new( new Fists(), 0 ),
+            new( new WoodenSword(), 5 ),
+            new( new Club(), 8 ),
+            new( new Dagger(), 8 ),
+            new( new GrassBlade(), 15 ),
+            new( new HuntingKnife(), 15 ),
+            new( new ReinforcedClub(), 15 ),
+            new( new TheSeparator(), 25 ),
+            new( new CeremonialKnife(), 25 ),
+            new( new DragonSlayer(), 32 ),
+            new( new MonoBlade(), 40 ),
+
+            // Оружия дальнего боя
+            new( new AlchemicalConcoction(), 10 ),
+            new( new Brick(), 13 ),
+            new( new CrudeBow(), 6 ),
+            new( new GhostRifle(), 42 ),
+            new( new GoldenDeagle(), 25 ),
+            new( new HeavyCrossbow(), 20 ),
+            new( new Longbow(), 14 ),
+            new( new Revolver(), 10 ),
+            new( new RocketLauncher(), 33 ),
+            new( new StarCannnon(), 25 ),
+
+            // Магические оружия
+            new( new ApprenticeWand(), 5 ),
+            new( new DragonBreath(), 30 ),
+            new( new LeafWand(), 15 ),
+            new( new Nirvana(), 40 ),
+            new( new OakStaff(), 7 ),
+            new( new SlitherWand(), 20 ),
+            new( new SparkWand(), 15 ),
         ] );
 
         IItemCatalog<IArmor> armorCatalog = new ArmorCatalog(
