@@ -23,6 +23,16 @@ public class FightersApp
         IItemCatalog<IWeapon> weaponCatalog = new WeaponCatalog(
         [
             new(new Fists(), 0),
+            new(new WoodenSword(), 5),
+            new(new Club(), 8),
+            new(new Dagger(), 8),
+            new(new GrassBlade(), 15),
+            new(new HuntingKnife(), 15),
+            new(new ReinforcedClub(), 15),
+            new(new TheSeparator(), 25),
+            new(new CeremonialKnife(), 25),
+            new(new DragonSlayer(), 32),
+            new(new MonoBlade(), 40)
         ] );
 
         IItemCatalog<IArmor> armorCatalog = new ArmorCatalog(
@@ -35,7 +45,7 @@ public class FightersApp
             new FighterStatFactory(),
             new WeaponFactory( weaponCatalog ),
             new ArmorFactory( armorCatalog ),
-            pointsPerFighter: 20
+            pointsPerFighter: 67
         );
 
         int teamACount = ReadFighterCount( "A" );

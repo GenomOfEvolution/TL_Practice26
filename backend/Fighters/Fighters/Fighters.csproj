@@ -7,4 +7,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\Weapons\RangedWeapons\" />
+    <Folder Include="Models\Weapons\MagicWeapons\" />
+  </ItemGroup>
+
 </Project>
