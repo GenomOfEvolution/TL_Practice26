@@ -1,4 +1,6 @@
-﻿namespace Domain.Entities;
+﻿using Domain.Enums;
+
+namespace Domain.Entities;
 
 /// <summary>
 /// Категория номера
@@ -18,6 +20,4 @@ public class RoomType
     public List<AmenitiesType> Amenities { get; set; } = [];
 
     public Currency Currency { get; set; }
-
-    public bool IsCanceled { get; set; }
 }

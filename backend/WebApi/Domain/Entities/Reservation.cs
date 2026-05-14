@@ -1,4 +1,6 @@
-﻿namespace Domain.Entities;
+﻿using Domain.Enums;
+
+namespace Domain.Entities;
 
 /// <summary>
 /// Бронирование
@@ -20,4 +22,6 @@ public class Reservation
 
     public decimal Total { get; set; }
     public Currency Currency { get; set; }
+
+    public bool IsCanceled { get; set; }
 }
