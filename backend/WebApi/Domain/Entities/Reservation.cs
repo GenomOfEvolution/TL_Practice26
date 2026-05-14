@@ -15,8 +15,8 @@ public class Reservation
     public DateOnly DepartureDate { get; set; }
     public TimeOnly DepartureTime { get; set; }
 
-    public string GuestName { get; set; }
-    public string GuestPhoneNumber { get; set; }
+    public string GuestName { get; set; } = String.Empty;
+    public string GuestPhoneNumber { get; set; } = String.Empty;
 
     public decimal Total { get; set; }
     public Currency Currency { get; set; }
