@@ -7,10 +7,10 @@ namespace Fighters.Services.DamageService;
 
 public class DamageService : IDamageService
 {
-    private const double WeaponStatBonus = 0.05d;
-    private const double WeaponStatBonusOverCap = 0.005d;
-    private const double StrengthExtraBonus = 1.01d;
-    private const float IntCritChanceBonus = 0.025f;
+    private const double _weaponStatBonus = 0.05d;
+    private const double _weaponStatBonusOverCap = 0.005d;
+    private const double _strengthExtraBonus = 1.01d;
+    private const float _intCritChanceBonus = 0.025f;
 
     private readonly IRandomService _randomService;
 
@@ -45,8 +45,8 @@ public class DamageService : IDamageService
 
     private static double CalculateStatBonus( int fighterStat, int weaponStat )
     {
-        return Math.Min( fighterStat, weaponStat ) * WeaponStatBonus
-            + Math.Max( 0, fighterStat - weaponStat ) * WeaponStatBonusOverCap;
+        return Math.Min( fighterStat, weaponStat ) * _weaponStatBonus
+            + Math.Max( 0, fighterStat - weaponStat ) * _weaponStatBonusOverCap;
     }
 
     private DamageStats CalculateWeaponDamage( IWeapon weapon, IFighter itemHolder )
@@ -58,7 +58,7 @@ public class DamageService : IDamageService
         double intelligenceBonus = CalculateStatBonus( itemHolder.Stats.Intelligence + raceBonus.Intelligence, weapon.Stats.Intelligence );
 
         double totalMultiplier = strengthBonus + dexterityBonus + intelligenceBonus;
-        double extraStrengthMult = totalMultiplier + strengthBonus * StrengthExtraBonus;
+        double extraStrengthMult = totalMultiplier + strengthBonus * _strengthExtraBonus;
 
         var baseDamage = new DamageStats
         {
@@ -75,7 +75,7 @@ public class DamageService : IDamageService
 
     private DamageStats TryApplyCrit( DamageStats damage, IFighter attacker )
     {
-        float critChanceTotal = damage.CritChance + attacker.Stats.Intelligence * IntCritChanceBonus;
+        float critChanceTotal = damage.CritChance + attacker.Stats.Intelligence * _intCritChanceBonus;
         if ( critChanceTotal <= 0 )
         {
             return damage;

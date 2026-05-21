@@ -5,7 +5,7 @@ namespace Fighters.Services.BattleLogger;
 
 public class BattleLogger : IBattleLogger
 {
-    private const int BorderWidth = 50;
+    private const int _borderWidth = 50;
     private int _round = 1;
     private string _roundBorder = String.Empty;
 
@@ -24,8 +24,8 @@ public class BattleLogger : IBattleLogger
     {
         string roundText = $" Раунд {_round} ";
 
-        int leftPad = ( BorderWidth - roundText.Length ) / 2;
-        int rightPad = BorderWidth - roundText.Length - leftPad;
+        int leftPad = ( _borderWidth - roundText.Length ) / 2;
+        int rightPad = _borderWidth - roundText.Length - leftPad;
 
         _roundBorder = $"{new string( '=', leftPad )}{roundText}{new string( '=', rightPad )}";
 
@@ -72,8 +72,8 @@ public class BattleLogger : IBattleLogger
     public void LogInitiativeOrder( IReadOnlyList<IFighter> participants )
     {
         string title = " Инициатива ";
-        int leftPad = ( BorderWidth - title.Length ) / 2;
-        int rightPad = BorderWidth - title.Length - leftPad;
+        int leftPad = ( _borderWidth - title.Length ) / 2;
+        int rightPad = _borderWidth - title.Length - leftPad;
         string border = $"{new string( '=', leftPad )}{title}{new string( '=', rightPad )}";
 
         Console.WriteLine( border );

@@ -8,9 +8,9 @@ namespace Fighters.Models.Fighters;
 
 public class SingleFighter : IFighter
 {
-    const int STR_HEALTH_MULT = 25;
-    const int DEX_HEALTH_MULT = 20;
-    const int INT_HEALTH_MULT = 15;
+    private const int _strHealthMult = 25;
+    private const int _dexHealthMult = 20;
+    private const int _intHealthMult = 15;
 
     private readonly IRace _race = new HumanRace();
     private IArmor _armor = new NoArmor();
@@ -58,9 +58,9 @@ public class SingleFighter : IFighter
     {
         FighterStats raceBonusStats = _race.GetStatBonus();
 
-        return ( Math.Max( 0, _stats.Strength + raceBonusStats.Strength ) ) * STR_HEALTH_MULT
-             + ( Math.Max( 0, _stats.Dexterity + raceBonusStats.Dexterity ) ) * DEX_HEALTH_MULT
-             + ( Math.Max( 0, _stats.Intelligence + raceBonusStats.Intelligence ) ) * INT_HEALTH_MULT;
+        return ( Math.Max( 0, _stats.Strength + raceBonusStats.Strength ) ) * _strHealthMult
+             + ( Math.Max( 0, _stats.Dexterity + raceBonusStats.Dexterity ) ) * _dexHealthMult
+             + ( Math.Max( 0, _stats.Intelligence + raceBonusStats.Intelligence ) ) * _intHealthMult;
     }
 
     public void SetArmor( IArmor armor )

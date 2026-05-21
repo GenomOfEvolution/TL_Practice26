@@ -12,12 +12,12 @@ public class WeaponFactory : IPointRestrictedFactory<IWeapon>
     private IPointsBudget _pointsBudget = new SharedPointsBudget();
     private IReadOnlyList<CatalogEntry<IWeapon>>? _cachedAvailable;
 
+    public int RemainingPoints => _pointsBudget.RemainingPoints;
+
     public WeaponFactory( IItemCatalog<IWeapon> catalog )
     {
         _catalog = catalog;
     }
-
-    public int RemainingPoints => _pointsBudget.RemainingPoints;
 
     public IWeapon Create( int choice ) =>
         TryCreate( choice, out IWeapon? weapon )

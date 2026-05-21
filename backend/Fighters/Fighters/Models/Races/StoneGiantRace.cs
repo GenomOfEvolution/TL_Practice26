@@ -5,7 +5,7 @@ namespace Fighters.Models.Races;
 
 public class StoneGiantRace : IRace
 {
-    private const float PHYS_DAMAGE_REDUCTION = 0.85f;
+    private const float _physDamageReduction = 0.85f;
 
     public string Name => "Каменный гигант";
 
@@ -29,8 +29,8 @@ public class StoneGiantRace : IRace
         {
             return new DamageStats
             {
-                MinDamage = ( int )( PHYS_DAMAGE_REDUCTION * baseDamage.MinDamage ),
-                MaxDamage = ( int )( PHYS_DAMAGE_REDUCTION * baseDamage.MaxDamage ),
+                MinDamage = ( int )( _physDamageReduction * baseDamage.MinDamage ),
+                MaxDamage = ( int )( _physDamageReduction * baseDamage.MaxDamage ),
                 Type = baseDamage.Type,
                 CritChance = baseDamage.CritChance,
                 CritDamage = baseDamage.CritDamage,

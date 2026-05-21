@@ -1,5 +1,4 @@
 ﻿using Fighters.Models.Armors;
-using Fighters.Models.Weapons;
 
 namespace Fighters.Models.ItemCatalog;
 

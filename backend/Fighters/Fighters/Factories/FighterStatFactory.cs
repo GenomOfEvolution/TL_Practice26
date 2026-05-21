@@ -7,19 +7,20 @@ namespace Fighters.Factories;
 public class FighterStatFactory : IPointRestrictedFactory<FighterStats>
 {
     private IPointsBudget _budget = new SharedPointsBudget();
+
+    public int RemainingPoints => _budget.RemainingPoints;
+
     public FighterStats Create( int choice ) =>
         TryCreate( choice, out var stats )
             ? stats
             : throw new InvalidOperationException( "Не удалось создать характеристики" );
-
-    public int RemainingPoints => _budget.RemainingPoints;
 
     public void PrintMenu() =>
         Console.WriteLine( $"Осталось очков на всё: {RemainingPoints}" );
 
     public bool TryCreate( int choice, out FighterStats item )
     {
-        item = default;
+        item = new FighterStats();
 
         if ( RemainingPoints <= 0 )
         {
@@ -43,6 +44,11 @@ public class FighterStatFactory : IPointRestrictedFactory<FighterStats>
         item = stats;
 
         return true;
+    }
+
+    public void SetBudget( IPointsBudget budget )
+    {
+        _budget = budget;
     }
 
     private FighterStats CreateStatsInteractive( int initialBudget )
@@ -83,10 +89,5 @@ public class FighterStatFactory : IPointRestrictedFactory<FighterStats>
         }
 
         return points;
-    }
-
-    public void SetBudget( IPointsBudget budget )
-    {
-        _budget = budget;
     }
 }

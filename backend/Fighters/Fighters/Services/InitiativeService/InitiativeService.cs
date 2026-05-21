@@ -5,7 +5,7 @@ namespace Fighters.Services.InitiativeService;
 
 public class InitiativeService : IInitiativeService
 {
-    private const int DexterityReducer = 5;
+    private const int _dexterityReducer = 5;
     private readonly IRandomService _randomService;
 
     public InitiativeService( IRandomService randomService )
@@ -29,7 +29,7 @@ public class InitiativeService : IInitiativeService
     private int CalculateInitiative( IFighter fighter )
     {
         int dex = fighter.Stats.Dexterity;
-        int randomPart = _randomService.Next( 0, ( dex % DexterityReducer ) + 1 );
+        int randomPart = _randomService.Next( 0, ( dex % _dexterityReducer ) + 1 );
         int raceModifier = fighter.Race.GetInitiativeModifier();
 
         return randomPart + raceModifier;

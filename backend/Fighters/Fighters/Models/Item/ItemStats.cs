@@ -5,8 +5,8 @@
 /// </summary>
 public class ItemStats
 {
-    private const int MIN_STAT_VALUE = 0;
-    private const int MAX_STAT_VALUE = 50;
+    private const int _minStatValue = 0;
+    private const int _maxStatValue = 50;
 
     private int _strength;
     private int _dexterity;
@@ -44,11 +44,11 @@ public class ItemStats
 
     private static void ValidateStat( int value, string statName )
     {
-        if ( value < MIN_STAT_VALUE || value > MAX_STAT_VALUE )
+        if ( value < _minStatValue || value > _maxStatValue )
         {
             throw new ArgumentOutOfRangeException(
                 statName,
-                $"ItemStat must be in range {MIN_STAT_VALUE} && {MAX_STAT_VALUE}"
+                $"ItemStat must be in range {_minStatValue} && {_maxStatValue}"
             );
         }
     }
