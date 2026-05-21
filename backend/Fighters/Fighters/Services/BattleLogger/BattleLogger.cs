@@ -5,9 +5,9 @@ namespace Fighters.Services.BattleLogger;
 
 public class BattleLogger : IBattleLogger
 {
-    private int _round = 1;
-    private string _roundBorder = string.Empty;
     private const int BorderWidth = 50;
+    private int _round = 1;
+    private string _roundBorder = String.Empty;
 
     public void LogAttack( IFighter attacker, IFighter defender, DamageStats damage )
     {
@@ -43,16 +43,23 @@ public class BattleLogger : IBattleLogger
         Console.WriteLine( $"Победитель: {winner.Name}!!!" );
     }
 
-    public void LogBattleStart( List<IFighter> allFighters )
+    public void LogBattleStart( IEnumerable<IFighter> allFighters )
     {
         Console.WriteLine( "Начало битвы!" );
     }
 
-    public void LogBattleEnd( List<IFighter> winners )
+    public void LogBattleEnd( IEnumerable<IFighter> winners )
     {
-        string winnersInfo = winners == null || winners.Count == 0
-       ? "Никто не выжил."
-       : string.Join( "\n", winners.Select( f => $"- {f.Name} (HP: {f.GetCurrentHealth()}/{f.GetMaxHealth()})" ) );
+        List<IFighter> winnersList = winners.ToList();
+
+        if ( winnersList.Count == 0 )
+        {
+            Console.WriteLine( "Никто не выжил." );
+            return;
+        }
+
+        string winnersInfo = String.Join( "\n",
+            winnersList.Select( f => $"- {f.Name} (HP: {f.GetCurrentHealth()}/{f.GetMaxHealth()})" ) );
 
         Console.WriteLine(
         $"""

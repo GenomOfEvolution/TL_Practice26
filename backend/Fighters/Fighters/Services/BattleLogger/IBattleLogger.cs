@@ -13,6 +13,6 @@ public interface IBattleLogger
     void LogAttack( IFighter firstFighter, IFighter secondFighter, DamageStats damage );
     void LogDamageTaken( IFighter damageReciever, int damage );
     void LogWinner( IFighter winner );
-    void LogBattleStart( List<IFighter> allFighters );
-    void LogBattleEnd( List<IFighter> winners );
+    void LogBattleStart( IEnumerable<IFighter> allFighters );
+    void LogBattleEnd( IEnumerable<IFighter> winners );
 }

@@ -6,7 +6,7 @@ namespace Fighters.Factories;
 
 public class FighterStatFactory : IPointRestrictedFactory<FighterStats>
 {
-    private IPointsBudget _budget = new SharedPointsBudget( 0 );
+    private IPointsBudget _budget = new SharedPointsBudget();
     public FighterStats Create( int choice ) =>
         TryCreate( choice, out var stats )
             ? stats

@@ -3,7 +3,7 @@
 public class SharedPointsBudget : IPointsBudget
 {
     private int _points;
-    public SharedPointsBudget( int initialPoints ) => _points = initialPoints;
+    public SharedPointsBudget( int initialPoints = 0 ) => _points = initialPoints;
 
     public int RemainingPoints => _points;
 

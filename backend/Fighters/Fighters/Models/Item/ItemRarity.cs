@@ -6,5 +6,5 @@ public enum ItemRarity
     Uncommon = 1,
     Rare = 2,
     Epic = 3,
-    Legendary = 4,
+    Legendary = 4
 }

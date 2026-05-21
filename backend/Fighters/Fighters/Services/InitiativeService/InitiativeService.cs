@@ -5,8 +5,8 @@ namespace Fighters.Services.InitiativeService;
 
 public class InitiativeService : IInitiativeService
 {
+    private const int DexterityReducer = 5;
     private readonly IRandomService _randomService;
-    private const int DEXTERITY_REDUCER = 5;
 
     public InitiativeService( IRandomService randomService )
     {
@@ -17,15 +17,11 @@ public class InitiativeService : IInitiativeService
     {
         ArgumentNullException.ThrowIfNull( participants );
 
-        IEnumerable<FighterInitiatvie> fightersWithInitiative = participants
-            .Select( f => new FighterInitiatvie( f, CalculateInitiative( f ) ) );
-
-        List<IFighter> sorted = [ ..
-            fightersWithInitiative
-                .OrderByDescending(entry => entry.InitiativeScore)
-                .ThenByDescending(entry => entry.Fighter.Stats.Dexterity)
-                .Select(entry => entry.Fighter)
-        ];
+        List<IFighter> sorted = [ .. participants
+            .Select( f => new FighterInitiative( f, CalculateInitiative( f ) ) )
+            .OrderByDescending( entry => entry.InitiativeScore )
+            .ThenByDescending( entry => entry.Fighter.Stats.Dexterity )
+            .Select( entry => entry.Fighter ) ];
 
         return sorted.AsReadOnly();
     }
@@ -33,7 +29,7 @@ public class InitiativeService : IInitiativeService
     private int CalculateInitiative( IFighter fighter )
     {
         int dex = fighter.Stats.Dexterity;
-        int randomPart = _randomService.Next( 0, ( dex % DEXTERITY_REDUCER ) + 1 );
+        int randomPart = _randomService.Next( 0, ( dex % DexterityReducer ) + 1 );
         int raceModifier = fighter.Race.GetInitiativeModifier();
 
         return randomPart + raceModifier;

@@ -2,8 +2,14 @@
 
 namespace Fighters.Services.InitiativeService;
 
-public record FighterInitiatvie
-(
-    IFighter Fighter,
-    int InitiativeScore
-);
+public class FighterInitiative
+{
+    public IFighter Fighter { get; }
+    public int InitiativeScore { get; }
+
+    public FighterInitiative( IFighter fighter, int initiative )
+    {
+        Fighter = fighter;
+        InitiativeScore = initiative;
+    }
+}

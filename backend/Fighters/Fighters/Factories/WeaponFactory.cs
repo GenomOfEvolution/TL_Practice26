@@ -9,7 +9,7 @@ namespace Fighters.Factories;
 public class WeaponFactory : IPointRestrictedFactory<IWeapon>
 {
     private readonly IItemCatalog<IWeapon> _catalog;
-    private IPointsBudget _pointsBudget = new SharedPointsBudget( 0 );
+    private IPointsBudget _pointsBudget = new SharedPointsBudget();
     private IReadOnlyList<CatalogEntry<IWeapon>>? _cachedAvailable;
 
     public WeaponFactory( IItemCatalog<IWeapon> catalog )

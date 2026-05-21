@@ -1,15 +1,48 @@
 ﻿using Fighters.Models.Weapons;
+using Fighters.Models.Weapons.MagicWeapons;
+using Fighters.Models.Weapons.MeleeWeapons;
+using Fighters.Models.Weapons.RangedWeapons;
 
 namespace Fighters.Models.ItemCatalog;
 
 public class WeaponCatalog : IItemCatalog<IWeapon>
 {
-    private readonly IReadOnlyList<CatalogEntry<IWeapon>> _entries;
+    private readonly IReadOnlyList<CatalogEntry<IWeapon>> _entries =
+    [
+        // Оружия ближнего боя
+        new( new Fists(), 0 ),
+        new( new WoodenSword(), 5 ),
+        new( new Club(), 8 ),
+        new( new Dagger(), 8 ),
+        new( new GrassBlade(), 15 ),
+        new( new HuntingKnife(), 15 ),
+        new( new ReinforcedClub(), 15 ),
+        new( new TheSeparator(), 25 ),
+        new( new CeremonialKnife(), 25 ),
+        new( new DragonSlayer(), 32 ),
+        new( new MonoBlade(), 40 ),
 
-    public WeaponCatalog( IEnumerable<CatalogEntry<IWeapon>> entries )
-    {
-        _entries = entries.ToList().AsReadOnly();
-    }
+        // Оружия дальнего боя
+        new( new AlchemicalConcoction(), 10 ),
+        new( new Brick(), 13 ),
+        new( new CrudeBow(), 6 ),
+        new( new GhostRifle(), 42 ),
+        new( new GoldenDeagle(), 25 ),
+        new( new HeavyCrossbow(), 20 ),
+        new( new Longbow(), 14 ),
+        new( new Revolver(), 10 ),
+        new( new RocketLauncher(), 33 ),
+        new( new StarCannnon(), 25 ),
+
+        // Магические оружия
+        new( new ApprenticeWand(), 5 ),
+        new( new DragonBreath(), 30 ),
+        new( new LeafWand(), 15 ),
+        new( new Nirvana(), 40 ),
+        new( new OakStaff(), 7 ),
+        new( new SlitherWand(), 20 ),
+        new( new SparkWand(), 15 ),
+    ];
 
     public IReadOnlyList<CatalogEntry<IWeapon>> GetAll() => _entries;
 

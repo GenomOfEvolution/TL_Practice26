@@ -6,11 +6,11 @@ namespace Fighters.Models.Races;
 
 public class GoblinRace : IRace
 {
+    private const int BaselineRarity = ( int )ItemRarity.Uncommon * 2;
+    private const int DamageModifierPerRarityTier = 5;
+
     public string Name => "Гоблин";
     public string Description => "увеличивает/уменьшает урон от редкости своих предметов";
-
-    private const int BASELINE_RARITY = ( int )ItemRarity.Uncommon * 2;
-    private const int DAMAGE_MODIFIER_PER_RARITY_TIER = 5;
 
     public int GetInitiativeModifier() => 1;
 
@@ -29,9 +29,9 @@ public class GoblinRace : IRace
     public DamageStats ModifyWeaponDamage( DamageStats baseDamage, IFighter wielder )
     {
         int totalRarity = CalculateTotalRarityScore( wielder );
-        int rarityDiff = totalRarity - BASELINE_RARITY;
+        int rarityDiff = totalRarity - BaselineRarity;
 
-        int damageModifier = rarityDiff * DAMAGE_MODIFIER_PER_RARITY_TIER;
+        int damageModifier = rarityDiff * DamageModifierPerRarityTier;
 
         int newMin = Math.Max( 1, baseDamage.MinDamage + damageModifier );
         int newMax = Math.Max( 1, baseDamage.MaxDamage + damageModifier );

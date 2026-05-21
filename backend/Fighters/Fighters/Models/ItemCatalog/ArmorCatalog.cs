@@ -5,12 +5,15 @@ namespace Fighters.Models.ItemCatalog;
 
 public class ArmorCatalog : IItemCatalog<IArmor>
 {
-    private readonly IReadOnlyList<CatalogEntry<IArmor>> _entries;
-
-    public ArmorCatalog( IEnumerable<CatalogEntry<IArmor>> entries )
-    {
-        _entries = entries.ToList().AsReadOnly();
-    }
+    private readonly IReadOnlyList<CatalogEntry<IArmor>> _entries =
+    [
+        new( new NoArmor(), 0 ),
+        new( new BerserkArmor(), 40 ),
+        new( new GlassArmor(), 15 ),
+        new( new KnightArmor(), 10 ),
+        new( new LeatherArmor(), 5 ),
+        new( new WitchDoctorArmor(), 35 ),
+    ];
 
     public IReadOnlyList<CatalogEntry<IArmor>> GetAll() => _entries;
 

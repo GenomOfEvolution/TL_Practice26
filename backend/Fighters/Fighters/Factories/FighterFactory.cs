@@ -24,7 +24,7 @@ public class FighterFactory : IFighterFactory
         IPointRestrictedFactory<FighterStats> statsFactory,
         IPointRestrictedFactory<IWeapon> weaponFactory,
         IPointRestrictedFactory<IArmor> armorFactory,
-        int pointsPerFighter = 20 )
+        int pointsPerFighter )
     {
         _raceFactory = raceFactory;
         _statsFactory = statsFactory;
@@ -86,7 +86,7 @@ public class FighterFactory : IFighterFactory
     }
 
     private T SelectComponent<T>(
-        string prompt,
+        string selectOption,
         IFighterComponentFactory<T> factory,
         T defaultValue
     ) where T : class
@@ -97,7 +97,7 @@ public class FighterFactory : IFighterFactory
         factory.PrintMenu();
         while ( !isValid )
         {
-            int choice = ReadInt( prompt );
+            int choice = ReadInt( selectOption );
 
             try
             {

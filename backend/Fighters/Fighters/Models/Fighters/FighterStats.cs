@@ -1,7 +1,6 @@
-﻿
-namespace Fighters.Models.Fighters;
+﻿namespace Fighters.Models.Fighters;
 
-public struct FighterStats
+public class FighterStats
 {
     public int Strength { get; set; }
     public int Dexterity { get; set; }

@@ -5,8 +5,8 @@ namespace Fighters.Models.Races;
 
 public class GnomeRace : IRace
 {
-    private const float POISON_DAMAGE_REDUCTION = 0.85f;
-    private const float MELEE_DAMAGE_BONUS = 1.15f;
+    private const float PoisonDamageReduction = 0.85f;
+    private const float MeleeDamageReduction = 1.15f;
 
     public string Name => "Гном";
     public string Description => "гномы сродни дворфам, но значительно меньше по размеру своих дальних родственников";
@@ -28,8 +28,8 @@ public class GnomeRace : IRace
         DamageStats modifiedDamage = baseDamage;
         if ( baseDamage.Type == DamageType.Poison )
         {
-            modifiedDamage.MinDamage = ( int )( baseDamage.MinDamage * POISON_DAMAGE_REDUCTION );
-            modifiedDamage.MaxDamage = ( int )( baseDamage.MaxDamage * POISON_DAMAGE_REDUCTION );
+            modifiedDamage.MinDamage = ( int )( baseDamage.MinDamage * PoisonDamageReduction );
+            modifiedDamage.MaxDamage = ( int )( baseDamage.MaxDamage * PoisonDamageReduction );
         }
 
         return modifiedDamage;
@@ -40,8 +40,8 @@ public class GnomeRace : IRace
         DamageStats modifiedDamage = baseDamage;
         if ( wielder.EquippedWeapon.WeaponType == Weapons.WeaponType.Melee )
         {
-            modifiedDamage.MinDamage = ( int )( baseDamage.MinDamage * MELEE_DAMAGE_BONUS );
-            modifiedDamage.MaxDamage = ( int )( baseDamage.MaxDamage * MELEE_DAMAGE_BONUS );
+            modifiedDamage.MinDamage = ( int )( baseDamage.MinDamage * MeleeDamageReduction );
+            modifiedDamage.MaxDamage = ( int )( baseDamage.MaxDamage * MeleeDamageReduction );
         }
 
         return modifiedDamage;

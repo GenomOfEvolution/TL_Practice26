@@ -5,7 +5,7 @@ namespace Fighters.Models.Races;
 
 public class DrowRace : IRace
 {
-    private const int RANGED_DAMAGE_BONUS = 50;
+    private const int RangedDamageBonus = 50;
 
     public string Name => "Дроу (Тёмный эльф)";
     public string Description => "обучены воевать с оружием дальнего боя";
@@ -32,8 +32,8 @@ public class DrowRace : IRace
         DamageStats modfiedDamage = baseDamage;
         if ( wielder.EquippedWeapon.WeaponType == Weapons.WeaponType.Ranged )
         {
-            modfiedDamage.MinDamage += RANGED_DAMAGE_BONUS;
-            modfiedDamage.MaxDamage += RANGED_DAMAGE_BONUS;
+            modfiedDamage.MinDamage += RangedDamageBonus;
+            modfiedDamage.MaxDamage += RangedDamageBonus;
         }
 
         return modfiedDamage;

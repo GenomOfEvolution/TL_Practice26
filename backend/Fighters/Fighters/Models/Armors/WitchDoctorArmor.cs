@@ -75,7 +75,8 @@ public class WitchDoctorArmor : IArmor
             result.MinDamage = ( int )Math.Round( result.MinDamage * magicPoisonMultiplier );
             result.MaxDamage = ( int )Math.Round( result.MaxDamage * magicPoisonMultiplier );
         }
-        else if ( result.Type == DamageType.Physic || result.Type == DamageType.Pure )
+
+        if ( result.Type == DamageType.Physic || result.Type == DamageType.Pure )
         {
             result.Type = DamageType.Magic;
             result.MinDamage = ( int )Math.Round( result.MinDamage * physConvertMultiplier );

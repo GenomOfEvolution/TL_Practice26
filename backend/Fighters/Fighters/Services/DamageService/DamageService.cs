@@ -7,12 +7,12 @@ namespace Fighters.Services.DamageService;
 
 public class DamageService : IDamageService
 {
-    private const double WEAPON_STAT_BONUS = 0.05d;
-    private const double WEAPON_STAT_BONUS_OVER_CAP = 0.005d;
-    private const double STRENGTH_EXTRA_BONUS = 1.01d;
-    private const float INT_CRIT_CHANCE_BONUS = 0.025f;
+    private const double WeaponStatBonus = 0.05d;
+    private const double WeaponStatBonusOverCap = 0.005d;
+    private const double StrengthExtraBonus = 1.01d;
+    private const float IntCritChanceBonus = 0.025f;
 
-    private IRandomService _randomService;
+    private readonly IRandomService _randomService;
 
     public DamageService( IRandomService randomService )
     {
@@ -21,19 +21,12 @@ public class DamageService : IDamageService
 
     public int CalculateReceivedDamage( DamageStats incomingDamage, IFighter target )
     {
-        var modifiedDamage = target.EquippedArmor.ModifyIncomingDamage( incomingDamage, target );
-        modifiedDamage = target.Race.ModifyIncomingDamage( modifiedDamage, target );
-
-        float resistance = target.EquippedArmor.Resistances
-            .GetValueOrDefault( modifiedDamage.Type, 0f );
-
+        DamageStats effectiveDamage = ApplyDamageModifiers( incomingDamage, target );
+        float resistance = target.EquippedArmor.Resistances.GetValueOrDefault( effectiveDamage.Type, 0f );
         float damageMultiplier = 1f - resistance;
 
-        int minDmg = ( int )( modifiedDamage.MinDamage * damageMultiplier );
-        int maxDmg = ( int )( modifiedDamage.MaxDamage * damageMultiplier );
-
-        minDmg = Math.Max( 1, minDmg );
-        maxDmg = Math.Max( 1, maxDmg );
+        int minDmg = Math.Max( 1, ( int )( effectiveDamage.MinDamage * damageMultiplier ) );
+        int maxDmg = Math.Max( 1, ( int )( effectiveDamage.MaxDamage * damageMultiplier ) );
 
         return _randomService.Next( minDmg, maxDmg + 1 );
     }
@@ -41,15 +34,48 @@ public class DamageService : IDamageService
     public DamageStats CalculateAttackDamage( IFighter attacker )
     {
         DamageStats weaponDamage = CalculateWeaponDamage( attacker.EquippedWeapon, attacker );
-        weaponDamage = attacker.Race.ModifyWeaponDamage( weaponDamage, attacker );
-        weaponDamage = attacker.EquippedArmor.ModifyWeaponDamage( weaponDamage, attacker );
-
         return TryApplyCrit( weaponDamage, attacker );
+    }
+
+    private static DamageStats ApplyDamageModifiers( DamageStats incomingDamage, IFighter target )
+    {
+        DamageStats armorModified = target.EquippedArmor.ModifyIncomingDamage( incomingDamage, target );
+        return target.Race.ModifyIncomingDamage( armorModified, target );
+    }
+
+    private static double CalculateStatBonus( int fighterStat, int weaponStat )
+    {
+        return Math.Min( fighterStat, weaponStat ) * WeaponStatBonus
+            + Math.Max( 0, fighterStat - weaponStat ) * WeaponStatBonusOverCap;
+    }
+
+    private DamageStats CalculateWeaponDamage( IWeapon weapon, IFighter itemHolder )
+    {
+        FighterStats raceBonus = itemHolder.Race.GetStatBonus();
+
+        double strengthBonus = CalculateStatBonus( itemHolder.Stats.Strength + raceBonus.Strength, weapon.Stats.Strength );
+        double dexterityBonus = CalculateStatBonus( itemHolder.Stats.Dexterity + raceBonus.Dexterity, weapon.Stats.Dexterity );
+        double intelligenceBonus = CalculateStatBonus( itemHolder.Stats.Intelligence + raceBonus.Intelligence, weapon.Stats.Intelligence );
+
+        double totalMultiplier = strengthBonus + dexterityBonus + intelligenceBonus;
+        double extraStrengthMult = totalMultiplier + strengthBonus * StrengthExtraBonus;
+
+        var baseDamage = new DamageStats
+        {
+            MinDamage = ( int )Math.Max( 1, Math.Round( weapon.Damage.MinDamage * totalMultiplier ) ),
+            MaxDamage = ( int )Math.Max( 1, Math.Round( weapon.Damage.MaxDamage * extraStrengthMult ) ),
+            Type = weapon.Damage.Type,
+            CritChance = weapon.Damage.CritChance,
+            CritDamage = weapon.Damage.CritDamage,
+        };
+
+        DamageStats raceModified = itemHolder.Race.ModifyWeaponDamage( baseDamage, itemHolder );
+        return itemHolder.EquippedArmor.ModifyWeaponDamage( raceModified, itemHolder );
     }
 
     private DamageStats TryApplyCrit( DamageStats damage, IFighter attacker )
     {
-        float critChanceTotal = damage.CritChance + attacker.Stats.Intelligence * INT_CRIT_CHANCE_BONUS;
+        float critChanceTotal = damage.CritChance + attacker.Stats.Intelligence * IntCritChanceBonus;
         if ( critChanceTotal <= 0 )
         {
             return damage;
@@ -68,32 +94,5 @@ public class DamageService : IDamageService
         }
 
         return damage;
-    }
-
-    private DamageStats CalculateWeaponDamage( IWeapon weapon, IFighter itemHolder )
-    {
-        FighterStats raceBonus = itemHolder.Race.GetStatBonus();
-
-        double strengthBonus = CalculateStatBonus( itemHolder.Stats.Strength + raceBonus.Strength, weapon.Stats.Strength );
-        double dexterityBonus = CalculateStatBonus( itemHolder.Stats.Dexterity + raceBonus.Dexterity, weapon.Stats.Dexterity );
-        double intelligenceBonus = CalculateStatBonus( itemHolder.Stats.Intelligence + raceBonus.Intelligence, weapon.Stats.Intelligence );
-
-        double totalMultiplier = strengthBonus + dexterityBonus + intelligenceBonus;
-        double extraStrengthMult = totalMultiplier + strengthBonus * STRENGTH_EXTRA_BONUS;
-
-        return new DamageStats
-        {
-            MinDamage = ( int )Math.Max( 1, Math.Round( weapon.Damage.MinDamage * totalMultiplier ) ),
-            MaxDamage = ( int )Math.Max( 1, Math.Round( weapon.Damage.MaxDamage * extraStrengthMult ) ),
-            Type = weapon.Damage.Type,
-            CritChance = weapon.Damage.CritChance,
-            CritDamage = weapon.Damage.CritDamage,
-        };
-    }
-
-    private static double CalculateStatBonus( int fighterStat, int weaponStat )
-    {
-        return Math.Min( fighterStat, weaponStat ) * WEAPON_STAT_BONUS
-            + Math.Max( 0, fighterStat - weaponStat ) * WEAPON_STAT_BONUS_OVER_CAP;
     }
 }

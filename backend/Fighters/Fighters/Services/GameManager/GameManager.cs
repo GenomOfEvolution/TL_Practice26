@@ -5,7 +5,7 @@ using Fighters.Services.BattleLogger;
 using Fighters.Services.DamageService;
 using Fighters.Services.InitiativeService;
 
-namespace Fighters.Models.GameManager;
+namespace Fighters.Services.GameManager;
 
 public class GameManager
 {
@@ -23,27 +23,32 @@ public class GameManager
         _initiativeService = initiativeService;
     }
 
-    public IEnumerable<IFighter> Play(
-        IEnumerable<IFighter> sideA,
-        IEnumerable<IFighter> sideB )
+    public IEnumerable<IFighter> Play( IEnumerable<IFighter> sideA, IEnumerable<IFighter> sideB )
     {
-        List<IFighter> fightersA = [ .. sideA ];
-        List<IFighter> fightersB = [ .. sideB ];
+        HashSet<IFighter> sideASet = [ .. sideA ];
+        HashSet<IFighter> sideBSet = [ .. sideB ];
 
-        if ( !( fightersA.Count > 0 ) || !( fightersB.Count > 0 ) )
+        if ( sideASet.Count == 0 || sideBSet.Count == 0 )
         {
-            throw new System.ArgumentException(
-                "Каждая сторона боя должна содержать хотя бы одного бойца." );
+            throw new ArgumentException( "Каждая сторона боя должна содержать хотя бы одного бойца." );
         }
 
-        List<IFighter> allFighters = [ .. fightersA, .. fightersB ];
-        HashSet<IFighter> sideASet = [ .. fightersA ];
-        HashSet<IFighter> sideBSet = [ .. fightersB ];
+        HashSet<IFighter> allFighters = [ .. sideASet, .. sideBSet ];
 
         _battleLogger.LogBattleStart( allFighters );
         IReadOnlyList<IFighter> turnOrder = _initiativeService.DetermineTurnOrder( allFighters );
         _battleLogger.LogInitiativeOrder( turnOrder );
 
+        ExecuteBattleLoop( sideASet, sideBSet, turnOrder );
+
+        List<IFighter> winners = [ .. allFighters.Where( f => f.IsAlive() ) ];
+        _battleLogger.LogBattleEnd( winners );
+
+        return winners;
+    }
+
+    private void ExecuteBattleLoop( HashSet<IFighter> sideASet, HashSet<IFighter> sideBSet, IReadOnlyList<IFighter> turnOrder )
+    {
         while ( sideASet.Any( f => f.IsAlive() ) && sideBSet.Any( f => f.IsAlive() ) )
         {
             _battleLogger.LogRoundStart();
@@ -51,37 +56,22 @@ public class GameManager
             for ( int i = 0; i < turnOrder.Count; i++ )
             {
                 IFighter attacker = turnOrder[ i ];
-
-                if ( !attacker.IsAlive() )
-                {
-                    continue;
-                }
+                if ( !attacker.IsAlive() ) continue;
 
                 HashSet<IFighter> currentSide = sideASet.Contains( attacker ) ? sideASet : sideBSet;
                 HashSet<IFighter> enemySide = currentSide == sideASet ? sideBSet : sideASet;
                 List<IFighter> validTargets = [ .. enemySide.Where( f => f.IsAlive() ) ];
 
-                if ( validTargets.Count == 0 )
-                {
-                    break;
-                }
+                if ( validTargets.Count == 0 ) break;
 
                 IFighter target = SelectTarget( attacker, validTargets );
                 ExecuteTurn( attacker, target );
 
-                if ( !enemySide.Any( f => f.IsAlive() ) )
-                {
-                    break;
-                }
+                if ( !enemySide.Any( f => f.IsAlive() ) ) break;
             }
 
             _battleLogger.LogRoundEnd();
         }
-
-        List<IFighter> winners = allFighters.Where( f => f.IsAlive() ).ToList();
-        _battleLogger.LogBattleEnd( winners );
-
-        return winners;
     }
 
     private void ExecuteTurn( IFighter attacker, IFighter defender )
