@@ -1,0 +1,19 @@
+.triangleButton {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  rotate: 180deg;
+  cursor: pointer;
+}
+
+.triangle {
+  width: 100%;
+  height: 100%;
+  background: #d9d9d9;
+  border: none;
+  cursor: pointer;
+  /* (x y, x y, x y) */
+  clip-path: polygon(50% 0%, 6% 75%, 94% 75%); 
+}

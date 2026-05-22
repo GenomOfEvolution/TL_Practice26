@@ -1,0 +1,29 @@
+.section {
+  display: flex;
+  flex-direction: column;
+}
+
+.buttonWrapper {
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.buttonWrapper::before {
+  content: '';
+  margin-right: 29px;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  border-top: 1px solid #D9D9D9;
+  z-index: 0;
+}
+
+.buttonWrapper > * {
+  position: relative;
+  z-index: 1;
+}
