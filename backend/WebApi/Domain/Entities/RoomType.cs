@@ -7,7 +7,7 @@ namespace Domain.Entities;
 /// </summary>
 public class RoomType
 {
-    public int Id { get; private init; }
+    public int Id { get; init; }
     public int PropertyId { get; set; }
     public string Name { get; set; } = String.Empty;
     public decimal DailyPrice { get; set; }

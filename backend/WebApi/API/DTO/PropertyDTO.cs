@@ -1,11 +1,7 @@
-﻿namespace Domain.Entities;
+﻿namespace API.DTO;
 
-/// <summary>
-/// Средство размещения (отель, апартаменты и др.).
-/// </summary>
-public class Property
+public class PropertyDTO
 {
-    public int Id { get; init; }
     public string Name { get; set; } = String.Empty;
     public string Country { get; set; } = String.Empty;
     public string City { get; set; } = String.Empty;

@@ -7,7 +7,7 @@ namespace Domain.Entities;
 /// </summary>
 public class Reservation
 {
-    public int Id { get; private init; }
+    public int Id { get; init; }
     public int PropertyId { get; set; }
     public int RoomTypeId { get; set; }
 
