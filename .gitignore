@@ -1,0 +1,58 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependencies
+node_modules/
+
+# Build output
+dist
+dist-ssr
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+x64/
+x86/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+artifacts/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.sln.ide
+
+# VS Code
+.vscode/
+!.vscode/extensions.json
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# .NET
+**/Properties/launchSettings.json
+*.nuget.props
+*.nuget.targets
+**/packages/*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local env files
+*.local
+.env
+.env.local
+.env.*.local
