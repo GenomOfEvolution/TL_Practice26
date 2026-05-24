@@ -24,4 +24,19 @@ public class Reservation
     public Currency Currency { get; set; }
 
     public bool IsCanceled { get; set; }
+
+    public void Update( Reservation reservation )
+    {
+        PropertyId = reservation.PropertyId;
+        RoomTypeId = reservation.RoomTypeId;
+        ArrivalDate = reservation.ArrivalDate;
+        ArrivalTime = reservation.ArrivalTime;
+        DepartureDate = reservation.DepartureDate;
+        DepartureTime = reservation.DepartureTime;
+        GuestName = reservation.GuestName;
+        GuestPhoneNumber = reservation.GuestPhoneNumber;
+        Total = reservation.Total;
+        Currency = reservation.Currency;
+        IsCanceled = reservation.IsCanceled;
+    }
 }

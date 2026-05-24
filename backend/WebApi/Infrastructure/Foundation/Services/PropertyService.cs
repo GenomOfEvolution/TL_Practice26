@@ -23,7 +23,7 @@ public class PropertyService : IPropertyService
 
     public async Task DeleteAsync( int id )
     {
-        var property = await _unitOfWork.Properties.GetByIdAsync( id );
+        Property? property = await _unitOfWork.Properties.GetByIdAsync( id );
 
         if ( property is not null )
         {
@@ -44,7 +44,16 @@ public class PropertyService : IPropertyService
 
     public async Task UpdateAsync( Property property )
     {
-        _unitOfWork.Properties.Update( property );
+        Property? existing = await _unitOfWork.Properties.GetByIdAsync( property.Id );
+
+        if ( existing is null )
+        {
+            return;
+        }
+
+        existing.Update( property );
+        _unitOfWork.Properties.Update( existing );
+
         await _unitOfWork.SaveChangesAsync();
     }
 }
