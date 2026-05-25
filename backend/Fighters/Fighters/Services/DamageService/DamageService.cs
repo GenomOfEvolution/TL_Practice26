@@ -40,6 +40,7 @@ public class DamageService : IDamageService
     private static DamageStats ApplyDamageModifiers( DamageStats incomingDamage, IFighter target )
     {
         DamageStats armorModified = target.EquippedArmor.ModifyIncomingDamage( incomingDamage, target );
+
         return target.Race.ModifyIncomingDamage( armorModified, target );
     }
 

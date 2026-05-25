@@ -48,7 +48,7 @@ public class FighterFactory : IFighterFactory
         ISpeciality speciality = SelectComponent( "Выберите класс (номер): ", _specialityFactory, new NoSpeciality() );
         Console.WriteLine( $"Класс: {speciality.Name}\n" );
 
-        FighterStats stats = _statsFactory.Create( 0 );
+        FighterStats stats = _statsFactory.Create();
         Console.WriteLine( $"Статы распределены. Осталось очков: {budget.RemainingPoints}\n" );
 
         IWeapon weapon = SelectPointRestricted( "оружие", _weaponFactory );

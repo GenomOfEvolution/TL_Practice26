@@ -2,6 +2,6 @@
 
 public interface IFighterComponentFactory<T>
 {
-    T Create( int choice );
+    T Create( int choice = 0 );
     void PrintMenu();
 }

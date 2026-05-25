@@ -1,4 +1,5 @@
-﻿using Fighters.Models.Damage;
+﻿using Fighters.Extensions;
+using Fighters.Models.Damage;
 using Fighters.Models.Fighters;
 
 namespace Fighters.Services.BattleLogger;
@@ -58,8 +59,7 @@ public class BattleLogger : IBattleLogger
             return;
         }
 
-        string winnersInfo = String.Join( "\n",
-            winnersList.Select( f => $"- {f.Name} (HP: {f.GetCurrentHealth()}/{f.GetMaxHealth()})" ) );
+        string winnersInfo = String.Join( "\n", winnersList.Select( f => $"- {f.Name} (HP: {f.GetCurrentHealth()}/{f.GetMaxHealth()})" ) );
 
         Console.WriteLine(
         $"""
@@ -89,15 +89,6 @@ public class BattleLogger : IBattleLogger
 
     private string LogDamage( DamageStats damage )
     {
-        return $"{damage.MinDamage} - {damage.MaxDamage} ({GetTypeNameRu( damage.Type )} урон)";
+        return $"{damage.MinDamage} - {damage.MaxDamage} ({damage.Type.GetTypeNameRu()} урон)";
     }
-
-    private static string GetTypeNameRu( DamageType type ) => type switch
-    {
-        DamageType.Physic => "физический",
-        DamageType.Magic => "магический",
-        DamageType.Pure => "чистый",
-        DamageType.Poison => "токсичный",
-        _ => type.ToString()
-    };
 }
