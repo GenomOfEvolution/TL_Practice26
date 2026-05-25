@@ -10,10 +10,14 @@ namespace API.Controllers;
 public class PropertiesController : ControllerBase
 {
     private readonly IPropertyService _propertyService;
+    private readonly IRoomTypeService _roomTypeService;
 
-    public PropertiesController( IPropertyService propertyService )
+    public PropertiesController(
+        IPropertyService propertyService,
+        IRoomTypeService roomTypeService )
     {
         _propertyService = propertyService;
+        _roomTypeService = roomTypeService;
     }
 
     [HttpGet]
@@ -39,13 +43,26 @@ public class PropertiesController : ControllerBase
         return EntityToPropertyDtoMapper.Map( property );
     }
 
+    [HttpGet( "{id:int}/roomtypes" )]
+    public async Task<ActionResult<List<RoomTypeDTO>>> GetRoomTypes( [FromRoute] int id )
+    {
+        var roomTypes = await _roomTypeService.GetByPropertyIdAsync( id );
+
+        return Ok( roomTypes
+            .Select( EntityToRoomTypeDtoMapper.Map )
+            .ToList() );
+    }
+
     [HttpPost]
     public async Task<ActionResult<PropertyDTO>> AddProperty( [FromBody] PropertyDTO propertyDTO )
     {
         var entity = PropertyDtoToEntityMapper.Map( propertyDTO );
         var created = await _propertyService.CreateAsync( entity );
 
-        return CreatedAtAction( nameof( GetById ), new { id = created.Id }, EntityToPropertyDtoMapper.Map( created ) );
+        return CreatedAtAction(
+            nameof( GetById ),
+            new { id = created.Id },
+            EntityToPropertyDtoMapper.Map( created ) );
     }
 
     [HttpPut( "{id:int}" )]
