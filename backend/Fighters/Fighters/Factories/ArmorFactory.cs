@@ -32,6 +32,7 @@ public class ArmorFactory : IPointRestrictedFactory<IArmor>
         if ( choice < 0 || choice >= _cachedAvailable.Count )
         {
             item = new NoArmor();
+
             return false;
         }
 
@@ -39,6 +40,7 @@ public class ArmorFactory : IPointRestrictedFactory<IArmor>
         if ( !_budget.TrySpend( selectedEntry.Price ) )
         {
             item = new NoArmor();
+
             return false;
         }
 

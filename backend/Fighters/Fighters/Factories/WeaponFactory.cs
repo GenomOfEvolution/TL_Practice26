@@ -39,6 +39,7 @@ public class WeaponFactory : IPointRestrictedFactory<IWeapon>
         if ( choice < 0 || choice >= _cachedAvailable.Count )
         {
             item = new Fists();
+
             return false;
         }
 
@@ -47,6 +48,7 @@ public class WeaponFactory : IPointRestrictedFactory<IWeapon>
         if ( !_pointsBudget.TrySpend( selectedEntry.Price ) )
         {
             item = new Fists();
+
             return false;
         }
 

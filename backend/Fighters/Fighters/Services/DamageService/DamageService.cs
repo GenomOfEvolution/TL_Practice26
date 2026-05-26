@@ -34,6 +34,7 @@ public class DamageService : IDamageService
     public DamageStats CalculateAttackDamage( IFighter attacker )
     {
         DamageStats weaponDamage = CalculateWeaponDamage( attacker.EquippedWeapon, attacker );
+
         return TryApplyCrit( weaponDamage, attacker );
     }
 
@@ -71,6 +72,7 @@ public class DamageService : IDamageService
         };
 
         DamageStats raceModified = itemHolder.Race.ModifyWeaponDamage( baseDamage, itemHolder );
+
         return itemHolder.EquippedArmor.ModifyWeaponDamage( raceModified, itemHolder );
     }
 

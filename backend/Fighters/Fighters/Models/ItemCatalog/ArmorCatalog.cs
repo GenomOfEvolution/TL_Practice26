@@ -33,6 +33,7 @@ public class ArmorCatalog : IItemCatalog<IArmor>
         if ( available.Count == 0 )
         {
             Console.WriteLine( "Нет доступного оружия за эти очки." );
+
             return;
         }
 

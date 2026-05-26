@@ -56,16 +56,17 @@ public class BattleLogger : IBattleLogger
         if ( winnersList.Count == 0 )
         {
             Console.WriteLine( "Никто не выжил." );
+
             return;
         }
 
         string winnersInfo = String.Join( "\n", winnersList.Select( f => $"- {f.Name} (HP: {f.GetCurrentHealth()}/{f.GetMaxHealth()})" ) );
 
         Console.WriteLine(
-        $"""
-        Вот они, наши победители:
-        {winnersInfo}
-        """
+            $"""
+            Вот они, наши победители:
+            {winnersInfo}
+            """
         );
     }
 

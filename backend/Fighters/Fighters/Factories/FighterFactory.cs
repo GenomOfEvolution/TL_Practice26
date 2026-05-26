@@ -75,6 +75,7 @@ public class FighterFactory : IFighterFactory
             Console.WriteLine( $"\n--- Боец {i + 1}/{amount} ---" );
             team.AddFighter( CreateFighter() );
         }
+
         return team;
     }
 
