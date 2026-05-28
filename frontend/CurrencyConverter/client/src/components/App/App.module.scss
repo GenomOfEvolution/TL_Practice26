@@ -1,8 +1,10 @@
 .app {
-  background-color: #EBF4FB;
-  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  min-block-size: 100vh;
   margin: 0;
+
+  background-color: #EBF4FB;
 }

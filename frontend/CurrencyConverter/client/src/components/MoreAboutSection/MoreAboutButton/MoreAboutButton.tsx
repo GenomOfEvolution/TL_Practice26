@@ -8,7 +8,7 @@ interface MoreAboutButtonProps {
 
 function MoreAboutButton({ fromValue, toValue, arrowUp = true }: MoreAboutButtonProps) {
   return (
-    <button className={styles.moreAboutButton}>{fromValue}/{toValue}: about {arrowUp ? '↑' : '↓'}</button>
+    <button className={styles['more-about-button']}>{fromValue}/{toValue}: about {arrowUp ? '↑' : '↓'}</button>
   )
 }
 

@@ -1,5 +1,5 @@
 import styles from './CurrencyInput.module.scss'
-import CurrencyListButton from '../buttons/CurrencyListButton/CurrencyListButton'
+import CurrencyListButton from './CurrencyListButton/CurrencyListButton'
 
 type CurrencyInputProps = {
   value: string
@@ -12,7 +12,9 @@ function CurrencyInput({ value, currency }: CurrencyInputProps) {
       <input className={styles.input} type="text" value={value} readOnly />
       <div className={styles.separator} />
       <div className={styles.dropdown}>
-        <span className={styles.dropdownText}>{currency}</span>
+        <select className={styles.select} value={currency}>
+          <option value={currency}>{currency}</option>
+        </select>
         <CurrencyListButton />
       </div>
     </div>

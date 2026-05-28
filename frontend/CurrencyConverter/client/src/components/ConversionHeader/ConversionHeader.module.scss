@@ -2,49 +2,55 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 25px;
+  margin-block-end: 25px;
 }
 
-.fromLabel {
-  font-family: 'Inter Variable';
-  font-weight: 400;
-  font-style: normal;
+.from {
+  display: flex; 
+  justify-content: center;
+  align-items: center;
+
+  block-size: 24px;
+  margin-block-end: 2px;
+
+  color: #767676;
+  font-family: 'Inter Variable', sans-serif;
   font-size: 20px;
+  font-weight: 400;
+  font-style: normal;
   line-height: 100%;
   letter-spacing: 0%;
-  color: #767676;
-  height: 24px;
+}
+
+.to {
   display: flex; 
   justify-content: center;
   align-items: center;
-  margin-bottom: 2px;
-}
 
-.toLabel {
-  font-family: 'Inter Variable';
-  font-weight: 400;
-  font-style: normal;
+  block-size: 53px;
+  margin-block-end: 20px;
+
+  color: #000;
+  font-family: 'Inter Variable', sans-serif;
   font-size: 44.17px;
-  line-height: 100%;
-  letter-spacing: 0%;
-  color: #000000;
-  height: 53px;
-  display: flex; 
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.dateLabel {
-  font-family: 'Inter Variable';
   font-weight: 400;
   font-style: normal;
-  font-size: 14.7px;
   line-height: 100%;
   letter-spacing: 0%;
-  color: #767676;
-  height: 18px;
+}
+
+.date {
   display: flex; 
   justify-content: center;
   align-items: center;
+
+  block-size: 18px;
+
+  color: #767676;
+  font-family: 'Inter Variable', sans-serif;
+  font-size: 14.7px;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 100%;
+  letter-spacing: 0%;
 }

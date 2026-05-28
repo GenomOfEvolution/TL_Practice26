@@ -3,27 +3,31 @@
   flex-direction: column;
 }
 
-.buttonWrapper {
-  height: 48px;
+.button-wrapper {
+  position: relative;
+
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
-  margin-bottom: 24px;
+
+  block-size: 48px;
+  margin-block-end: 24px;
 }
 
-.buttonWrapper::before {
+.button-wrapper::before {
   content: '';
-  margin-right: 29px;
+
   position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  border-top: 1px solid #D9D9D9;
+  inset-block-start: 50%;
+  inset-inline: 0;
   z-index: 0;
+
+  margin-inline-end: 29px;
+
+  border-block-start: 1px solid #D9D9D9;
 }
 
-.buttonWrapper > * {
+.button-wrapper > * {
   position: relative;
   z-index: 1;
 }

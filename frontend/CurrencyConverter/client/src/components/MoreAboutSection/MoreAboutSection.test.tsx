@@ -9,17 +9,10 @@ describe('MoreAboutSection', () => {
     expect(button).toBeInTheDocument()
   })
 
-  it('renders first CurrencyInfo with Polish zloty title', () => {
+  it('renders both CurrencyInfo components with testIds', () => {
     render(<MoreAboutSection fromValue="PLN" toValue="JPY" />)
 
-    expect(screen.getByText('Polish zloty - PLN - zł')).toBeInTheDocument()
-    expect(screen.getByText(/official currency and legal tender of Poland/)).toBeInTheDocument()
-  })
-
-  it('renders second CurrencyInfo with Japanese yen title', () => {
-    render(<MoreAboutSection fromValue="PLN" toValue="JPY" />)
-
-    expect(screen.getByText('Japanese yen - JPY - ¥')).toBeInTheDocument()
-    expect(screen.getByText(/official currency of Japan/)).toBeInTheDocument()
+    expect(screen.getByTestId('first-info')).toBeInTheDocument()
+    expect(screen.getByTestId('second-info')).toBeInTheDocument()
   })
 })

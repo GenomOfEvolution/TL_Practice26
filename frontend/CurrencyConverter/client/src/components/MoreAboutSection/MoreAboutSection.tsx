@@ -1,5 +1,5 @@
 import styles from './MoreAboutSection.module.scss'
-import MoreAboutButton from '../buttons/MoreAboutButton/MoreAboutButton'
+import MoreAboutButton from './MoreAboutButton/MoreAboutButton'
 import CurrencyInfo from '../CurrencyInfo/CurrencyInfo'
 
 const currencyData: Record<string, { title: string; description: string }> = {
@@ -13,7 +13,7 @@ const currencyData: Record<string, { title: string; description: string }> = {
   },
 }
 
-interface MoreAboutSectionProps {
+type MoreAboutSectionProps = {
   fromValue: string
   toValue: string
 }
@@ -24,11 +24,11 @@ function MoreAboutSection({ fromValue, toValue }: MoreAboutSectionProps) {
 
   return (
     <div className={styles.section}>
-      <div className={styles.buttonWrapper}>
+      <div className={styles['button-wrapper']}>
         <MoreAboutButton fromValue={fromValue} toValue={toValue} />
       </div>
-      {from && <CurrencyInfo title={from.title} description={from.description} />}
-      {to && <CurrencyInfo title={to.title} description={to.description} />}
+      {from && <CurrencyInfo testId="first-info" title={from.title} description={from.description} />}
+      {to && <CurrencyInfo testId="second-info" title={to.title} description={to.description} />}
     </div>
   )
 }

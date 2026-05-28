@@ -1,11 +1,14 @@
 .exchanger {
-  width: 1257px;
-  height: 662px;
-  background-color: #FFFFFF;
+  box-sizing: border-box;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
-  box-sizing: border-box;
+
+  inline-size: 1257px;
+  block-size: 662px;
+  padding-inline-start: 28px;
+
+  background-color: #FFF;
   border-radius: 30px;
-  padding-left: 28px;
 }

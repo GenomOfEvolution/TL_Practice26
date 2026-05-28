@@ -1,5 +1,5 @@
 import styles from './App.module.scss'
-import CurrencyConverter from './components/CurrencyConverter/CurrencyConverter'
+import CurrencyConverter from '../CurrencyConverter/CurrencyConverter'
 
 function App() {
   return (
