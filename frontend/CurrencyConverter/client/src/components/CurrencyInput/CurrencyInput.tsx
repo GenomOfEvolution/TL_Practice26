@@ -15,7 +15,9 @@ function CurrencyInput({ value, currency }: CurrencyInputProps) {
         <select className={styles.select} value={currency}>
           <option value={currency}>{currency}</option>
         </select>
-        <CurrencyListButton />
+        <div className={styles['button-overlay']}>
+          <CurrencyListButton />
+        </div>
       </div>
     </div>
   )
