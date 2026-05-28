@@ -59,13 +59,7 @@ export default {
                 message: "Do not use physical 'padding/margin' CSS properties, use logical properties instead."
             }
         ],
-        'selector-class-pattern': [
-            '^([a-z][a-z0-9]*)(-[a-z0-9]+)*$',
-            {
-                'resolveNestedSelectors': true,
-                'message': 'Expected class selector to be kebab-case'
-            }
-        ],
+        'selector-class-pattern': null,
         'no-descending-specificity': null,
         'scss/at-mixin-argumentless-call-parentheses': 'always',
         'scss/no-global-function-names': null,
@@ -110,6 +104,13 @@ export default {
                 unspecified: 'bottomAlphabetical',
                 emptyLineBeforeUnspecified: 'always',
                 emptyLineMinimumPropertyThreshold: 5
+            }
+        ],
+        'selector-class-pattern': [
+            '^([a-z][a-z0-9]*)(-[a-z0-9]+)*$',
+            {
+                resolveNestedSelectors: true,
+                message: 'Expected class selector to be kebab-case'
             }
         ]
     }

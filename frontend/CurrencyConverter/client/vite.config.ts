@@ -8,4 +8,9 @@ export default defineConfig({
     setupFiles: './src/setupTests.ts',
     globals: true,
   },
+  css: {
+    modules: {
+      localsConvention: 'camelCaseOnly'
+    }
+  }
 })

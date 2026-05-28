@@ -1,10 +1,10 @@
-import styles from './CurrencyInfo.module.scss'
+import styles from './CurrencyInfo.module.scss';
 
 type CurrencyInfoProps = {
   testId?: string
   title: string
   description: string
-}
+};
 
 function CurrencyInfo({ testId, title, description }: CurrencyInfoProps) {
   return (

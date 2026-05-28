@@ -1,6 +1,6 @@
-import styles from './MoreAboutButton.module.scss'
+import styles from './MoreAboutButton.module.scss';
 
-interface MoreAboutButtonProps {
+type MoreAboutButtonProps = {
   fromValue: string
   toValue: string
   arrowUp?: boolean
@@ -8,7 +8,7 @@ interface MoreAboutButtonProps {
 
 function MoreAboutButton({ fromValue, toValue, arrowUp = true }: MoreAboutButtonProps) {
   return (
-    <button className={styles['more-about-button']}>{fromValue}/{toValue}: about {arrowUp ? '↑' : '↓'}</button>
+    <button className={styles.button}>{fromValue}/{toValue}: about {arrowUp ? '↑' : '↓'}</button>
   )
 }
 
