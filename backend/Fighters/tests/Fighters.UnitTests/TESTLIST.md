@@ -91,27 +91,23 @@
 
 ---
 
-### IRace / конкретные расы
+### IRace — уникальные бонусы рас
 
-- [ ] `Race_Human_StatBonus_3_3_3` — GetStatBonus → +3/+3/+3; Initiative +3
-- [ ] `Race_Goblin_StatBonus` — -2 Str, +1 Dex, +3 Int; Init +1
-- [ ] `Race_Goblin_ModifyWeaponDamage_RarityScaling` — корректирует урон в зависимости от Rarity
-- [ ] `Race_Drow_StatBonus` — -1 Str, +5 Dex, +1 Int; Init +4
-- [ ] `Race_Drow_ModifyWeaponDamage_RangedBonus` — +50 damage у Ranged оружия
-- [ ] `Race_Gnome_StatBonus` — +4 Str, +0 Dex, +2 Int; Init +1
-- [ ] `Race_Gnome_ModifyIncomingDamage_PoisonResist` — Poison -15%
-- [ ] `Race_Gnome_ModifyWeaponDamage_MeleeBoost` — Melee +15%
-- [ ] `Race_StoneGiant_StatBonus` — +5 Str, -5 Dex, +0 Int; Init -3
-- [ ] `Race_StoneGiant_ModifyIncomingDamage_PhysicResist` — Physic -15%
+- [x] `Race_Goblin_ModifyWeaponDamage_RarityScaling` — корректирует урон в зависимости от Rarity (Common предметы → -10)
+- [x] `Race_Goblin_ModifyWeaponDamage_LegendaryGear_BoostsDamage` — Legendary предметы (MonoBlade + BerserkArmor) → +30 к урону
+- [x] `Race_Drow_ModifyWeaponDamage_RangedBonus` — +50 damage у Ranged оружия
+- [x] `Race_Gnome_ModifyIncomingDamage_PoisonResist` — Poison -15%
+- [x] `Race_Gnome_ModifyWeaponDamage_MeleeBoost` — Melee +15%
+- [x] `Race_StoneGiant_ModifyIncomingDamage_PhysicResist` — Physic -15%
 
 ---
 
 ### ISpeciality / конкретные специализации
 
-- [ ] `Speciality_NoSpeciality_SelectsFirst` — SelectTarget возвращает candidates.First()
-- [ ] `Speciality_Warrior_SelectsHighestMaxHp` — SelectTarget выбирает с максимальным MaxHealth
-- [ ] `Speciality_Ranger_SelectsLast` — SelectTarget возвращает candidates.Last()
-- [ ] `Speciality_Assassin_SelectsLowestCurrentHp` — SelectTarget выбирает с минимальным CurrentHealth
+- [x] `Speciality_NoSpeciality_SelectsFirst` — SelectTarget возвращает candidates.First()
+- [x] `Speciality_Warrior_SelectsHighestMaxHp` — SelectTarget выбирает с максимальным MaxHealth
+- [x] `Speciality_Ranger_SelectsLast` — SelectTarget возвращает candidates.Last()
+- [x] `Speciality_Assassin_SelectsLowestCurrentHp` — SelectTarget выбирает с минимальным CurrentHealth
 
 ---
 
@@ -124,18 +120,17 @@
 
 ---
 
-### IItemCatalog<T> / WeaponCatalog, ArmorCatalog
+### IItemCatalog<T> (через TestCatalog с моковыми данными)
 
-- [ ] `WeaponCatalog_GetAll_ReturnsAllWeapons` — GetAll() возвращает 27 записей
-- [ ] `ArmorCatalog_GetAll_ReturnsAllArmors` — GetAll() возвращает 6 записей
-- [ ] `WeaponCatalog_GetAvailable_FiltersByPrice` — GetAvailable(maxPoints) возвращает только доступные
-- [ ] `ArmorCatalog_GetAvailable_FiltersByPrice` — GetAvailable(maxPoints) возвращает только доступные
-- [ ] `WeaponCatalog_GetByIndex_ReturnsCorrectEntry` — GetByIndex(0) == первый элемент из GetAll()
-- [ ] `WeaponCatalog_GetByIndex_ThrowsOnInvalid` — неверный индекс → исключение
+- [x] `GetAll_ReturnsAllEntries` — возвращает все записи
+- [x] `GetAvailable_FiltersByPrice` — фильтрация по maxPoints
+- [x] `GetAvailable_ZeroPoints_ReturnsFreeItems` — только бесплатные предметы при 0 очков
+- [x] `GetByIndex_ReturnsCorrectEntry` — получение по индексу
+- [x] `GetByIndex_ThrowsOnInvalidIndex` — исключение при неверном индексе
 
 ### CatalogEntry<T>
 
-- [ ] `CatalogEntry_Create_SetsItemAndPrice` — Item и Price корректно проставлены
+- [x] `CatalogEntry_Create_SetsItemAndPrice` — Item и Price корректно проставлены
 
 ---
 
@@ -153,14 +148,9 @@
 
 ### IInitiativeService / InitiativeService
 
-- [ ] `DetermineTurnOrder_ReturnsAllParticipants` — все участники присутствуют в результате
-- [ ] `DetermineTurnOrder_SortedByInitiativeDesc` — отсортированы по инициативе (убывание)
-- [ ] `DetermineTurnOrder_RaceModifierApplied` — модификатор инициативы от расы учитывается
-- [ ] `DetermineTurnOrder_TiebreakerByDexterity` — при равной инициативе выше Dex идёт первым
-
-### FighterInitiative
-
-- [ ] `FighterInitiative_Create_SetsFighterAndScore` — Fighter и InitiativeScore корректны
+- [x] `DetermineTurnOrder_SortedByInitiativeDesc` — отсортированы по инициативе (убывание)
+- [x] `DetermineTurnOrder_RaceModifierApplied` — модификатор инициативы от расы учитывается
+- [x] `DetermineTurnOrder_TiebreakerByDexterity` — при равной инициативе выше Dex идёт первым
 
 ---
 
