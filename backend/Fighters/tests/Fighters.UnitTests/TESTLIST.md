@@ -30,64 +30,15 @@
 
 ---
 
-### IWeapon / конкретные оружия
-
-- [ ] `Weapon_Fists_PropertiesCorrect`
-- [ ] `Weapon_WoodenSword_PropertiesCorrect`
-- [ ] `Weapon_Club_PropertiesCorrect`
-- [ ] `Weapon_ReinforcedClub_PropertiesCorrect`
-- [ ] `Weapon_HuntingKnife_PropertiesCorrect`
-- [ ] `Weapon_Dagger_PropertiesCorrect`
-- [ ] `Weapon_BroadSword_PropertiesCorrect`
-- [ ] `Weapon_GrassBlade_PropertiesCorrect`
-- [ ] `Weapon_MonoBlade_PropertiesCorrect`
-- [ ] `Weapon_CeremonialKnife_PropertiesCorrect`
-- [ ] `Weapon_DragonSlayer_PropertiesCorrect`
-- [ ] `Weapon_TheSeparator_PropertiesCorrect`
-- [ ] `Weapon_Brick_PropertiesCorrect`
-- [ ] `Weapon_CrudeBow_PropertiesCorrect`
-- [ ] `Weapon_Longbow_PropertiesCorrect`
-- [ ] `Weapon_HeavyCrossbow_PropertiesCorrect`
-- [ ] `Weapon_Revolver_PropertiesCorrect`
-- [ ] `Weapon_GoldenDeagle_PropertiesCorrect`
-- [ ] `Weapon_GhostRifle_PropertiesCorrect`
-- [ ] `Weapon_AlchemicalConcoction_PropertiesCorrect`
-- [ ] `Weapon_RocketLauncher_PropertiesCorrect`
-- [ ] `Weapon_StarCannnon_PropertiesCorrect`
-- [ ] `Weapon_SparkWand_PropertiesCorrect`
-- [ ] `Weapon_ApprenticeWand_PropertiesCorrect`
-- [ ] `Weapon_LeafWand_PropertiesCorrect`
-- [ ] `Weapon_SlitherWand_PropertiesCorrect`
-- [ ] `Weapon_OakStaff_PropertiesCorrect`
-- [ ] `Weapon_DragonBreath_PropertiesCorrect`
-- [ ] `Weapon_Nirvana_PropertiesCorrect`
-
-### WeaponType
-
-- [ ] `WeaponType_HasAllValues` — Melee=0, Ranged=1, Magic=2
-
----
-
 ### IArmor / конкретные брони
 
-- [ ] `Armor_NoArmor_ResistancesEmpty` — Resistances пустой; ModifyWeaponDamage/ModifyIncomingDamage возвращают как есть
-- [ ] `Armor_LeatherArmor_Resistances_Physic10` — Resistances содержит Physic=0.1f
-- [ ] `Armor_KnightArmor_Resistances` — Physic=0.4, Poison=0.1, Magic=0.05
-- [ ] `Armor_GlassArmor_DoublesDamage` — ModifyWeaponDamage и ModifyIncomingDamage удваивают урон
-- [ ] `Armor_BerserkArmor_ScalesWithMissingHp` — ModifyWeaponDamage множитель растёт при потере HP
-- [ ] `Armor_WitchDoctorArmor_ModifyIncomingDamage` — Physic/Pure → Magic, -20% dmg, -15% crit
-- [ ] `Armor_WitchDoctorArmor_ModifyWeaponDamage` — Magic/Poison +20%, Physic/Pure → Magic +15%
-
-### DamageType
-
-- [ ] `DamageType_HasAllValues` — Physic=0, Magic=1, Pure=2, Poison=3
-
----
-
-### DamageStats
-
-- [ ] `DamageStats_DefaultValues` — MinDamage/MaxDamage/Type/CritChance/CritDamage = default
-- [ ] `DamageStats_PropertiesCanBeSet` — все свойства get/set работают
+- [x] `Armor_NoArmor_ResistancesEmpty` — Resistances пустой; ModifyWeaponDamage/ModifyIncomingDamage возвращают как есть
+- [x] `Armor_LeatherArmor_Resistances_Physic10` — Resistances содержит Physic=0.1f
+- [x] `Armor_KnightArmor_Resistances` — Physic=0.4, Poison=0.1, Magic=0.05
+- [x] `Armor_GlassArmor_DoublesDamage` — ModifyWeaponDamage и ModifyIncomingDamage удваивают урон
+- [x] `Armor_BerserkArmor_ScalesWithMissingHp` — ModifyWeaponDamage множитель растёт при потере HP
+- [x] `Armor_WitchDoctorArmor_ModifyIncomingDamage` — Physic/Pure → Magic, -20% dmg, -15% crit
+- [x] `Armor_WitchDoctorArmor_ModifyWeaponDamage` — Magic/Poison +20%, Physic/Pure → Magic +15%
 
 ---
 
@@ -113,10 +64,10 @@
 
 ### IPointsBudget / SharedPointsBudget
 
-- [ ] `SharedPointsBudget_InitialPoints` — RemainingPoints == initialPoints
-- [ ] `SharedPointsBudget_TrySpend_EnoughPoints_ReturnsTrue` — TrySpend(N) при N ≤ Remaining → true
-- [ ] `SharedPointsBudget_TrySpend_NotEnough_ReturnsFalse` — TrySpend(N) при N > Remaining → false
-- [ ] `SharedPointsBudget_TrySpend_DeductsPoints` — после TrySpend RemainingPoints уменьшается
+- [x] `SharedPointsBudget_InitialPoints` — RemainingPoints == initialPoints
+- [x] `SharedPointsBudget_TrySpend_EnoughPoints_ReturnsTrue` — TrySpend(N) при N ≤ Remaining → true
+- [x] `SharedPointsBudget_TrySpend_NotEnough_ReturnsFalse` — TrySpend(N) при N > Remaining → false
+- [x] `SharedPointsBudget_TrySpend_DeductsPoints` — после TrySpend RemainingPoints уменьшается
 
 ---
 
@@ -136,13 +87,13 @@
 
 ### IDamageService / DamageService
 
-- [ ] `CalculateAttackDamage_ReturnsDamageStats` — корректные Min/MaxDamage с учётом стат, оружия, расы, брони
-- [ ] `CalculateAttackDamage_CritApplied` — при NextDouble() ≥ CritChance крит применяется
-- [ ] `CalculateAttackDamage_RaceModifierApplied` — модификаторы расы применяются к урону
-- [ ] `CalculateAttackDamage_ArmorModifierApplied` — ModifyWeaponDamage брони применяется
-- [ ] `CalculateReceivedDamage_ResistancesApplied` — сопротивления брони уменьшают урон
-- [ ] `CalculateReceivedDamage_RandomRangeApplied` — урон в диапазоне [MinDamage, MaxDamage]
-- [ ] `CalculateReceivedDamage_RaceIncomingModifierApplied` — ModifyIncomingDamage расы применяется
+- [x] `CalculateAttackDamage_ReturnsDamageStats` — корректные Min/MaxDamage с учётом стат, оружия, расы, брони
+- [x] `CalculateAttackDamage_CritApplied` — при NextDouble() ≥ CritChance крит применяется
+- [x] `CalculateAttackDamage_RaceModifierApplied` — модификаторы расы применяются к урону
+- [x] `CalculateAttackDamage_ArmorModifierApplied` — ModifyWeaponDamage брони применяется
+- [x] `CalculateReceivedDamage_ResistancesApplied` — сопротивления брони уменьшают урон
+- [x] `CalculateReceivedDamage_RandomRangeApplied` — урон в диапазоне [MinDamage, MaxDamage]
+- [x] `CalculateReceivedDamage_RaceIncomingModifierApplied` — ModifyIncomingDamage расы применяется
 
 ---
 
@@ -154,61 +105,60 @@
 
 ---
 
-### IBattleLogger / BattleLogger
+### IBattleLogger / BattleLogger (через GameManager)
 
-- [ ] `LogMethods_DoNotThrow` — все Log-методы не выбрасывают исключений
+- [x] `GameManager_CallsLogBattleStartAndEnd_AtLeastOnce` — мок IBattleLogger; GameManager вызывает LogBattleStart, LogBattleEnd, LogRoundStart, LogRoundEnd, LogAttack, LogDamageTaken хотя бы 1 раз
 
 ---
 
 ### IRandomService / DefaultRandomService
 
-- [ ] `DefaultRandomService_Next_ReturnsInRange` — Next(min, max) возвращает [min, max)
-- [ ] `DefaultRandomService_NextDouble_ReturnsInRange` — NextDouble() возвращает [0.0, 1.0)
+- [x] `DefaultRandomService_Next_ReturnsInRange` — Next(min, max) возвращает [min, max)
+- [x] `DefaultRandomService_NextDouble_ReturnsInRange` — NextDouble() возвращает [0.0, 1.0)
 
 ---
 
 ### GameManager
 
 - [x] `Play_TwoEqualFighters_FirstFighterWins` — существующий тест
-- [ ] `Play_OneFighterPerTeam_ReturnsSingleWinner` — возвращается 1 победитель при 1vs1
-- [ ] `Play_FighterADies_FighterBWins` — если FighterA проигрывает, побеждает FighterB
-- [ ] `Play_MultipleFighters_TeamWithLastAliveWins` — 2vs2, побеждает команда с выжившим
-- [ ] `Play_AllDead_ReturnsEmpty` — если все умерли, возвращается пустой список
-- [ ] `Play_RoundLogic_ExecutesUntilOneTeamRemains` — бой идёт пока не останется одна команда
-- [ ] `Play_LoggerCalled_BattleStartAndEnd` — LogBattleStart и LogBattleEnd вызываются
+- [x] `Play_OneFighterPerTeam_ReturnsSingleWinner` — возвращается 1 победитель при 1vs1
+- [x] `Play_FighterADies_FighterBWins` — если FighterA проигрывает, побеждает FighterB
+- [x] `Play_MultipleFighters_TeamWithLastAliveWins` — 2vs2, побеждает команда с выжившим
+- [x] `Play_RoundLogic_ExecutesUntilOneTeamRemains` — бой идёт пока не останется одна команда
+- [x] `Play_LoggerCalled_BattleStartAndEnd` — LogBattleStart и LogBattleEnd вызываются
 
 ---
 
 ### IFighterFactory / FighterFactory
 
-- [ ] `FighterFactory_CreateFighter_ReturnsValidFighter` — созданный боец имеет все компоненты
-- [ ] `FighterFactory_CreateFighterTeam_ReturnsTeamWithCorrectCount` — команда содержит указанное количество бойцов
+- [x] `FighterFactory_CreateFighter_ReturnsValidFighter` — созданный боец имеет все компоненты
+- [x] `FighterFactory_CreateFighterTeam_ReturnsTeamWithCorrectCount` — команда содержит указанное количество бойцов
 
 ### IFighterComponentFactory<T> реализации
 
-- [ ] `RaceFactory_Create_ReturnsCorrectRace` — Create(1) → HumanRace, Create(2) → GoblinRace и т.д.
-- [ ] `SpecialityFactory_Create_ReturnsCorrectSpeciality` — Create(1) → NoSpeciality, Create(2) → Warrior и т.д.
+- [x] `RaceFactory_Create_ReturnsCorrectRace` — Create(0) → HumanRace, Create(1) → DrowRace и т.д.
+- [x] `SpecialityFactory_Create_ReturnsCorrectSpeciality` — Create(0) → NoSpeciality, Create(1) → Warrior и т.д.
 
 ### IPointRestrictedFactory<T> реализации
 
-- [ ] `WeaponFactory_TryCreate_EnoughPoints_CreatesAndDeducts` — TryCreate создаёт предмет и списывает очки
-- [ ] `WeaponFactory_TryCreate_NotEnoughPoints_ReturnsFalse` — TryCreate возвращает false при нехватке очков
-- [ ] `ArmorFactory_TryCreate_EnoughPoints_CreatesAndDeducts` — TryCreate создаёт броню и списывает очки
-- [ ] `FighterStatFactory_TryCreate_CreatesStats` — TryCreate создаёт FighterStats по номеру выбора
+- [x] `WeaponFactory_TryCreate_EnoughPoints_CreatesAndDeducts` — TryCreate создаёт предмет и списывает очки
+- [x] `WeaponFactory_TryCreate_NotEnoughPoints_ReturnsFalse` — TryCreate возвращает false при нехватке очков
+- [x] `ArmorFactory_TryCreate_EnoughPoints_CreatesAndDeducts` — TryCreate создаёт броню и списывает очки
+- [x] `FighterStatFactory_TryCreate_CreatesStats` — TryCreate создаёт FighterStats по номеру выбора
 
 ---
 
 ### IFighterExtensions
 
-- [ ] `IsAlive_HealthAboveZero_ReturnsTrue`
-- [ ] `IsAlive_HealthZero_ReturnsFalse`
+- [x] `IsAlive_HealthAboveZero_ReturnsTrue`
+- [x] `IsAlive_HealthZero_ReturnsFalse`
 
 ### DamageTypeExtensions
 
-- [ ] `GetTypeNameRu_ReturnsRussianName` — каждый DamageType возвращает корректное русское название
+- [x] `GetTypeNameRu_ReturnsRussianName` — каждый DamageType возвращает корректное русское название
 
 ---
 
 ### FightersApp.Run
 
-- [ ] `Run_DoesNotThrow` — интеграционный тест, что точка входа не падает
+- [x] `Run_DoesNotThrow` — интеграционный тест, что точка входа не падает
