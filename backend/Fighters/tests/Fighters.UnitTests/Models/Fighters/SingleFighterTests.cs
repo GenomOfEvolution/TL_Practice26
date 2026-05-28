@@ -3,7 +3,7 @@ using Fighters.Models.Fighters;
 using Fighters.Models.Races;
 using Fighters.Models.Specialities;
 using Fighters.Models.Weapons.MeleeWeapons;
-using TestLibrary;
+using Fighters.TestLibrary;
 
 namespace Fighters.UnitTests.Models.Fighters;
 

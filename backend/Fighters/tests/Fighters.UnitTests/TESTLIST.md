@@ -7,34 +7,26 @@
 
 ### IFighter / SingleFighter
 
-- [ ] `SingleFighter_Create_PropertiesInitialized` — Name, Stats, Race, Speciality, Armor, Weapon корректно проставлены
-- [ ] `SingleFighter_EmptyName_ReturnsDefault` — Name = "" -> "Безымянный боец"
-- [ ] `SingleFighter_GetMaxHealth_CalculatesCorrectly` — str\*25 + dex\*20 + int\*15 + race bonus
-- [ ] `SingleFighter_GetCurrentHealth_EqualsMaxHealthOnCreation` — после создания GetCurrentHealth() == GetMaxHealth()
-- [ ] `SingleFighter_TakeDamage_ReducesHealth` — вызов TakeDamage(10) уменьшает здоровье на 10
-- [ ] `SingleFighter_TakeDamage_ClampsAtZero` — здоровье не уходит ниже 0
-- [ ] `SingleFighter_SetArmor_UpdatesArmor` — после SetArmor() возвращается новый armor
-- [ ] `SingleFighter_SetWeapon_UpdatesWeapon` — после SetWeapon() возвращается новое оружие
+- [x] `SingleFighter_Create_PropertiesInitialized` — Name, Stats, Race, Speciality, Armor, Weapon корректно проставлены
+- [x] `SingleFighter_EmptyName_ReturnsDefault` — Name = "" -> "Безымянный боец"
+- [x] `SingleFighter_GetMaxHealth_CalculatesCorrectly` — str\*25 + dex\*20 + int\*15 + race bonus
+- [x] `SingleFighter_GetCurrentHealth_EqualsMaxHealthOnCreation` — после создания GetCurrentHealth() == GetMaxHealth()
+- [x] `SingleFighter_TakeDamage_ReducesHealth` — вызов TakeDamage(10) уменьшает здоровье на 10
+- [x] `SingleFighter_TakeDamage_ClampsAtZero` — здоровье не уходит ниже 0
+- [x] `SingleFighter_SetArmor_UpdatesArmor` — после SetArmor() возвращается новый armor
+- [x] `SingleFighter_SetWeapon_UpdatesWeapon` — после SetWeapon() возвращается новое оружие
 
 ### IFighterTeam / FighterTeam
 
-- [ ] `FighterTeam_AddFighter_MemberAdded` — после AddFighter() GetMembers() содержит бойца
-- [ ] `FighterTeam_GetMembers_ReturnsAllAdded` — несколько бойцов возвращаются все
-
-### FighterStats
-
-- [ ] `FighterStats_DefaultValues` — Strength/Dexterity/Intelligence = 0
+- [x] `FighterTeam_AddFighter_MemberAdded` — после AddFighter() GetMembers() содержит бойца
+- [x] `FighterTeam_GetMembers_ReturnsAllAdded` — несколько бойцов возвращаются все
 
 ---
 
 ### IItem / ItemStats
 
-- [ ] `ItemStats_PropertiesCanBeSet` — Strength/Dexterity/Intelligence get/set работают
-- [ ] `ItemStats_ValidateThrowsOnNegative` — отрицательные значения → исключение
-
-### ItemRarity
-
-- [ ] `ItemRarity_HasAllValues` — Common=0, Uncommon=1, Rare=2, Epic=3, Legendary=4
+- [x] `ItemStats_PropertiesCanBeSet` — Strength/Dexterity/Intelligence get/set работают
+- [x] `ItemStats_ValidateThrowsOnNegative` — отрицательные значения → исключение
 
 ---
 

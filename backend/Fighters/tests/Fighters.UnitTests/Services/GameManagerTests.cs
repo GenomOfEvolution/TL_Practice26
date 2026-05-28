@@ -5,7 +5,7 @@ using Fighters.Services.InitiativeService;
 using Fighters.Services.RandomService;
 using GameManager = Fighters.Services.GameManager.GameManager;
 using Moq;
-using TestLibrary;
+using Fighters.TestLibrary;
 
 namespace Fighters.UnitTests.Services;
 
