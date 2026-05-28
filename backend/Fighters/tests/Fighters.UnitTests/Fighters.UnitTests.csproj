@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Fighters\Fighters.csproj" />
+    <ProjectReference Include="..\..\TestLibrary\TestLibrary.csproj" />
   </ItemGroup>
 
   <ItemGroup>

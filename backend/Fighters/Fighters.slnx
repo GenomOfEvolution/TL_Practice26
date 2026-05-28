@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/tests/">
+    <Project Path="TestLibrary/TestLibrary.csproj" Id="933a69e3-90b0-4b63-b850-1d209f22a01a" />
     <Project Path="tests/Fighters.UnitTests/Fighters.UnitTests.csproj" />
   </Folder>
   <Project Path="Fighters/Fighters.csproj" />

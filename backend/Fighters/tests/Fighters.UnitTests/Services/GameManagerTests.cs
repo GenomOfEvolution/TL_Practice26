@@ -1,16 +1,13 @@
-﻿using Fighters.Models.Armors;
-using Fighters.Models.Fighters;
-using Fighters.Models.Races;
-using Fighters.Models.Specialities;
-using Fighters.Models.Weapons.MeleeWeapons;
+﻿using Fighters.Models.Fighters;
 using Fighters.Services.BattleLogger;
 using Fighters.Services.DamageService;
-using Fighters.Services.GameManager;
 using Fighters.Services.InitiativeService;
 using Fighters.Services.RandomService;
+using GameManager = Fighters.Services.GameManager.GameManager;
 using Moq;
+using TestLibrary;
 
-namespace Fighters.UnitTests;
+namespace Fighters.UnitTests.Services;
 
 public class GameManagerTests
 {
@@ -19,7 +16,6 @@ public class GameManagerTests
     {
         // Arrange
         var mockRandom = new Mock<IRandomService>();
-
         mockRandom
             .Setup( r => r.Next( It.IsAny<int>(), It.IsAny<int>() ) )
             .Returns<int, int>( ( min, max ) => max );
@@ -29,8 +25,8 @@ public class GameManagerTests
         var intiativeService = new InitiativeService( mockRandom.Object );
         var gameManager = new GameManager( new BattleLogger(), damageService, intiativeService );
 
-        IFighter fighterA = CreateFighter( "FighterA" );
-        IFighter fighterB = CreateFighter( "FighterB" );
+        IFighter fighterA = FighterBuilder.CreateDefault( "FighterA" );
+        IFighter fighterB = FighterBuilder.CreateDefault( "FighterB" );
 
         // Act
         var winner = gameManager.Play( [ fighterA ], [ fighterB ] );
@@ -38,13 +34,4 @@ public class GameManagerTests
         // Assert
         Assert.Equal( fighterA.Name, winner.First().Name );
     }
-
-    private SingleFighter CreateFighter( string name ) => new SingleFighter(
-        name,
-        new FighterStats { Strength = 10, Dexterity = 10, Intelligence = 10 },
-        new HumanRace(),
-        new NoSpeciality(),
-        new NoArmor(),
-        new Fists()
-    );
 }
