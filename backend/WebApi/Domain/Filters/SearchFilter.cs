@@ -1,10 +1,10 @@
 ﻿namespace Domain.Filters;
 
-public record SearchFilter
-(
-    string City,
-    DateOnly ArrivalDate,
-    DateOnly DepartureDate,
-    int Guests,
-    decimal? MaxPrice = null
-);
+public class SearchFilter
+{
+    public string City { get; set; } = string.Empty;
+    public DateOnly ArrivalDate { get; set; }
+    public DateOnly DepartureDate { get; set; }
+    public int Guests { get; set; }
+    public decimal? MaxPrice { get; set; }
+}

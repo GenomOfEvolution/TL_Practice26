@@ -1,9 +1,9 @@
 ﻿namespace Domain.Filters;
 
-public record ReservationFilter
-(
-    int? PropertyId = null,
-    string? GuestName = null,
-    DateOnly? DateFrom = null,
-    DateOnly? DateTo = null
-);
+public class ReservationFilter
+{
+    public int? PropertyId { get; set; }
+    public string? GuestName { get; set; }
+    public DateOnly? DateFrom { get; set; }
+    public DateOnly? DateTo { get; set; }
+}
