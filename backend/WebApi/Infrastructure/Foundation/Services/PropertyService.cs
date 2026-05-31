@@ -15,6 +15,8 @@ public class PropertyService : IPropertyService
 
     public async Task<Property> CreateAsync( Property property )
     {
+        ValidateProperty( property );
+
         await _unitOfWork.Properties.AddAsync( property );
         await _unitOfWork.SaveChangesAsync();
 
@@ -44,6 +46,8 @@ public class PropertyService : IPropertyService
 
     public async Task UpdateAsync( Property property )
     {
+        ValidateProperty( property );
+
         Property? existing = await _unitOfWork.Properties.GetByIdAsync( property.Id );
 
         if ( existing is null )
@@ -55,5 +59,44 @@ public class PropertyService : IPropertyService
         _unitOfWork.Properties.Update( existing );
 
         await _unitOfWork.SaveChangesAsync();
+    }
+
+    private static void ValidateProperty( Property property )
+    {
+        if ( string.IsNullOrWhiteSpace( property.Name ) )
+        {
+            throw new ArgumentException( "Название средства размещения не может быть пустым.",
+                nameof( property.Name ) );
+        }
+
+        if ( string.IsNullOrWhiteSpace( property.Country ) )
+        {
+            throw new ArgumentException( "Страна не может быть пустой.",
+                nameof( property.Country ) );
+        }
+
+        if ( string.IsNullOrWhiteSpace( property.City ) )
+        {
+            throw new ArgumentException( "Город не может быть пустым.",
+                nameof( property.City ) );
+        }
+
+        if ( string.IsNullOrWhiteSpace( property.Address ) )
+        {
+            throw new ArgumentException( "Адрес не может быть пустым.",
+                nameof( property.Address ) );
+        }
+
+        if ( property.Latitude < -90.0 || property.Latitude > 90.0 )
+        {
+            throw new ArgumentException( "Широта (Latitude) должна быть в диапазоне от -90 до 90.",
+                nameof( property.Latitude ) );
+        }
+
+        if ( property.Longitude < -180.0 || property.Longitude > 180.0 )
+        {
+            throw new ArgumentException( "Долгота (Longitude) должна быть в диапазоне от -180 до 180.",
+                nameof( property.Longitude ) );
+        }
     }
 }

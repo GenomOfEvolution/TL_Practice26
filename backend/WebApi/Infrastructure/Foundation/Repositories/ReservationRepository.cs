@@ -43,8 +43,9 @@ public class ReservationRepository : BaseRepository<Reservation>, IReservationRe
     {
         return await Entities
             .Where( r => r.RoomTypeId == roomTypeId
-                     && r.ArrivalDate < departure
-                     && r.DepartureDate > arrival )
+                && !r.IsCanceled
+                && r.ArrivalDate < departure
+                && r.DepartureDate > arrival )
             .ToListAsync();
     }
 }

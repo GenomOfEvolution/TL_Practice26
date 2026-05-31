@@ -3,7 +3,7 @@ using Domain.Entities;
 
 namespace API.Mappers;
 
-public static class RoomTypeDtoToEntity
+public static class RoomTypeDtoToEntityMapper
 {
     public static RoomType Map( RoomTypeDTO roomTypeDTO, int id = 0 )
     {

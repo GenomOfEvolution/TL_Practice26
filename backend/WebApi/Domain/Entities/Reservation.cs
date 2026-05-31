@@ -39,4 +39,9 @@ public class Reservation
         Currency = reservation.Currency;
         IsCanceled = reservation.IsCanceled;
     }
+
+    public void SetCanceled( bool isCanceled )
+    {
+        IsCanceled = isCanceled;
+    }
 }

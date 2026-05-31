@@ -32,7 +32,7 @@ public class RoomTypeController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<RoomTypeDTO>> AddRoomType( [FromBody] RoomTypeDTO roomTypeDTO )
     {
-        var entity = RoomTypeDtoToEntity.Map( roomTypeDTO );
+        var entity = RoomTypeDtoToEntityMapper.Map( roomTypeDTO );
         var created = await _roomTypeService.CreateAsync( entity );
 
         return CreatedAtAction(
@@ -51,7 +51,7 @@ public class RoomTypeController : ControllerBase
             return NotFound();
         }
 
-        var roomType = RoomTypeDtoToEntity.Map( roomTypeDTO, id );
+        var roomType = RoomTypeDtoToEntityMapper.Map( roomTypeDTO, id );
 
         await _roomTypeService.UpdateAsync( roomType );
 
