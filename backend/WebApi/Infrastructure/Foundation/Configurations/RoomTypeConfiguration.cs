@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Enums;
+using Infrastructure.Foundation.DbSeeds;
 using Infrastructure.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -45,5 +46,7 @@ public class RoomTypeConfiguration : IEntityTypeConfiguration<RoomType>
              .HasConversion( new EnumListToStringConverter<AmenitiesType>() );
 
         builder.HasIndex( r => r.PropertyId );
+
+        builder.HasData( RoomTypeDbSeed.GetData() );
     }
 }

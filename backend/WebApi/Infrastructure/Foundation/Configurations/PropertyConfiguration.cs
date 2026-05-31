@@ -1,5 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Domain.Entities;
+﻿using Domain.Entities;
+using Infrastructure.Foundation.DbSeeds;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Foundation.Configurations;
@@ -32,5 +33,7 @@ public class PropertyConfiguration : IEntityTypeConfiguration<Property>
 
         builder.Property( p => p.Longitude )
             .IsRequired();
+
+        builder.HasData( PropertyDbSeed.GetData() );
     }
 }
