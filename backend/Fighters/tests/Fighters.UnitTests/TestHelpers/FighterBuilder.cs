@@ -19,4 +19,16 @@ public static class FighterBuilder
             new Fists()
         );
     }
+
+    public static SingleFighter CreateWithStats( FighterStats fighterStats, string name = "TestFighter" )
+    {
+        return new SingleFighter(
+            name,
+            fighterStats,
+            new HumanRace(),
+            new NoSpeciality(),
+            new NoArmor(),
+            new Fists()
+        );
+    }
 }

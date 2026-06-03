@@ -27,7 +27,7 @@ public class ItemCatalogTests
     }
 
     [Fact]
-    public void GetAvailable_WithBudget20_ReturnsItemsUnder20()
+    public void GetAvailable_WithFixedBudget_ReturnsItemsUnderBudget()
     {
         // Act
         var result = _catalog.GetAvailable( 20 );

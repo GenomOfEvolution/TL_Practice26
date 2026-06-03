@@ -10,21 +10,20 @@ namespace Fighters.UnitTests.Models.Fighters;
 
 public class SingleFighterTests
 {
-    private const int _strHealthMult = 25;
-    private const int _dexHealthMult = 20;
-    private const int _intHealthMult = 15;
+    private const int _StrHealthMult = 25;
+    private const int _DexHealthMult = 20;
+    private const int _IntHealthMult = 15;
 
     [Fact]
     public void SingleFighter_Create_PropertiesInitialized()
     {
         // Arrange
-        SingleFighter fighter = FighterBuilder.CreateDefault( "Aragorn" );
+        var stats = new FighterStats { Strength = 10, Dexterity = 10, Intelligence = 10 };
+        SingleFighter fighter = FighterBuilder.CreateWithStats( stats, "Aragorn" );
 
         // Assert
         Assert.Equal( "Aragorn", fighter.Name );
-        Assert.Equal( 10, fighter.Stats.Strength );
-        Assert.Equal( 10, fighter.Stats.Dexterity );
-        Assert.Equal( 10, fighter.Stats.Intelligence );
+        Assert.Equal( stats, fighter.Stats );
         Assert.IsType<HumanRace>( fighter.Race );
         Assert.IsType<NoSpeciality>( fighter.Speciality );
         Assert.IsType<NoArmor>( fighter.EquippedArmor );
@@ -35,7 +34,7 @@ public class SingleFighterTests
     public void SingleFighter_EmptyName_ReturnsDefault()
     {
         // Arrange
-        SingleFighter fighter = FighterBuilder.CreateDefault( "" );
+        SingleFighter fighter = FighterBuilder.CreateDefault( String.Empty );
 
         // Assert
         Assert.Equal( "Безымянный боец", fighter.Name );
@@ -49,9 +48,9 @@ public class SingleFighterTests
     {
         // Arrange
         var humanBonus = new HumanRace().GetStatBonus();
-        int strPart = Math.Max( 0, strength + humanBonus.Strength ) * _strHealthMult;
-        int dexPart = Math.Max( 0, dexterity + humanBonus.Dexterity ) * _dexHealthMult;
-        int intPart = Math.Max( 0, intelligence + humanBonus.Intelligence ) * _intHealthMult;
+        int strPart = Math.Max( 0, strength + humanBonus.Strength ) * _StrHealthMult;
+        int dexPart = Math.Max( 0, dexterity + humanBonus.Dexterity ) * _DexHealthMult;
+        int intPart = Math.Max( 0, intelligence + humanBonus.Intelligence ) * _IntHealthMult;
         int expected = strPart + dexPart + intPart;
 
         var fighter = new SingleFighter(
@@ -89,13 +88,14 @@ public class SingleFighterTests
     {
         // Arrange
         SingleFighter fighter = FighterBuilder.CreateDefault();
+        int damageToTake = ( int )( fighter.GetMaxHealth() * 0.5 );
         int initialHealth = fighter.GetCurrentHealth();
 
         // Act
-        fighter.TakeDamage( 50 );
+        fighter.TakeDamage( damageToTake );
 
         // Assert
-        Assert.Equal( initialHealth - 50, fighter.GetCurrentHealth() );
+        Assert.Equal( initialHealth - damageToTake, fighter.GetCurrentHealth() );
     }
 
     [Fact]

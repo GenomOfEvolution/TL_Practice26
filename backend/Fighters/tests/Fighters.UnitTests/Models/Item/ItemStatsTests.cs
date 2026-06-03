@@ -1,4 +1,3 @@
-using System.Reflection;
 using Fighters.Models.Item;
 
 namespace Fighters.UnitTests.Models.Item;
@@ -36,14 +35,17 @@ public class ItemStatsTests
     {
         // Arrange
         var stats = new ItemStats();
-        var property = typeof( ItemStats ).GetProperty( propertyName );
 
         // Act
-        var ex = Record.Exception( () => property!.SetValue( stats, invalidValue ) );
+        Action act = propertyName switch
+        {
+            nameof( ItemStats.Strength ) => () => stats.Strength = invalidValue,
+            nameof( ItemStats.Dexterity ) => () => stats.Dexterity = invalidValue,
+            nameof( ItemStats.Intelligence ) => () => stats.Intelligence = invalidValue,
+            _ => throw new ArgumentException( $"Unexpected property: {propertyName}" )
+        };
 
-        // Assert
-        Assert.NotNull( ex );
-        Assert.IsType<TargetInvocationException>( ex );
-        Assert.IsType<ArgumentOutOfRangeException>( ex.InnerException );
+        // Assert 
+        Assert.Throws<ArgumentOutOfRangeException>( act );
     }
 }

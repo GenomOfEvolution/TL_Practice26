@@ -1,10 +1,14 @@
 using Fighters.Models.Armors;
 using Fighters.Models.Damage;
+using Fighters.Models.Fighters;
+using Fighters.UnitTests.TestHelpers;
 
 namespace Fighters.UnitTests.Models.Armors;
 
 public class WitchDoctorArmorTests
 {
+    private static IFighter Fighter => FighterBuilder.CreateDefault();
+
     [Fact]
     public void ModifyIncomingDamage_PhysicDamage_ConvertsToMagicAndReduces()
     {
@@ -20,7 +24,7 @@ public class WitchDoctorArmorTests
         };
 
         // Act
-        var result = armor.ModifyIncomingDamage( baseDamage, null! );
+        var result = armor.ModifyIncomingDamage( baseDamage, Fighter );
 
         // Assert
         Assert.Equal( 80, result.MinDamage );
@@ -44,7 +48,7 @@ public class WitchDoctorArmorTests
         };
 
         // Act
-        var result = armor.ModifyIncomingDamage( baseDamage, null! );
+        var result = armor.ModifyIncomingDamage( baseDamage, Fighter );
 
         // Assert
         Assert.Equal( 80, result.MinDamage );
@@ -67,7 +71,7 @@ public class WitchDoctorArmorTests
         };
 
         // Act
-        var result = armor.ModifyWeaponDamage( baseDamage, null! );
+        var result = armor.ModifyWeaponDamage( baseDamage, Fighter );
 
         // Assert
         Assert.Equal( 120, result.MinDamage );
@@ -92,7 +96,7 @@ public class WitchDoctorArmorTests
         };
 
         // Act
-        var result = armor.ModifyWeaponDamage( baseDamage, null! );
+        var result = armor.ModifyWeaponDamage( baseDamage, Fighter );
 
         // Assert
         Assert.Equal( 115, result.MinDamage );

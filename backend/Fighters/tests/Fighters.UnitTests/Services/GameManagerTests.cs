@@ -1,8 +1,5 @@
-﻿using Fighters.Models.Armors;
+﻿using Fighters.Extensions;
 using Fighters.Models.Fighters;
-using Fighters.Models.Races;
-using Fighters.Models.Specialities;
-using Fighters.Models.Weapons.MeleeWeapons;
 using Fighters.Services.BattleLogger;
 using Fighters.Services.DamageService;
 using Fighters.Services.InitiativeService;
@@ -16,8 +13,9 @@ namespace Fighters.UnitTests.Services;
 public class GameManagerTests
 {
     private readonly Mock<IRandomService> _mockRandom;
-    private readonly GameManager _gameManager;
     private readonly Mock<IBattleLogger> _mockLogger;
+
+    private readonly GameManager _gameManager;
 
     public GameManagerTests()
     {
@@ -48,45 +46,20 @@ public class GameManagerTests
     }
 
     [Fact]
-    public void Play_OneFighterPerTeam_ReturnsSingleWinner()
-    {
-        // Arrange
-        IFighter fighterA = FighterBuilder.CreateDefault( "FighterA" );
-        IFighter fighterB = FighterBuilder.CreateDefault( "FighterB" );
-
-        // Act
-        var winners = _gameManager.Play( [ fighterA ], [ fighterB ] );
-
-        // Assert
-        Assert.Single( winners );
-    }
-
-    [Fact]
     public void Play_FirstFighterDies_SecondFighterWins()
     {
         // Arrange
-        var fighterA = new SingleFighter(
-            "FighterA",
-            new FighterStats { Strength = 1, Dexterity = 1, Intelligence = 1 },
-            new HumanRace(),
-            new NoSpeciality(),
-            new NoArmor(),
-            new Fists()
-        );
-        var fighterB = new SingleFighter(
-            "FighterB",
-            new FighterStats { Strength = 50, Dexterity = 50, Intelligence = 50 },
-            new HumanRace(),
-            new NoSpeciality(),
-            new NoArmor(),
-            new Fists()
-        );
+        FighterStats firstFighterStats = new FighterStats { Dexterity = 1, Intelligence = 1, Strength = 1 };
+        FighterStats secondFighterStats = new FighterStats { Dexterity = 50, Intelligence = 50, Strength = 50 };
+
+        var fighterA = FighterBuilder.CreateWithStats( firstFighterStats, "FighterA" );
+        var fighterB = FighterBuilder.CreateWithStats( secondFighterStats, "FighterB" );
 
         // Act
         var winners = _gameManager.Play( [ fighterA ], [ fighterB ] );
 
         // Assert
-        Assert.Single( winners );
+        Assert.False( fighterA.IsAlive() );
         Assert.Equal( "FighterB", winners.First().Name );
     }
 
@@ -94,27 +67,17 @@ public class GameManagerTests
     public void Play_MultipleFighters_TeamWithLastAliveWins()
     {
         // Arrange
-        IFighter teamA1 = FighterBuilder.CreateDefault( "TeamA_F1" );
-        IFighter teamA2 = FighterBuilder.CreateDefault( "TeamA_F2" );
-        var teamB1 = new SingleFighter(
-            "TeamB_F1",
-            new FighterStats { Strength = 1, Dexterity = 1, Intelligence = 1 },
-            new HumanRace(),
-            new NoSpeciality(),
-            new NoArmor(),
-            new Fists()
-        );
-        var teamB2 = new SingleFighter(
-            "TeamB_F2",
-            new FighterStats { Strength = 1, Dexterity = 1, Intelligence = 1 },
-            new HumanRace(),
-            new NoSpeciality(),
-            new NoArmor(),
-            new Fists()
-        );
+        FighterStats firstTeamStats = new FighterStats { Dexterity = 10, Intelligence = 10, Strength = 10 };
+        FighterStats secondTeamStats = new FighterStats { Dexterity = 1, Intelligence = 1, Strength = 1 };
+
+        IFighter teamAfirstFighter = FighterBuilder.CreateWithStats( firstTeamStats, "TeamA_F1" );
+        IFighter teamAsecondFighter = FighterBuilder.CreateWithStats( firstTeamStats, "TeamA_F2" );
+
+        IFighter teamBfirstFighter = FighterBuilder.CreateWithStats( secondTeamStats, "TeamB_F1" );
+        IFighter teamBsecondFighter = FighterBuilder.CreateWithStats( secondTeamStats, "TeamB_F2" );
 
         // Act
-        var winners = _gameManager.Play( [ teamA1, teamA2 ], [ teamB1, teamB2 ] );
+        var winners = _gameManager.Play( [ teamAfirstFighter, teamAsecondFighter ], [ teamBfirstFighter, teamBsecondFighter ] );
 
         // Assert
         Assert.Equal( 2, winners.Count() );

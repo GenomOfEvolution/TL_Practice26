@@ -1,5 +1,7 @@
 using Fighters.Models.Armors;
 using Fighters.Models.Damage;
+using Fighters.Models.Fighters;
+using Fighters.UnitTests.TestHelpers;
 
 namespace Fighters.UnitTests.Models.Armors;
 
@@ -10,6 +12,7 @@ public class GlassArmorTests
     {
         // Arrange
         var armor = new GlassArmor();
+        IFighter fighter = FighterBuilder.CreateDefault();
         var baseDamage = new DamageStats
         {
             MinDamage = 50,
@@ -20,7 +23,7 @@ public class GlassArmorTests
         };
 
         // Act
-        var result = armor.ModifyWeaponDamage( baseDamage, null! );
+        var result = armor.ModifyWeaponDamage( baseDamage, fighter );
 
         // Assert
         Assert.Equal( 100, result.MinDamage );
@@ -34,6 +37,7 @@ public class GlassArmorTests
     {
         // Arrange
         var armor = new GlassArmor();
+        IFighter fighter = FighterBuilder.CreateDefault();
         var baseDamage = new DamageStats
         {
             MinDamage = 50,
@@ -44,7 +48,7 @@ public class GlassArmorTests
         };
 
         // Act
-        var result = armor.ModifyIncomingDamage( baseDamage, null! );
+        var result = armor.ModifyIncomingDamage( baseDamage, fighter );
 
         // Assert
         Assert.Equal( 100, result.MinDamage );

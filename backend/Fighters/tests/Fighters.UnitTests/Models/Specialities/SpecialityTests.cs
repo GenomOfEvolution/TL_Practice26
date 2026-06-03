@@ -1,8 +1,5 @@
-using Fighters.Models.Armors;
 using Fighters.Models.Fighters;
-using Fighters.Models.Races;
 using Fighters.Models.Specialities;
-using Fighters.Models.Weapons.MeleeWeapons;
 using Fighters.UnitTests.TestHelpers;
 
 namespace Fighters.UnitTests.Models.Specialities;
@@ -13,23 +10,7 @@ public class SpecialityTests
 
     public SpecialityTests()
     {
-        var damaged = FighterBuilder.CreateDefault( "DamagedFighter" );
-        damaged.TakeDamage( 100 );
-
-        _candidates =
-        [
-            FighterBuilder.CreateDefault( "FirstFighter" ),
-            damaged,
-            new SingleFighter(
-                "HealthiestFighter",
-                new FighterStats { Strength = 50, Dexterity = 0, Intelligence = 0 },
-                new HumanRace(),
-                new NoSpeciality(),
-                new NoArmor(),
-                new Fists()
-            ),
-            FighterBuilder.CreateDefault( "LastFighter" )
-        ];
+        _candidates = SetupCandidates();
     }
 
     [Fact]
@@ -82,5 +63,22 @@ public class SpecialityTests
 
         // Assert
         Assert.Equal( "DamagedFighter", target.Name );
+    }
+
+    private static List<IFighter> SetupCandidates()
+    {
+        var defaultFighterStats = new FighterStats { Dexterity = 10, Intelligence = 10, Strength = 10 };
+        var healthiestStats = new FighterStats { Dexterity = 0, Intelligence = 0, Strength = 50 };
+
+        var damagedFighter = FighterBuilder.CreateWithStats( defaultFighterStats, "DamagedFighter" );
+        damagedFighter.TakeDamage( 100 );
+
+        return
+        [
+            FighterBuilder.CreateWithStats( defaultFighterStats, "FirstFighter" ),
+            damagedFighter,
+            FighterBuilder.CreateWithStats( healthiestStats, "HealthiestFighter" ),
+            FighterBuilder.CreateWithStats( defaultFighterStats, "LastFighter" )
+        ];
     }
 }
