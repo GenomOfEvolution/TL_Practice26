@@ -2,6 +2,7 @@ using Fighters.Models.Armors;
 using Fighters.Models.Fighters;
 using Fighters.Models.Races;
 using Fighters.Models.Specialities;
+using Fighters.Models.Weapons;
 using Fighters.Models.Weapons.MeleeWeapons;
 using Fighters.TestLibrary;
 
@@ -44,18 +45,18 @@ public class SingleFighterTests
     [InlineData( 10, 10, 10 )]
     [InlineData( 0, 0, 0 )]
     [InlineData( 5, 15, 20 )]
-    public void SingleFighter_GetMaxHealth_CalculatesCorrectly( int str, int dex, int intelligence )
+    public void SingleFighter_GetMaxHealth_CalculatesCorrectly( int strength, int dexterity, int intelligence )
     {
         // Arrange
         var humanBonus = new HumanRace().GetStatBonus();
-        int strPart = Math.Max( 0, str + humanBonus.Strength ) * _strHealthMult;
-        int dexPart = Math.Max( 0, dex + humanBonus.Dexterity ) * _dexHealthMult;
+        int strPart = Math.Max( 0, strength + humanBonus.Strength ) * _strHealthMult;
+        int dexPart = Math.Max( 0, dexterity + humanBonus.Dexterity ) * _dexHealthMult;
         int intPart = Math.Max( 0, intelligence + humanBonus.Intelligence ) * _intHealthMult;
         int expected = strPart + dexPart + intPart;
 
         var fighter = new SingleFighter(
             "Test",
-            new FighterStats { Strength = str, Dexterity = dex, Intelligence = intelligence },
+            new FighterStats { Strength = strength, Dexterity = dexterity, Intelligence = intelligence },
             new HumanRace(),
             new NoSpeciality(),
             new NoArmor(),
@@ -104,7 +105,7 @@ public class SingleFighterTests
         SingleFighter fighter = FighterBuilder.CreateDefault();
 
         // Act
-        fighter.TakeDamage( 999999 );
+        fighter.TakeDamage( fighter.GetMaxHealth() + 1 );
 
         // Assert
         Assert.Equal( 0, fighter.GetCurrentHealth() );
@@ -129,12 +130,14 @@ public class SingleFighterTests
     {
         // Arrange
         SingleFighter fighter = FighterBuilder.CreateDefault();
-        var newWeapon = new Fists();
+        IWeapon newWeapon = new WoodenSword();
+        IWeapon oldWeapon = fighter.EquippedWeapon;
 
         // Act
         fighter.SetWeapon( newWeapon );
 
         // Assert
         Assert.Same( newWeapon, fighter.EquippedWeapon );
+        Assert.NotSame( oldWeapon, fighter.EquippedWeapon );
     }
 }

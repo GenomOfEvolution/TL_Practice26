@@ -1,13 +1,14 @@
-using Fighters.Services.RandomService;
-
 namespace Fighters.UnitTests.Services;
 
 public class RandomServiceTests
 {
     [Fact]
-    public void DefaultRandomService_Next_ReturnsInRange()
+    public void Next_Range_ReturnsInRange()
     {
+        // Arrange
         var service = new DefaultRandomService();
+
+        // Act & Assert
         for ( int i = 0; i < 100; i++ )
         {
             int result = service.Next( 5, 10 );
@@ -16,9 +17,12 @@ public class RandomServiceTests
     }
 
     [Fact]
-    public void DefaultRandomService_NextDouble_ReturnsInRange()
+    public void NextDouble_NoArgs_ReturnsInRange()
     {
+        // Arrange
         var service = new DefaultRandomService();
+
+        // Act & Assert
         for ( int i = 0; i < 100; i++ )
         {
             double result = service.NextDouble();

@@ -21,35 +21,42 @@ public class DamageServiceTests
     }
 
     [Fact]
-    public void CalculateAttackDamage_ReturnsDamageStats()
+    public void CalculateAttackDamage_DefaultFighter_ReturnsDamageStats()
     {
+        // Arrange
         _mockRandom.Setup( r => r.NextDouble() ).Returns( 1.0 );
         var service = new DamageService( _mockRandom.Object );
         var fighter = CreateDefaultFighter();
 
+        // Act
         var result = service.CalculateAttackDamage( fighter );
 
+        // Assert
         Assert.NotNull( result );
         Assert.True( result.MinDamage > 0 );
         Assert.True( result.MaxDamage >= result.MinDamage );
     }
 
     [Fact]
-    public void CalculateAttackDamage_CritApplied()
+    public void CalculateAttackDamage_CritRoll_AppliesCritDamage()
     {
+        // Arrange
         _mockRandom.Setup( r => r.NextDouble() ).Returns( 0.0 );
         var service = new DamageService( _mockRandom.Object );
         var fighter = CreateDefaultFighter();
 
+        // Act
         var result = service.CalculateAttackDamage( fighter );
 
+        // Assert
         Assert.True( result.MinDamage > 0 );
         Assert.True( result.MaxDamage >= result.MinDamage );
     }
 
     [Fact]
-    public void CalculateAttackDamage_RaceModifierApplied()
+    public void CalculateAttackDamage_DrowRace_AppliesRaceModifier()
     {
+        // Arrange
         _mockRandom.Setup( r => r.NextDouble() ).Returns( 1.0 );
         var service = new DamageService( _mockRandom.Object );
         var fighter = new SingleFighter(
@@ -61,8 +68,10 @@ public class DamageServiceTests
             new Brick()
         );
 
+        // Act
         var result = service.CalculateAttackDamage( fighter );
 
+        // Assert
         var expectedBase = new DamageService( _mockRandom.Object ).CalculateAttackDamage(
             new SingleFighter(
                 "Human",
@@ -79,8 +88,9 @@ public class DamageServiceTests
     }
 
     [Fact]
-    public void CalculateAttackDamage_ArmorModifierApplied()
+    public void CalculateAttackDamage_GlassArmor_AppliesArmorModifier()
     {
+        // Arrange
         _mockRandom.Setup( r => r.NextDouble() ).Returns( 1.0 );
         var service = new DamageService( _mockRandom.Object );
         var fighter = new SingleFighter(
@@ -101,16 +111,19 @@ public class DamageServiceTests
             new Fists()
         );
 
+        // Act
         var result = service.CalculateAttackDamage( fighter );
         var normalResult = service.CalculateAttackDamage( normalFighter );
 
+        // Assert
         Assert.True( result.MinDamage > normalResult.MinDamage );
         Assert.True( result.MaxDamage > normalResult.MaxDamage );
     }
 
     [Fact]
-    public void CalculateReceivedDamage_ResistancesApplied()
+    public void CalculateReceivedDamage_KnightArmor_ResistancesReduceDamage()
     {
+        // Arrange
         _mockRandom.Setup( r => r.Next( It.IsAny<int>(), It.IsAny<int>() ) )
             .Returns<int, int>( ( min, max ) => min );
         var service = new DamageService( _mockRandom.Object );
@@ -131,15 +144,18 @@ public class DamageServiceTests
             CritDamage = 1,
         };
 
+        // Act
         var result = service.CalculateReceivedDamage( incomingDamage, knight );
 
+        // Assert
         int expectedMin = ( int )( 100 * ( 1 - 0.40f ) );
         Assert.Equal( expectedMin, result );
     }
 
     [Fact]
-    public void CalculateReceivedDamage_RandomRangeApplied()
+    public void CalculateReceivedDamage_ValidRange_ReturnsDamageInRange()
     {
+        // Arrange
         _mockRandom.Setup( r => r.Next( It.IsAny<int>(), It.IsAny<int>() ) )
             .Returns<int, int>( ( min, max ) =>
             {
@@ -157,14 +173,17 @@ public class DamageServiceTests
             CritDamage = 1,
         };
 
+        // Act
         var result = service.CalculateReceivedDamage( incomingDamage, fighter );
 
+        // Assert
         Assert.InRange( result, 1, 100 );
     }
 
     [Fact]
-    public void CalculateReceivedDamage_RaceIncomingModifierApplied()
+    public void CalculateReceivedDamage_StoneGiantRace_AppliesIncomingModifier()
     {
+        // Arrange
         _mockRandom.Setup( r => r.Next( It.IsAny<int>(), It.IsAny<int>() ) )
             .Returns<int, int>( ( min, max ) => min );
         var service = new DamageService( _mockRandom.Object );
@@ -185,8 +204,10 @@ public class DamageServiceTests
             CritDamage = 1,
         };
 
+        // Act
         var result = service.CalculateReceivedDamage( incomingDamage, stoneGiant );
 
+        // Assert
         int expectedMin = ( int )( 100 * 0.85f );
         Assert.Equal( expectedMin, result );
     }

@@ -6,8 +6,9 @@ namespace Fighters.UnitTests.Extensions;
 public class DamageTypeExtensionsTests
 {
     [Fact]
-    public void GetTypeNameRu_ReturnsRussianName()
+    public void GetTypeNameRu_AllDamageTypes_ReturnsRussianName()
     {
+        // Act & Assert
         Assert.Equal( "физический", DamageType.Physic.GetTypeNameRu() );
         Assert.Equal( "магический", DamageType.Magic.GetTypeNameRu() );
         Assert.Equal( "чистый", DamageType.Pure.GetTypeNameRu() );

@@ -17,7 +17,7 @@ public class ItemCatalogTests
     );
 
     [Fact]
-    public void GetAll_ReturnsAllEntries()
+    public void GetAll_ThreeEntries_ReturnsAllEntries()
     {
         // Act
         var result = _catalog.GetAll();
@@ -27,7 +27,7 @@ public class ItemCatalogTests
     }
 
     [Fact]
-    public void GetAvailable_FiltersByPrice()
+    public void GetAvailable_WithBudget20_ReturnsItemsUnder20()
     {
         // Act
         var result = _catalog.GetAvailable( 20 );
@@ -56,7 +56,7 @@ public class ItemCatalogTests
     }
 
     [Fact]
-    public void GetByIndex_ReturnsCorrectEntry()
+    public void GetByIndex_ValidIndex_ReturnsCorrectEntry()
     {
         // Act
         var first = _catalog.GetByIndex( 0 );
@@ -70,7 +70,7 @@ public class ItemCatalogTests
     }
 
     [Fact]
-    public void GetByIndex_ThrowsOnInvalidIndex()
+    public void GetByIndex_InvalidIndex_ThrowsArgumentOutOfRangeException()
     {
         // Act & Assert
         Assert.Throws<ArgumentOutOfRangeException>( () => _catalog.GetByIndex( -1 ) );
@@ -78,7 +78,7 @@ public class ItemCatalogTests
     }
 
     [Fact]
-    public void CatalogEntry_Create_SetsItemAndPrice()
+    public void CatalogEntry_Create_WithItemAndPrice_SetsProperties()
     {
         // Arrange
         var item = new TestItem( "Bow", "Ranged weapon", ItemRarity.Uncommon );

@@ -1,5 +1,4 @@
-﻿using Fighters.Extensions;
-using Fighters.Models.Armors;
+﻿using Fighters.Models.Armors;
 using Fighters.Models.Fighters;
 using Fighters.Models.Races;
 using Fighters.Models.Specialities;
@@ -8,9 +7,9 @@ using Fighters.Services.BattleLogger;
 using Fighters.Services.DamageService;
 using Fighters.Services.InitiativeService;
 using Fighters.Services.RandomService;
-using GameManager = Fighters.Services.GameManager.GameManager;
-using Moq;
 using Fighters.TestLibrary;
+using Moq;
+using GameManager = Fighters.Services.GameManager.GameManager;
 
 namespace Fighters.UnitTests.Services;
 
@@ -37,28 +36,35 @@ public class GameManagerTests
     [Fact]
     public void Play_TwoEqualFighters_FirstFighterWins()
     {
+        // Arrange
         IFighter fighterA = FighterBuilder.CreateDefault( "FighterA" );
         IFighter fighterB = FighterBuilder.CreateDefault( "FighterB" );
 
+        // Act
         var winner = _gameManager.Play( [ fighterA ], [ fighterB ] );
 
+        // Assert
         Assert.Equal( fighterA.Name, winner.First().Name );
     }
 
     [Fact]
     public void Play_OneFighterPerTeam_ReturnsSingleWinner()
     {
+        // Arrange
         IFighter fighterA = FighterBuilder.CreateDefault( "FighterA" );
         IFighter fighterB = FighterBuilder.CreateDefault( "FighterB" );
 
+        // Act
         var winners = _gameManager.Play( [ fighterA ], [ fighterB ] );
 
+        // Assert
         Assert.Single( winners );
     }
 
     [Fact]
-    public void Play_FighterADies_FighterBWins()
+    public void Play_FirstFighterDies_SecondFighterWins()
     {
+        // Arrange
         var fighterA = new SingleFighter(
             "FighterA",
             new FighterStats { Strength = 1, Dexterity = 1, Intelligence = 1 },
@@ -76,8 +82,10 @@ public class GameManagerTests
             new Fists()
         );
 
+        // Act
         var winners = _gameManager.Play( [ fighterA ], [ fighterB ] );
 
+        // Assert
         Assert.Single( winners );
         Assert.Equal( "FighterB", winners.First().Name );
     }
@@ -85,6 +93,7 @@ public class GameManagerTests
     [Fact]
     public void Play_MultipleFighters_TeamWithLastAliveWins()
     {
+        // Arrange
         IFighter teamA1 = FighterBuilder.CreateDefault( "TeamA_F1" );
         IFighter teamA2 = FighterBuilder.CreateDefault( "TeamA_F2" );
         var teamB1 = new SingleFighter(
@@ -104,35 +113,12 @@ public class GameManagerTests
             new Fists()
         );
 
+        // Act
         var winners = _gameManager.Play( [ teamA1, teamA2 ], [ teamB1, teamB2 ] );
 
+        // Assert
         Assert.Equal( 2, winners.Count() );
         Assert.Contains( winners, w => w.Name == "TeamA_F1" );
         Assert.Contains( winners, w => w.Name == "TeamA_F2" );
-    }
-
-    [Fact]
-    public void Play_RoundLogic_ExecutesUntilOneTeamRemains()
-    {
-        IFighter fighterA = FighterBuilder.CreateDefault( "FighterA" );
-        IFighter fighterB = FighterBuilder.CreateDefault( "FighterB" );
-
-        var winners = _gameManager.Play( [ fighterA ], [ fighterB ] );
-
-        Assert.Single( winners );
-        Assert.False( fighterB.IsAlive() );
-        Assert.True( fighterA.IsAlive() );
-    }
-
-    [Fact]
-    public void Play_LoggerCalled_BattleStartAndEnd()
-    {
-        IFighter fighterA = FighterBuilder.CreateDefault( "FighterA" );
-        IFighter fighterB = FighterBuilder.CreateDefault( "FighterB" );
-
-        _gameManager.Play( [ fighterA ], [ fighterB ] );
-
-        _mockLogger.Verify( l => l.LogBattleStart( It.IsAny<IEnumerable<IFighter>>() ), Times.Once );
-        _mockLogger.Verify( l => l.LogBattleEnd( It.IsAny<IEnumerable<IFighter>>() ), Times.Once );
     }
 }

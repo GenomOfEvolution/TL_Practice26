@@ -11,20 +11,8 @@ namespace Fighters.UnitTests.Services;
 
 public class InitiativeServiceTests
 {
-    private static SingleFighter CreateFighter( string name, int dexterity, IRace race )
-    {
-        return new SingleFighter(
-            name,
-            new FighterStats { Strength = 10, Dexterity = dexterity, Intelligence = 10 },
-            race,
-            new NoSpeciality(),
-            new NoArmor(),
-            new Fists()
-        );
-    }
-
     [Fact]
-    public void DetermineTurnOrder_SortedByInitiativeDesc()
+    public void DetermineTurnOrder_MultipleFighters_SortedByInitiativeDescending()
     {
         // Arrange
         var mockRandom = new Mock<IRandomService>();
@@ -54,7 +42,7 @@ public class InitiativeServiceTests
     }
 
     [Fact]
-    public void DetermineTurnOrder_RaceModifierApplied()
+    public void DetermineTurnOrder_DifferentRaces_RaceModifierApplied()
     {
         // Arrange
         var mockRandom = new Mock<IRandomService>();
@@ -84,13 +72,13 @@ public class InitiativeServiceTests
     }
 
     [Fact]
-    public void DetermineTurnOrder_TiebreakerByDexterity()
+    public void DetermineTurnOrder_EqualInitiative_TiebreakerByDexterity()
     {
         // Arrange
         var mockRandom = new Mock<IRandomService>();
         mockRandom
             .Setup( r => r.Next( It.IsAny<int>(), It.IsAny<int>() ) )
-            .Returns( 0 );
+            .Returns<int, int>( ( min, max ) => min );
 
         var service = new InitiativeService( mockRandom.Object );
         var fighters = new List<IFighter>
@@ -111,5 +99,17 @@ public class InitiativeServiceTests
         Assert.Equal( "Dex6", result[ 2 ].Name );
         Assert.Equal( "Dex4", result[ 3 ].Name );
         Assert.Equal( "Dex2", result[ 4 ].Name );
+    }
+
+    private static SingleFighter CreateFighter( string name, int dexterity, IRace race )
+    {
+        return new SingleFighter(
+            name,
+            new FighterStats { Strength = 10, Dexterity = dexterity, Intelligence = 10 },
+            race,
+            new NoSpeciality(),
+            new NoArmor(),
+            new Fists()
+        );
     }
 }

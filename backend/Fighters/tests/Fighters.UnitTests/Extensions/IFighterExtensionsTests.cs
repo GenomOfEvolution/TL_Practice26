@@ -8,15 +8,27 @@ public class IFighterExtensionsTests
     [Fact]
     public void IsAlive_HealthAboveZero_ReturnsTrue()
     {
+        // Arrange
         var fighter = FighterBuilder.CreateDefault();
-        Assert.True( fighter.IsAlive() );
+
+        // Act
+        bool result = fighter.IsAlive();
+
+        // Assert
+        Assert.True( result );
     }
 
     [Fact]
     public void IsAlive_HealthZero_ReturnsFalse()
     {
+        // Arrange
         var fighter = FighterBuilder.CreateDefault();
-        fighter.TakeDamage( 999999 );
-        Assert.False( fighter.IsAlive() );
+        fighter.TakeDamage( fighter.GetMaxHealth() + 1 );
+
+        // Act
+        bool result = fighter.IsAlive();
+
+        // Assert
+        Assert.False( result );
     }
 }

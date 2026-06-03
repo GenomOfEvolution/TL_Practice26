@@ -15,8 +15,10 @@ public class FactoryTests
     [Fact]
     public void RaceFactory_Create_ReturnsCorrectRace()
     {
+        // Arrange
         var factory = new RaceFactory();
 
+        // Act & Assert
         Assert.IsType<HumanRace>( factory.Create( 0 ) );
         Assert.IsType<DrowRace>( factory.Create( 1 ) );
         Assert.IsType<GnomeRace>( factory.Create( 2 ) );
@@ -27,7 +29,10 @@ public class FactoryTests
     [Fact]
     public void RaceFactory_Create_InvalidChoice_Throws()
     {
+        // Arrange
         var factory = new RaceFactory();
+
+        // Act & Assert
         Assert.Throws<ArgumentOutOfRangeException>( () => factory.Create( -1 ) );
         Assert.Throws<ArgumentOutOfRangeException>( () => factory.Create( 5 ) );
     }
@@ -35,8 +40,10 @@ public class FactoryTests
     [Fact]
     public void SpecialityFactory_Create_ReturnsCorrectSpeciality()
     {
+        // Arrange
         var factory = new SpecialityFactory();
 
+        // Act & Assert
         Assert.IsType<NoSpeciality>( factory.Create( 0 ) );
         Assert.IsType<Warrior>( factory.Create( 1 ) );
         Assert.IsType<Ranger>( factory.Create( 2 ) );
@@ -46,7 +53,10 @@ public class FactoryTests
     [Fact]
     public void SpecialityFactory_Create_InvalidChoice_Throws()
     {
+        // Arrange
         var factory = new SpecialityFactory();
+
+        // Act & Assert
         Assert.Throws<ArgumentOutOfRangeException>( () => factory.Create( -1 ) );
         Assert.Throws<ArgumentOutOfRangeException>( () => factory.Create( 4 ) );
     }
@@ -54,13 +64,16 @@ public class FactoryTests
     [Fact]
     public void WeaponFactory_TryCreate_EnoughPoints_CreatesAndDeducts()
     {
+        // Arrange
         var budget = new SharedPointsBudget( 100 );
         var catalog = new WeaponCatalog();
         var factory = new WeaponFactory( catalog );
         factory.SetBudget( budget );
 
+        // Act
         bool result = factory.TryCreate( 0, out IWeapon? weapon );
 
+        // Assert
         Assert.True( result );
         Assert.IsType<Fists>( weapon );
         Assert.Equal( 100, budget.RemainingPoints );
@@ -69,26 +82,32 @@ public class FactoryTests
     [Fact]
     public void WeaponFactory_TryCreate_NotEnoughPoints_ReturnsFalse()
     {
+        // Arrange
         var budget = new SharedPointsBudget( 0 );
         var catalog = new WeaponCatalog();
         var factory = new WeaponFactory( catalog );
         factory.SetBudget( budget );
 
+        // Act
         bool result = factory.TryCreate( 1, out IWeapon? weapon );
 
+        // Assert
         Assert.False( result );
     }
 
     [Fact]
     public void ArmorFactory_TryCreate_EnoughPoints_CreatesAndDeducts()
     {
+        // Arrange
         var budget = new SharedPointsBudget( 100 );
         var catalog = new ArmorCatalog();
         var factory = new ArmorFactory( catalog );
         factory.SetBudget( budget );
 
+        // Act
         bool result = factory.TryCreate( 0, out IArmor? armor );
 
+        // Assert
         Assert.True( result );
         Assert.IsType<NoArmor>( armor );
         Assert.Equal( 100, budget.RemainingPoints );
@@ -97,19 +116,23 @@ public class FactoryTests
     [Fact]
     public void ArmorFactory_TryCreate_NotEnoughPoints_ReturnsFalse()
     {
+        // Arrange
         var budget = new SharedPointsBudget( 0 );
         var catalog = new ArmorCatalog();
         var factory = new ArmorFactory( catalog );
         factory.SetBudget( budget );
 
+        // Act
         bool result = factory.TryCreate( 1, out IArmor? armor );
 
+        // Assert
         Assert.False( result );
     }
 
     [Fact]
     public void FighterStatFactory_TryCreate_CreatesStats()
     {
+        // Arrange
         var budget = new SharedPointsBudget( 30 );
         var factory = new FighterStatFactory();
         factory.SetBudget( budget );
@@ -120,8 +143,10 @@ public class FactoryTests
 
         try
         {
+            // Act
             bool result = factory.TryCreate( 0, out FighterStats? stats );
 
+            // Assert
             Assert.True( result );
             Assert.NotNull( stats );
             Assert.Equal( 10, stats.Strength );
@@ -138,6 +163,7 @@ public class FactoryTests
     [Fact]
     public void FighterFactory_CreateFighter_ReturnsValidFighter()
     {
+        // Arrange
         var raceFactory = new RaceFactory();
         var specialityFactory = new SpecialityFactory();
         var statFactory = new FighterStatFactory();
@@ -160,8 +186,10 @@ public class FactoryTests
 
         try
         {
+            // Act
             IFighter fighter = fighterFactory.CreateFighter();
 
+            // Assert
             Assert.NotNull( fighter );
             Assert.Equal( "TestFighter", fighter.Name );
             Assert.IsType<HumanRace>( fighter.Race );
@@ -178,6 +206,7 @@ public class FactoryTests
     [Fact]
     public void FighterFactory_CreateFighterTeam_ReturnsTeamWithCorrectCount()
     {
+        // Arrange
         var raceFactory = new RaceFactory();
         var specialityFactory = new SpecialityFactory();
         var statFactory = new FighterStatFactory();
@@ -194,8 +223,10 @@ public class FactoryTests
 
         try
         {
+            // Act
             IFighterTeam team = fighterFactory.CreateFighterTeam( 2 );
 
+            // Assert
             Assert.NotNull( team );
             Assert.Equal( 2, team.GetMembers().Count() );
         }
