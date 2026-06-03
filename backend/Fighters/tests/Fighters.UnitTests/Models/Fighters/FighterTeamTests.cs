@@ -1,5 +1,5 @@
 using Fighters.Models.Fighters;
-using Fighters.TestLibrary;
+using Fighters.UnitTests.TestHelpers;
 
 namespace Fighters.UnitTests.Models.Fighters;
 

@@ -4,7 +4,7 @@ using Fighters.Models.Races;
 using Fighters.Models.Specialities;
 using Fighters.Models.Weapons.MeleeWeapons;
 
-namespace Fighters.TestLibrary;
+namespace Fighters.UnitTests.TestHelpers;
 
 public static class FighterBuilder
 {

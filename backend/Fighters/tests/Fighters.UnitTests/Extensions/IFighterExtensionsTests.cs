@@ -1,5 +1,5 @@
 using Fighters.Extensions;
-using Fighters.TestLibrary;
+using Fighters.UnitTests.TestHelpers;
 
 namespace Fighters.UnitTests.Extensions;
 

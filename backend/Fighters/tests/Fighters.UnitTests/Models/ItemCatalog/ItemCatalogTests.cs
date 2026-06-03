@@ -1,6 +1,6 @@
 using Fighters.Models.Item;
 using Fighters.Models.ItemCatalog;
-using Fighters.TestLibrary;
+using Fighters.UnitTests.TestHelpers;
 
 namespace Fighters.UnitTests.Models.ItemCatalog;
 

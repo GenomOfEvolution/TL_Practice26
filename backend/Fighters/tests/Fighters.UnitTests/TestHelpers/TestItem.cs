@@ -1,6 +1,6 @@
 using Fighters.Models.Item;
 
-namespace Fighters.TestLibrary;
+namespace Fighters.UnitTests.TestHelpers;
 
 public class TestItem : IItem
 {

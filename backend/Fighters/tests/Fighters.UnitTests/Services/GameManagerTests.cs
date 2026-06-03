@@ -7,7 +7,7 @@ using Fighters.Services.BattleLogger;
 using Fighters.Services.DamageService;
 using Fighters.Services.InitiativeService;
 using Fighters.Services.RandomService;
-using Fighters.TestLibrary;
+using Fighters.UnitTests.TestHelpers;
 using Moq;
 using GameManager = Fighters.Services.GameManager.GameManager;
 

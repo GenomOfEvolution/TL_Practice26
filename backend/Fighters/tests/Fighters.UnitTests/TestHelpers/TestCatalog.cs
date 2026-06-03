@@ -1,7 +1,7 @@
 using Fighters.Models.Item;
 using Fighters.Models.ItemCatalog;
 
-namespace Fighters.TestLibrary;
+namespace Fighters.UnitTests.TestHelpers;
 
 public class TestCatalog<T>( params CatalogEntry<T>[] entries ) : IItemCatalog<T> where T : IItem
 {
