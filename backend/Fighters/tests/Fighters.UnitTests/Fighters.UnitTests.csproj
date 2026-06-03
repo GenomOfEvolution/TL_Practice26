@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Fighters\Fighters.csproj" />
-
   </ItemGroup>
 
   <ItemGroup>
