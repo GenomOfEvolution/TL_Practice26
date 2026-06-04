@@ -10,6 +10,8 @@ type CurrencyInputProps = {
   onAmountChange: (value: string) => void;
   onCurrencyChange: (code: string) => void;
   readOnly?: boolean;
+  inputTestId?: string;
+  selectTestId?: string;
 };
 
 export const CurrencyInput = ({
@@ -18,7 +20,9 @@ export const CurrencyInput = ({
   currencies,
   onAmountChange,
   onCurrencyChange,
-  readOnly = false
+  readOnly = false,
+  inputTestId,
+  selectTestId
 }: CurrencyInputProps) => {
   const handleAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
     onAmountChange(e.target.value);
@@ -30,10 +34,10 @@ export const CurrencyInput = ({
 
   return (
     <div className={styles.container}>
-      <input className={styles.input} type="text" value={value} onChange={handleAmountChange} readOnly={readOnly} />
+      <input className={styles.input} type="text" value={value} onChange={handleAmountChange} readOnly={readOnly} data-testid={inputTestId} />
       <div className={styles.separator} />
       <div className={styles.dropdown}>
-        <select className={styles.select} value={currency} onChange={handleCurrencyChange}>
+        <select className={styles.select} value={currency} onChange={handleCurrencyChange} data-testid={selectTestId}>
           {currencies.map((c) => (
             <option key={c.code} value={c.code}>
               {c.code}
