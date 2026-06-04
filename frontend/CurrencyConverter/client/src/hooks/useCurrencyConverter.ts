@@ -30,7 +30,7 @@ export const useCurrencyConverter = () => {
   const result = useMemo(() => {
     const rate = priceChanges[from]?.[to]?.price;
 
-    if (rate == null) {
+    if (rate === null) {
       return '';
     }
 
