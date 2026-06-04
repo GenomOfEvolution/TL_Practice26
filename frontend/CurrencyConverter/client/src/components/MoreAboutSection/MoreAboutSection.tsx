@@ -5,42 +5,46 @@ import { MoreAboutButton } from './MoreAboutButton';
 import { CurrencyInfo } from '../CurrencyInfo/CurrencyInfo';
 
 type MoreAboutSectionProps = {
-  from: Currency;
-  to: Currency;
+  from: string;
+  to: string;
+  currencies: Currency[];
 };
 
-export const MoreAboutSection = ({ from, to }: MoreAboutSectionProps) => {
+export const MoreAboutSection = ({ from, to, currencies }: MoreAboutSectionProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleToggle = () => {
     setIsOpen((prev) => !prev);
   };
 
+  const fromCurrency = currencies.find((c) => c.code === from);
+  const toCurrency = currencies.find((c) => c.code === to);
+
   return (
     <div className={styles.section}>
-      <div>
+      <div key={`${from}-${to}`}>
         <div className={styles.buttonWrapper}>
           <MoreAboutButton
-            fromValue={from.code}
-            toValue={to.code}
+            fromValue={from}
+            toValue={to}
             arrowUp={isOpen}
             onClick={handleToggle}
             testId="more-about-button"
           />
         </div>
-        {isOpen && (
-          <>
-            <CurrencyInfo
-              testId="first-info"
-              title={`${from.name} - ${from.code} - ${from.symbol}`}
-              description={from.description || 'No description available.'}
-            />
-            <CurrencyInfo
-              testId="second-info"
-              title={`${to.name} - ${to.code} - ${to.symbol}`}
-              description={to.description || 'No description available.'}
-            />
-          </>
+        {isOpen && fromCurrency && (
+          <CurrencyInfo
+            testId="first-info"
+            title={`${fromCurrency.name} - ${fromCurrency.code} - ${fromCurrency.symbol}`}
+            description={fromCurrency.description || 'No description available.'}
+          />
+        )}
+        {isOpen && toCurrency && (
+          <CurrencyInfo
+            testId="second-info"
+            title={`${toCurrency.name} - ${toCurrency.code} - ${toCurrency.symbol}`}
+            description={toCurrency.description || 'No description available.'}
+          />
         )}
       </div>
     </div>

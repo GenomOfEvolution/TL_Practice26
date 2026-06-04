@@ -1,30 +1,25 @@
 import { useState, useMemo, useCallback } from 'react';
-import type { Currency } from '../models';
 import { currencies, priceChanges } from '../mocks';
 
-const findFirstDifferent = (code: string): Currency => {
+const findFirstDifferent = (code: string): string => {
   const found = currencies.find((c) => c.code !== code);
 
-  return found ? found : currencies[0];
+  return found ? found.code : code;
 };
 
 export const useCurrencyConverter = () => {
-  const [from, setFromState] = useState<Currency>(currencies[0]);
-  const [to, setToState] = useState<Currency>(currencies[1]);
+  const [from, setFromState] = useState(currencies[0].code);
+  const [to, setToState] = useState(currencies[1].code);
   const [amount, setAmount] = useState('1');
 
   const setFrom = useCallback((code: string) => {
-    const currency = currencies.find((c) => c.code === code);
-    if (!currency) return;
-    setFromState(currency);
-    setToState((prevTo) => (code === prevTo.code ? findFirstDifferent(code) : prevTo));
+    setFromState(code);
+    setToState((prevTo) => (code === prevTo ? findFirstDifferent(code) : prevTo));
   }, []);
 
   const setTo = useCallback((code: string) => {
-    const currency = currencies.find((c) => c.code === code);
-    if (!currency) return;
-    setToState(currency);
-    setFromState((prevFrom) => (code === prevFrom.code ? findFirstDifferent(code) : prevFrom));
+    setToState(code);
+    setFromState((prevFrom) => (code === prevFrom ? findFirstDifferent(code) : prevFrom));
   }, []);
 
   const swap = useCallback(() => {
@@ -33,9 +28,9 @@ export const useCurrencyConverter = () => {
   }, [from, to]);
 
   const result = useMemo(() => {
-    const rate = priceChanges[from.code]?.[to.code]?.price;
+    const rate = priceChanges[from]?.[to]?.price;
 
-    if (rate === null) {
+    if (rate == null) {
       return '';
     }
 

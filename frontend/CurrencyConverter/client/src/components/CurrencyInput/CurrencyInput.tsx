@@ -18,7 +18,7 @@ export const CurrencyInput = ({
   currencies,
   onAmountChange,
   onCurrencyChange,
-  readOnly = false,
+  readOnly = false
 }: CurrencyInputProps) => {
   const handleAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
     onAmountChange(e.target.value);

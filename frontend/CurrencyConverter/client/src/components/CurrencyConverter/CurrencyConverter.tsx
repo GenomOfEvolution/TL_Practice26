@@ -9,14 +9,18 @@ export const CurrencyConverter = () => {
   const { from, to, amount, result, currencies, priceChanges, setFrom, setTo, setAmount, swap } =
     useCurrencyConverter();
 
-  const dateTime = priceChanges[from.code]?.[to.code]?.dateTime;
+  const fromCurrency = currencies.find((c) => c.code === from);
+  const toCurrency = currencies.find((c) => c.code === to);
+  const dateTime = priceChanges[from]?.[to]?.dateTime;
 
   return (
     <div className={styles.exchanger}>
-      <ConversionHeader from={from} to={to} amount={amount} result={result} dateTime={dateTime} />
+      {fromCurrency && toCurrency && (
+        <ConversionHeader from={fromCurrency} to={toCurrency} amount={amount} result={result} dateTime={dateTime} />
+      )}
       <CurrencyInput
         value={amount}
-        currency={from.code}
+        currency={from}
         currencies={currencies}
         onAmountChange={setAmount}
         onCurrencyChange={setFrom}
@@ -26,13 +30,13 @@ export const CurrencyConverter = () => {
       </div>
       <CurrencyInput
         value={result}
-        currency={to.code}
+        currency={to}
         currencies={currencies}
         onAmountChange={setAmount}
         onCurrencyChange={setTo}
         readOnly
       />
-      <MoreAboutSection key={`${from.code}-${to.code}`} from={from} to={to} />
+      <MoreAboutSection from={from} to={to} currencies={currencies} />
     </div>
   );
 };
