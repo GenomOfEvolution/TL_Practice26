@@ -1,0 +1,33 @@
+.section {
+  display: flex;
+  flex-direction: column;
+}
+
+.button-wrapper {
+  position: relative;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  block-size: 48px;
+  margin-block-end: 24px;
+}
+
+.button-wrapper::before {
+  content: '';
+
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline: 0;
+  z-index: 0;
+
+  margin-inline-end: 29px;
+
+  border-block-start: 1px solid #d9d9d9;
+}
+
+.button-wrapper > * {
+  position: relative;
+  z-index: 1;
+}
