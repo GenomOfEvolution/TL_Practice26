@@ -24,9 +24,11 @@ export const CurrencyConverter = () => {
         currencies={currencies}
         onAmountChange={setAmount}
         onCurrencyChange={setFrom}
+        inputTestId="from-amount"
+        selectTestId="from-currency"
       />
       <div className={styles.swapWrapper}>
-        <SwapButton onClick={swap} />
+        <SwapButton onClick={swap} testId="swap-button" />
       </div>
       <CurrencyInput
         value={result}
@@ -35,8 +37,16 @@ export const CurrencyConverter = () => {
         onAmountChange={setAmount}
         onCurrencyChange={setTo}
         readOnly
+        inputTestId="to-amount"
+        selectTestId="to-currency"
       />
-      <MoreAboutSection from={from} to={to} currencies={currencies} />
+      {/*
+        key={`${from}-${to}`} — при смене валютной пары React удаляет старый
+        MoreAboutSection и создаёт новый, сбрасывая isOpen в false.
+        Без key пришлось бы использовать useEffect + setIsOpen(false),
+        что не гарантирует сброс всех видов локального состояния (ref и т.д.).
+      */}
+      <MoreAboutSection key={`${from}-${to}`} from={from} to={to} currencies={currencies} />
     </div>
   );
 };

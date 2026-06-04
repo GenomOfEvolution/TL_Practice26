@@ -22,7 +22,7 @@ export const MoreAboutSection = ({ from, to, currencies }: MoreAboutSectionProps
 
   return (
     <div className={styles.section}>
-      <div key={`${from}-${to}`}>
+      <div>
         <div className={styles.buttonWrapper}>
           <MoreAboutButton
             fromValue={from}
