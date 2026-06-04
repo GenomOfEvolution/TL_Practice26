@@ -12,7 +12,7 @@ namespace Fighters.UnitTests.Factories;
 public class FighterFactoryTests
 {
     [Fact]
-    public void FighterFactory_CreateFighter_ReturnsValidFighter()
+    public void CreateFighter_NotZeroPoints_ReturnsValidFighter()
     {
         // Arrange
         var raceFactory = new RaceFactory();
@@ -46,7 +46,7 @@ public class FighterFactoryTests
     }
 
     [Fact]
-    public void FighterFactory_CreateFighterTeam_ReturnsTeamWithCorrectCount()
+    public void CreateFighterTeam_NotZeroPoints_ReturnsTeamWithCorrectCount()
     {
         // Arrange
         var raceFactory = new RaceFactory();

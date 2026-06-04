@@ -6,7 +6,7 @@ namespace Fighters.UnitTests.Factories;
 public class SpecialityFactoryTests
 {
     [Fact]
-    public void SpecialityFactory_Create_ReturnsCorrectSpeciality()
+    public void Create_CorrectIndex_ReturnsCorrectSpeciality()
     {
         // Arrange
         var factory = new SpecialityFactory();

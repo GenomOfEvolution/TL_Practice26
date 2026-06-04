@@ -9,7 +9,7 @@ namespace Fighters.UnitTests.Factories;
 public class WeaponFactoryTests
 {
     [Fact]
-    public void WeaponFactory_TryCreate_EnoughPoints_CreatesAndDeducts()
+    public void TryCreate_EnoughPoints_CreatesAndDeducts()
     {
         // Arrange
         var budget = new SharedPointsBudget( 100 );
@@ -27,7 +27,7 @@ public class WeaponFactoryTests
     }
 
     [Fact]
-    public void WeaponFactory_TryCreate_NotEnoughPoints_ReturnsFalse()
+    public void TryCreate_NotEnoughPoints_ReturnsFalse()
     {
         // Arrange
         var budget = new SharedPointsBudget( 0 );

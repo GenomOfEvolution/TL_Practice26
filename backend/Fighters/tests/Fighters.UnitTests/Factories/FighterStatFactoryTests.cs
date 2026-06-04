@@ -8,7 +8,7 @@ namespace Fighters.UnitTests.Factories;
 public class FighterStatFactoryTests
 {
     [Fact]
-    public void FighterStatFactory_TryCreate_CreatesStats()
+    public void TryCreate_NotZeroPoints_CreatesStats()
     {
         // Arrange
         var budget = new SharedPointsBudget( 30 );

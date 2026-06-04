@@ -10,9 +10,9 @@ namespace Fighters.UnitTests.Models.Fighters;
 
 public class SingleFighterTests
 {
-    private const int _StrHealthMult = 25;
-    private const int _DexHealthMult = 20;
-    private const int _IntHealthMult = 15;
+    private const int StrenghtHealthMult = 25;
+    private const int DexterityHealthMult = 20;
+    private const int IntelligenceHealthMult = 15;
 
     [Fact]
     public void SingleFighter_Create_PropertiesInitialized()
@@ -48,9 +48,9 @@ public class SingleFighterTests
     {
         // Arrange
         var humanBonus = new HumanRace().GetStatBonus();
-        int strPart = Math.Max( 0, strength + humanBonus.Strength ) * _StrHealthMult;
-        int dexPart = Math.Max( 0, dexterity + humanBonus.Dexterity ) * _DexHealthMult;
-        int intPart = Math.Max( 0, intelligence + humanBonus.Intelligence ) * _IntHealthMult;
+        int strPart = Math.Max( 0, strength + humanBonus.Strength ) * StrenghtHealthMult;
+        int dexPart = Math.Max( 0, dexterity + humanBonus.Dexterity ) * DexterityHealthMult;
+        int intPart = Math.Max( 0, intelligence + humanBonus.Intelligence ) * IntelligenceHealthMult;
         int expected = strPart + dexPart + intPart;
 
         var fighter = new SingleFighter(

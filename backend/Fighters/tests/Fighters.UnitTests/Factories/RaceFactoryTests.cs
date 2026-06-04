@@ -6,7 +6,7 @@ namespace Fighters.UnitTests.Factories;
 public class RaceFactoryTests
 {
     [Fact]
-    public void RaceFactory_Create_ReturnsCorrectRace()
+    public void Create_CorrectIndex_ReturnsCorrectRace()
     {
         // Arrange
         var factory = new RaceFactory();
