@@ -1,5 +1,4 @@
 ﻿using Fighters.Models.Fighters;
-using Fighters.Models.Weapons;
 
 namespace Fighters.Models.Specialities;
 
