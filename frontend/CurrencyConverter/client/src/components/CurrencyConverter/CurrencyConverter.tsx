@@ -9,44 +9,30 @@ export const CurrencyConverter = () => {
   const { from, to, amount, result, currencies, priceChanges, setFrom, setTo, setAmount, swap } =
     useCurrencyConverter();
 
-  const fromCurrency = currencies.find((c) => c.code === from);
-  const toCurrency = currencies.find((c) => c.code === to);
-  const dateTime = priceChanges[from]?.[to]?.dateTime;
+  const dateTime = priceChanges[from.code]?.[to.code]?.dateTime;
 
   return (
     <div className={styles.exchanger}>
-      {fromCurrency && toCurrency && (
-        <ConversionHeader from={fromCurrency} to={toCurrency} amount={amount} result={result} dateTime={dateTime} />
-      )}
+      <ConversionHeader from={from} to={to} amount={amount} result={result} dateTime={dateTime} />
       <CurrencyInput
         value={amount}
-        currency={from}
+        currency={from.code}
         currencies={currencies}
         onAmountChange={setAmount}
         onCurrencyChange={setFrom}
-        inputTestId="from-amount"
-        selectTestId="from-currency"
       />
       <div className={styles.swapWrapper}>
-        <SwapButton onClick={swap} testId="swap-button" />
+        <SwapButton onClick={swap} />
       </div>
       <CurrencyInput
         value={result}
-        currency={to}
+        currency={to.code}
         currencies={currencies}
         onAmountChange={setAmount}
         onCurrencyChange={setTo}
         readOnly
-        inputTestId="to-amount"
-        selectTestId="to-currency"
       />
-      {/*
-        key={`${from}-${to}`} — при смене валютной пары React удаляет старый
-        MoreAboutSection и создаёт новый, сбрасывая isOpen в false.
-        Без key пришлось бы использовать useEffect + setIsOpen(false),
-        что не гарантирует сброс всех видов локального состояния (ref и т.д.).
-      */}
-      <MoreAboutSection key={`${from}-${to}`} from={from} to={to} currencies={currencies} />
+      <MoreAboutSection key={`${from.code}-${to.code}`} from={from} to={to} />
     </div>
   );
 };
