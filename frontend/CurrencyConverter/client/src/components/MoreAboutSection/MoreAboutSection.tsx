@@ -29,18 +29,18 @@ export const MoreAboutSection = ({ from, to }: MoreAboutSectionProps) => {
           />
         </div>
         {isOpen && (
-          <CurrencyInfo
-            testId="first-info"
-            title={`${from.name} - ${from.code} - ${from.symbol}`}
-            description={from.description || 'No description available.'}
-          />
-        )}
-        {isOpen && (
-          <CurrencyInfo
-            testId="second-info"
-            title={`${to.name} - ${to.code} - ${to.symbol}`}
-            description={to.description || 'No description available.'}
-          />
+          <>
+            <CurrencyInfo
+              testId="first-info"
+              title={`${from.name} - ${from.code} - ${from.symbol}`}
+              description={from.description || 'No description available.'}
+            />
+            <CurrencyInfo
+              testId="second-info"
+              title={`${to.name} - ${to.code} - ${to.symbol}`}
+              description={to.description || 'No description available.'}
+            />
+          </>
         )}
       </div>
     </div>
