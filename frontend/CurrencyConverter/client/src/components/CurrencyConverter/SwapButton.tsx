@@ -2,12 +2,11 @@ import styles from './SwapButton.module.scss';
 
 type SwapButtonProps = {
   onClick: () => void;
-  testId?: string;
 };
 
-export const SwapButton = ({ onClick, testId }: SwapButtonProps) => {
+export const SwapButton = ({ onClick }: SwapButtonProps) => {
   return (
-    <button className={styles.button} onClick={onClick} type="button" data-testid={testId}>
+    <button className={styles.button} onClick={onClick} type="button">
       Swap ⇄
     </button>
   );

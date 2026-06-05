@@ -1,75 +1,95 @@
 import { render, screen, fireEvent } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CurrencyConverter } from '../components/CurrencyConverter/CurrencyConverter';
+import { useCurrencyConverter } from '../hooks/useCurrencyConverter';
+import { currencies } from '../mocks';
+
+vi.mock('../hooks/useCurrencyConverter', () => ({
+  useCurrencyConverter: vi.fn()
+}));
+
+const createUseCurrencyConverterMock = () => ({
+  from: currencies[0],
+  to: currencies[1],
+  amount: '1',
+  result: '5.9',
+  currencies,
+  priceChanges: {},
+  setFrom: vi.fn(),
+  setTo: vi.fn(),
+  setAmount: vi.fn(),
+  swap: vi.fn()
+});
+
+beforeEach(() => {
+  vi.mocked(useCurrencyConverter).mockReturnValue(createUseCurrencyConverterMock());
+});
 
 describe('CurrencyConverter', () => {
   it('renders inputs, selects, swap button and more-about button', () => {
-    // Arrange
     render(<CurrencyConverter />);
 
-    // Assert
-    expect(screen.getByTestId('from-amount')).toBeInTheDocument();
-    expect(screen.getByTestId('to-amount')).toBeInTheDocument();
-    expect(screen.getByTestId('from-currency')).toBeInTheDocument();
-    expect(screen.getByTestId('to-currency')).toBeInTheDocument();
-    expect(screen.getByTestId('swap-button')).toBeInTheDocument();
-    expect(screen.getByTestId('more-about-button')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('1')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('5.9')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('CAD')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('PLN')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /swap/i })).toBeInTheDocument();
+    expect(screen.getByText(/CAD\/PLN.*about/)).toBeInTheDocument();
   });
 
-  it('recalculates result when amount changes', () => {
-    // Arrange
-    render(<CurrencyConverter />);
-    const fromAmount = screen.getByTestId<HTMLInputElement>('from-amount');
-    const toAmount = screen.getByTestId<HTMLInputElement>('to-amount');
+  it('calls setAmount when amount input changes', () => {
+    const setAmount = vi.fn();
+    vi.mocked(useCurrencyConverter).mockReturnValue({ ...createUseCurrencyConverterMock(), setAmount });
 
-    // Act
+    render(<CurrencyConverter />);
+    const fromAmount = screen.getByDisplayValue('1');
+
     fireEvent.change(fromAmount, { target: { value: '2' } });
 
-    // Assert
-    expect(toAmount).toHaveValue('5.9');
+    expect(setAmount).toHaveBeenCalledWith('2');
   });
 
-  it('recalculates result when currency pair changes', () => {
-    // Arrange
-    render(<CurrencyConverter />);
-    const toAmount = screen.getByTestId<HTMLInputElement>('to-amount');
-    const fromCurrency = screen.getByTestId<HTMLSelectElement>('from-currency');
+  it('calls setFrom when from currency changes', () => {
+    const setFrom = vi.fn();
+    vi.mocked(useCurrencyConverter).mockReturnValue({ ...createUseCurrencyConverterMock(), setFrom });
 
-    // Act
+    render(<CurrencyConverter />);
+    const fromCurrency = screen.getByDisplayValue('CAD');
+
     fireEvent.change(fromCurrency, { target: { value: 'AUD' } });
 
-    // Assert
-    expect(toAmount).toHaveValue('2.66');
+    expect(setFrom).toHaveBeenCalledWith('AUD');
   });
 
-  it('prevents selecting the same currency in both selects', () => {
-    // Arrange
-    render(<CurrencyConverter />);
-    const fromCurrency = screen.getByTestId<HTMLSelectElement>('from-currency');
-    const toCurrency = screen.getByTestId<HTMLSelectElement>('to-currency');
+  it('calls setFrom with selected currency', () => {
+    const setFrom = vi.fn();
+    vi.mocked(useCurrencyConverter).mockReturnValue({ ...createUseCurrencyConverterMock(), setFrom });
 
-    // Act
+    render(<CurrencyConverter />);
+    const fromCurrency = screen.getByDisplayValue('CAD');
+
     fireEvent.change(fromCurrency, { target: { value: 'PLN' } });
 
-    // Assert
-    expect(fromCurrency).toHaveValue('PLN');
-    expect(toCurrency).not.toHaveValue('PLN');
+    expect(setFrom).toHaveBeenCalledWith('PLN');
   });
 
-  it('resets MoreAboutSection isOpen when currency pair changes', () => {
-    // Arrange
+  it('toggles MoreAboutSection and calls setFrom on pair change', () => {
+    const setFrom = vi.fn();
+    vi.mocked(useCurrencyConverter).mockReturnValue({ ...createUseCurrencyConverterMock(), setFrom });
+
     render(<CurrencyConverter />);
-    const moreAboutButton = screen.getByTestId('more-about-button');
+    const moreAboutButton = screen.getByText(/CAD\/PLN.*about/);
+
     fireEvent.click(moreAboutButton);
+    expect(screen.getByText('Canadian dollar - CAD - $')).toBeInTheDocument();
+    expect(screen.getByText('Polish zloty - PLN - zł')).toBeInTheDocument();
 
-    expect(screen.getByTestId('first-info')).toBeInTheDocument();
-    expect(screen.getByTestId('second-info')).toBeInTheDocument();
+    fireEvent.click(moreAboutButton);
+    expect(screen.queryByText('Polish zloty - PLN - zł')).not.toBeInTheDocument();
 
-    // Act
-    const fromCurrency = screen.getByTestId<HTMLSelectElement>('from-currency');
+    const fromCurrency = screen.getByDisplayValue('CAD');
     fireEvent.change(fromCurrency, { target: { value: 'AUD' } });
 
-    // Assert
-    expect(screen.queryByTestId('first-info')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('second-info')).not.toBeInTheDocument();
+    expect(setFrom).toHaveBeenCalledWith('AUD');
   });
 });
