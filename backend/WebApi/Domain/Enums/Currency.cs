@@ -2,7 +2,7 @@
 
 public enum Currency
 {
-    Rubles = 0,
-    US_Dollars = 1,
-    Euros = 2
+    RUB = 0,
+    USD = 1,
+    EUR = 2
 }

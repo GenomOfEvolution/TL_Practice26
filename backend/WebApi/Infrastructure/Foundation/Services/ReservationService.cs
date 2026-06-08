@@ -7,31 +7,32 @@ namespace Infrastructure.Foundation.Services;
 
 public class ReservationService : IReservationService
 {
+    private readonly IReservationRepository _reservationRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPropertyService _propertyService;
     private readonly IRoomTypeService _roomTypeService;
 
-    public ReservationService( IUnitOfWork unitOfWork, IPropertyService propertyService, IRoomTypeService roomTypeService )
+    public ReservationService( IReservationRepository reservationRepository, IUnitOfWork unitOfWork, IPropertyService propertyService, IRoomTypeService roomTypeService )
     {
+        _reservationRepository = reservationRepository;
         _unitOfWork = unitOfWork;
         _propertyService = propertyService;
         _roomTypeService = roomTypeService;
     }
 
-    public async Task CancelAsync( int id )
+    public async Task CancelAsync( int id, CancellationToken ct = default )
     {
-        Reservation? reservation = await GetByIdAsync( id );
+        Reservation? reservation = await GetByIdAsync( id, ct );
 
         if ( reservation != null )
         {
             reservation.SetCanceled( true );
-            _unitOfWork.Reservations.Update( reservation );
 
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync( ct );
         }
     }
 
-    public async Task<Reservation> CreateAsync( Reservation reservation )
+    public async Task<Reservation> CreateAsync( Reservation reservation, CancellationToken ct = default )
     {
         ValidateDates( reservation.ArrivalDate, reservation.DepartureDate, reservation.ArrivalTime, reservation.DepartureTime );
         ValidateGuestInfo( reservation.GuestName, reservation.GuestPhoneNumber );
@@ -49,22 +50,23 @@ public class ReservationService : IReservationService
             reservation.RoomTypeId,
             reservation.ArrivalDate,
             reservation.DepartureDate,
-            roomType.TotalRoomsCount );
+            roomType.TotalRoomsCount,
+            ct );
 
-        await _unitOfWork.Reservations.AddAsync( reservation );
-        await _unitOfWork.SaveChangesAsync();
+        await _reservationRepository.AddAsync( reservation, ct );
+        await _unitOfWork.SaveChangesAsync( ct );
 
         return reservation;
     }
 
-    public async Task<Reservation?> GetByIdAsync( int id )
+    public async Task<Reservation?> GetByIdAsync( int id, CancellationToken ct = default )
     {
-        return await _unitOfWork.Reservations.GetByIdAsync( id );
+        return await _reservationRepository.GetByIdAsync( id, ct );
     }
 
-    public async Task<IEnumerable<Reservation>> GetListAsync( ReservationFilter filter )
+    public async Task<IEnumerable<Reservation>> GetListAsync( ReservationFilter filter, CancellationToken ct = default )
     {
-        return await _unitOfWork.Reservations.GetByFiltersAsync( filter );
+        return await _reservationRepository.GetByFiltersAsync( filter, ct );
     }
 
     private static void ValidateDates( DateOnly arrivalDate, DateOnly departureDate, TimeOnly arrivalTime, TimeOnly departureTime )
@@ -133,10 +135,10 @@ public class ReservationService : IReservationService
         return dailyPrice * nights;
     }
 
-    private async Task CheckAvailabilityAsync( int roomTypeId, DateOnly arrivalDate, DateOnly departureDate, int totalRoomsCount )
+    private async Task CheckAvailabilityAsync( int roomTypeId, DateOnly arrivalDate, DateOnly departureDate, int totalRoomsCount, CancellationToken ct = default )
     {
-        IEnumerable<Reservation> overlaps = await _unitOfWork.Reservations.GetOverlappingAsync(
-            roomTypeId, arrivalDate, departureDate );
+        IEnumerable<Reservation> overlaps = await _reservationRepository.GetOverlappingAsync(
+            roomTypeId, arrivalDate, departureDate, ct );
 
         int bookedRooms = overlaps.Count();
 

@@ -12,7 +12,7 @@ public class ReservationRepository : BaseRepository<Reservation>, IReservationRe
     {
     }
 
-    public async Task<IEnumerable<Reservation>> GetByFiltersAsync( ReservationFilter filter )
+    public async Task<IEnumerable<Reservation>> GetByFiltersAsync( ReservationFilter filter, CancellationToken ct = default )
     {
         IQueryable<Reservation> query = Entities;
 
@@ -36,16 +36,16 @@ public class ReservationRepository : BaseRepository<Reservation>, IReservationRe
             query = query.Where( r => r.DepartureDate <= filter.DateTo.Value );
         }
 
-        return await query.ToListAsync();
+        return await query.ToListAsync( ct );
     }
 
-    public async Task<IEnumerable<Reservation>> GetOverlappingAsync( int roomTypeId, DateOnly arrival, DateOnly departure )
+    public async Task<IEnumerable<Reservation>> GetOverlappingAsync( int roomTypeId, DateOnly arrival, DateOnly departure, CancellationToken ct = default )
     {
         return await Entities
             .Where( r => r.RoomTypeId == roomTypeId
                 && !r.IsCanceled
                 && r.ArrivalDate < departure
                 && r.DepartureDate > arrival )
-            .ToListAsync();
+            .ToListAsync( ct );
     }
 }

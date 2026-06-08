@@ -4,9 +4,9 @@ namespace Domain.Services;
 
 public interface IPropertyService
 {
-    Task<Property> CreateAsync( Property property );
-    Task<Property?> GetByIdAsync( int id );
-    Task<IEnumerable<Property>> GetAllAsync();
-    Task UpdateAsync( Property property );
-    Task DeleteAsync( int id );
+    Task<Property> CreateAsync( Property property, CancellationToken ct = default );
+    Task<Property?> GetByIdAsync( int id, CancellationToken ct = default );
+    Task<IEnumerable<Property>> GetAllAsync( CancellationToken ct = default );
+    Task UpdateAsync( Property property, CancellationToken ct = default );
+    Task DeleteAsync( int id, CancellationToken ct = default );
 }

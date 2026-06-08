@@ -28,7 +28,7 @@ public static class RoomTypeDbSeed
                     AmenitiesType.TV,
                     AmenitiesType.Hairdryer
                 ],
-                Currency = Currency.Rubles
+                Currency = Currency.RUB
             },
             new RoomType
             {
@@ -51,7 +51,7 @@ public static class RoomTypeDbSeed
                     AmenitiesType.MiniBar,
                     AmenitiesType.Bathtub
                 ],
-                Currency = Currency.Rubles
+                Currency = Currency.RUB
             },
             new RoomType
             {
@@ -79,7 +79,7 @@ public static class RoomTypeDbSeed
                     AmenitiesType.Bathtub,
                     AmenitiesType.CoffeeMaker
                 ],
-                Currency = Currency.Rubles
+                Currency = Currency.RUB
             },
             // Seaside Resort (PropertyId=2)
             new RoomType
@@ -101,7 +101,7 @@ public static class RoomTypeDbSeed
                     AmenitiesType.TV,
                     AmenitiesType.Hairdryer
                 ],
-                Currency = Currency.Rubles
+                Currency = Currency.RUB
             },
             new RoomType
             {
@@ -124,7 +124,7 @@ public static class RoomTypeDbSeed
                     AmenitiesType.MiniBar,
                     AmenitiesType.Balcony
                 ],
-                Currency = Currency.Rubles
+                Currency = Currency.RUB
             },
             // Mountain Lodge (PropertyId=3)
             new RoomType
@@ -146,7 +146,7 @@ public static class RoomTypeDbSeed
                     AmenitiesType.TV,
                     AmenitiesType.Hairdryer
                 ],
-                Currency = Currency.Rubles
+                Currency = Currency.RUB
             },
             new RoomType
             {
@@ -170,7 +170,7 @@ public static class RoomTypeDbSeed
                     AmenitiesType.Bathtub,
                     AmenitiesType.CoffeeMaker
                 ],
-                Currency = Currency.Rubles
+                Currency = Currency.RUB
             },
             // City Inn (PropertyId=4)
             new RoomType
@@ -191,7 +191,7 @@ public static class RoomTypeDbSeed
                     AmenitiesType.TV,
                     AmenitiesType.Hairdryer
                 ],
-                Currency = Currency.Rubles
+                Currency = Currency.RUB
             },
             new RoomType
             {
@@ -214,7 +214,7 @@ public static class RoomTypeDbSeed
                     AmenitiesType.MiniBar,
                     AmenitiesType.CoffeeMaker
                 ],
-                Currency = Currency.Rubles
+                Currency = Currency.RUB
             }
         ];
     }

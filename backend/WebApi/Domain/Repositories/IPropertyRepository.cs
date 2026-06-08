@@ -4,5 +4,5 @@ namespace Domain.Repositories;
 
 public interface IPropertyRepository : IBaseRepository<Property>
 {
-    Task<IEnumerable<Property>> GetByCityAsync( string city );
+    Task<IEnumerable<Property>> GetByCityAsync( string city, CancellationToken ct = default );
 }

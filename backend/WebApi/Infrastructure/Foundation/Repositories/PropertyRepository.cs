@@ -11,10 +11,10 @@ public class PropertyRepository : BaseRepository<Property>, IPropertyRepository
     {
     }
 
-    public async Task<IEnumerable<Property>> GetByCityAsync( string city )
+    public async Task<IEnumerable<Property>> GetByCityAsync( string city, CancellationToken ct = default )
     {
         return await Entities
             .Where( p => p.City == city )
-            .ToListAsync();
+            .ToListAsync( ct );
     }
 }

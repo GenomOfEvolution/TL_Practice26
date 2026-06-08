@@ -4,9 +4,9 @@ namespace Domain.Services;
 
 public interface IRoomTypeService
 {
-    Task<RoomType> CreateAsync( RoomType roomType );
-    Task<RoomType?> GetByIdAsync( int id );
-    Task<IEnumerable<RoomType>> GetByPropertyIdAsync( int propertyId );
-    Task UpdateAsync( RoomType roomType );
-    Task DeleteAsync( int id );
+    Task<RoomType> CreateAsync( RoomType roomType, CancellationToken ct = default );
+    Task<RoomType?> GetByIdAsync( int id, CancellationToken ct = default );
+    Task<IEnumerable<RoomType>> GetByPropertyIdAsync( int propertyId, CancellationToken ct = default );
+    Task UpdateAsync( RoomType roomType, CancellationToken ct = default );
+    Task DeleteAsync( int id, CancellationToken ct = default );
 }

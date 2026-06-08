@@ -6,51 +6,53 @@ namespace Infrastructure.Foundation.Services;
 
 public class RoomTypeService : IRoomTypeService
 {
+    private readonly IRoomTypeRepository _roomTypeRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPropertyService _propertyService;
 
-    public RoomTypeService( IUnitOfWork unitOfWork, IPropertyService propertyService )
+    public RoomTypeService( IRoomTypeRepository roomTypeRepository, IUnitOfWork unitOfWork, IPropertyService propertyService )
     {
+        _roomTypeRepository = roomTypeRepository;
         _unitOfWork = unitOfWork;
         _propertyService = propertyService;
     }
 
-    public async Task<RoomType> CreateAsync( RoomType roomType )
+    public async Task<RoomType> CreateAsync( RoomType roomType, CancellationToken ct = default )
     {
         await ValidateRoomTypeAsync( roomType );
 
-        await _unitOfWork.RoomTypes.AddAsync( roomType );
-        await _unitOfWork.SaveChangesAsync();
+        await _roomTypeRepository.AddAsync( roomType, ct );
+        await _unitOfWork.SaveChangesAsync( ct );
 
         return roomType;
     }
 
-    public async Task DeleteAsync( int id )
+    public async Task DeleteAsync( int id, CancellationToken ct = default )
     {
-        RoomType? roomType = await GetByIdAsync( id );
+        RoomType? roomType = await GetByIdAsync( id, ct );
 
         if ( roomType is not null )
         {
-            _unitOfWork.RoomTypes.Delete( roomType );
-            await _unitOfWork.SaveChangesAsync();
+            _roomTypeRepository.Delete( roomType );
+            await _unitOfWork.SaveChangesAsync( ct );
         }
     }
 
-    public async Task<RoomType?> GetByIdAsync( int id )
+    public async Task<RoomType?> GetByIdAsync( int id, CancellationToken ct = default )
     {
-        return await _unitOfWork.RoomTypes.GetByIdAsync( id );
+        return await _roomTypeRepository.GetByIdAsync( id, ct );
     }
 
-    public async Task<IEnumerable<RoomType>> GetByPropertyIdAsync( int propertyId )
+    public async Task<IEnumerable<RoomType>> GetByPropertyIdAsync( int propertyId, CancellationToken ct = default )
     {
-        return await _unitOfWork.RoomTypes.GetByPropertyIdAsync( propertyId );
+        return await _roomTypeRepository.GetByPropertyIdAsync( propertyId, ct );
     }
 
-    public async Task UpdateAsync( RoomType roomType )
+    public async Task UpdateAsync( RoomType roomType, CancellationToken ct = default )
     {
         await ValidateRoomTypeAsync( roomType );
 
-        RoomType? existing = await _unitOfWork.RoomTypes.GetByIdAsync( roomType.Id );
+        RoomType? existing = await _roomTypeRepository.GetByIdAsync( roomType.Id, ct );
 
         if ( existing is null )
         {
@@ -58,9 +60,8 @@ public class RoomTypeService : IRoomTypeService
         }
 
         existing.Update( roomType );
-        _unitOfWork.RoomTypes.Update( existing );
 
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync( ct );
     }
 
     private async Task ValidateRoomTypeAsync( RoomType roomType )

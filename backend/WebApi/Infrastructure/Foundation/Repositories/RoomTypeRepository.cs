@@ -11,10 +11,10 @@ public class RoomTypeRepository : BaseRepository<RoomType>, IRoomTypeRepository
     {
     }
 
-    public async Task<IEnumerable<RoomType>> GetByPropertyIdAsync( int propertyId )
+    public async Task<IEnumerable<RoomType>> GetByPropertyIdAsync( int propertyId, CancellationToken ct = default )
     {
         return await Entities
             .Where( rt => rt.PropertyId == propertyId )
-            .ToListAsync();
+            .ToListAsync( ct );
     }
 }

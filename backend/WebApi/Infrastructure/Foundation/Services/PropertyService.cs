@@ -6,49 +6,51 @@ namespace Infrastructure.Foundation.Services;
 
 public class PropertyService : IPropertyService
 {
+    private readonly IPropertyRepository _propertyRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public PropertyService( IUnitOfWork unitOfWork )
+    public PropertyService( IPropertyRepository propertyRepository, IUnitOfWork unitOfWork )
     {
+        _propertyRepository = propertyRepository;
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Property> CreateAsync( Property property )
+    public async Task<Property> CreateAsync( Property property, CancellationToken ct = default )
     {
         ValidateProperty( property );
 
-        await _unitOfWork.Properties.AddAsync( property );
-        await _unitOfWork.SaveChangesAsync();
+        await _propertyRepository.AddAsync( property, ct );
+        await _unitOfWork.SaveChangesAsync( ct );
 
         return property;
     }
 
-    public async Task DeleteAsync( int id )
+    public async Task DeleteAsync( int id, CancellationToken ct = default )
     {
-        Property? property = await _unitOfWork.Properties.GetByIdAsync( id );
+        Property? property = await _propertyRepository.GetByIdAsync( id, ct );
 
         if ( property is not null )
         {
-            _unitOfWork.Properties.Delete( property );
-            await _unitOfWork.SaveChangesAsync();
+            _propertyRepository.Delete( property );
+            await _unitOfWork.SaveChangesAsync( ct );
         }
     }
 
-    public async Task<IEnumerable<Property>> GetAllAsync()
+    public async Task<IEnumerable<Property>> GetAllAsync( CancellationToken ct = default )
     {
-        return await _unitOfWork.Properties.GetAllAsync();
+        return await _propertyRepository.GetAllAsync( ct );
     }
 
-    public async Task<Property?> GetByIdAsync( int id )
+    public async Task<Property?> GetByIdAsync( int id, CancellationToken ct = default )
     {
-        return await _unitOfWork.Properties.GetByIdAsync( id );
+        return await _propertyRepository.GetByIdAsync( id, ct );
     }
 
-    public async Task UpdateAsync( Property property )
+    public async Task UpdateAsync( Property property, CancellationToken ct = default )
     {
         ValidateProperty( property );
 
-        Property? existing = await _unitOfWork.Properties.GetByIdAsync( property.Id );
+        Property? existing = await _propertyRepository.GetByIdAsync( property.Id, ct );
 
         if ( existing is null )
         {
@@ -56,9 +58,8 @@ public class PropertyService : IPropertyService
         }
 
         existing.Update( property );
-        _unitOfWork.Properties.Update( existing );
 
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync( ct );
     }
 
     private static void ValidateProperty( Property property )
