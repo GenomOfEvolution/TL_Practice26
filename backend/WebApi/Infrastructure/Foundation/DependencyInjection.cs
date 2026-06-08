@@ -17,8 +17,13 @@ public static class DependencyInjection
         string? connectionString = configuration.GetConnectionString( "DefaultConnection" );
 
         services.AddDbContext<AppDbContext>( options =>
-            options.UseSqlServer( connectionString, sql => sql.MigrationsAssembly( "Infrastructure.Migrations" ) )
+            options.UseSqlServer( connectionString, sql =>
+            {
+                sql.MigrationsAssembly( "Infrastructure.Migrations" );
+                sql.MigrationsHistoryTable( "__EFMigrationsHistory" );
+            } )
             .UseSnakeCaseNamingConvention() );
+
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IPropertyRepository, PropertyRepository>();
