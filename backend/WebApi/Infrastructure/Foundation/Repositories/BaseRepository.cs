@@ -6,30 +6,30 @@ namespace Infrastructure.Foundation.Repositories;
 public class BaseRepository<TEntity> : IBaseRepository<TEntity>
     where TEntity : class
 {
-    protected readonly DbSet<TEntity> Entities;
+    protected readonly AppDbContext Context;
 
     public BaseRepository( AppDbContext context )
     {
-        Entities = context.Set<TEntity>();
+        Context = context;
     }
 
     public async Task AddAsync( TEntity entity, CancellationToken ct = default )
     {
-        await Entities.AddAsync( entity, ct );
+        await Context.Set<TEntity>().AddAsync( entity, ct );
     }
 
     public void Delete( TEntity entity )
     {
-        Entities.Remove( entity );
+        Context.Set<TEntity>().Remove( entity );
     }
 
     public async Task<IEnumerable<TEntity>> GetAllAsync( CancellationToken ct = default )
     {
-        return await Entities.ToListAsync( ct );
+        return await Context.Set<TEntity>().ToListAsync( ct );
     }
 
     public async Task<TEntity?> GetByIdAsync( int id, CancellationToken ct = default )
     {
-        return await Entities.FindAsync( id, ct );
+        return await Context.Set<TEntity>().FindAsync( id, ct );
     }
 }

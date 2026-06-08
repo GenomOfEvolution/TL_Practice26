@@ -34,11 +34,15 @@ public class ReservationService : IReservationService
 
     public async Task<int> CreateAsync( Reservation reservation, CancellationToken ct = default )
     {
-        ValidateDates( reservation.ArrivalDate, reservation.DepartureDate, reservation.ArrivalTime, reservation.DepartureTime );
-        ValidateGuestInfo( reservation.GuestName, reservation.GuestPhoneNumber );
+        ThrowIfInvalidDates(
+            reservation.ArrivalDate,
+            reservation.DepartureDate,
+            reservation.ArrivalTime,
+            reservation.DepartureTime );
+        ThrowIfInvalidGuestInfo( reservation.GuestName, reservation.GuestPhoneNumber );
 
-        Property property = await ValidatePropertyExistsAsync( reservation.PropertyId );
-        RoomType roomType = await ValidateRoomTypeAsync( reservation.RoomTypeId, reservation.PropertyId );
+        Property property = await ThrowIfPropertyNotExists( reservation.PropertyId );
+        RoomType roomType = await ThrowIfInvalidRoomType( reservation.RoomTypeId, reservation.PropertyId );
 
         reservation.Total = CalculateTotal(
             roomType.DailyPrice,
@@ -69,7 +73,11 @@ public class ReservationService : IReservationService
         return ( await _reservationRepository.GetByFiltersAsync( filter, ct ) ).ToList();
     }
 
-    private static void ValidateDates( DateOnly arrivalDate, DateOnly departureDate, TimeOnly arrivalTime, TimeOnly departureTime )
+    private static void ThrowIfInvalidDates(
+        DateOnly arrivalDate,
+        DateOnly departureDate,
+        TimeOnly arrivalTime,
+        TimeOnly departureTime )
     {
         DateOnly today = DateOnly.FromDateTime( DateTime.Today );
 
@@ -92,7 +100,7 @@ public class ReservationService : IReservationService
         }
     }
 
-    private static void ValidateGuestInfo( string guestName, string guestPhoneNumber )
+    private static void ThrowIfInvalidGuestInfo( string guestName, string guestPhoneNumber )
     {
         if ( string.IsNullOrWhiteSpace( guestName ) )
         {
@@ -107,13 +115,13 @@ public class ReservationService : IReservationService
         }
     }
 
-    private async Task<Property> ValidatePropertyExistsAsync( int propertyId )
+    private async Task<Property> ThrowIfPropertyNotExists( int propertyId )
     {
         return await _propertyService.GetByIdAsync( propertyId )
             ?? throw new ArgumentException( "Средство размещения с указанным ID не найдено.", nameof( propertyId ) );
     }
 
-    private async Task<RoomType> ValidateRoomTypeAsync( int roomTypeId, int propertyId )
+    private async Task<RoomType> ThrowIfInvalidRoomType( int roomTypeId, int propertyId )
     {
         RoomType roomType = await _roomTypeService.GetByIdAsync( roomTypeId )
             ?? throw new ArgumentException( "Тип номера с указанным ID не найден.",
@@ -135,7 +143,12 @@ public class ReservationService : IReservationService
         return dailyPrice * nights;
     }
 
-    private async Task CheckAvailabilityAsync( int roomTypeId, DateOnly arrivalDate, DateOnly departureDate, int totalRoomsCount, CancellationToken ct = default )
+    private async Task CheckAvailabilityAsync(
+        int roomTypeId,
+        DateOnly arrivalDate,
+        DateOnly departureDate,
+        int totalRoomsCount,
+        CancellationToken ct = default )
     {
         IEnumerable<Reservation> overlaps = await _reservationRepository.GetOverlappingAsync(
             roomTypeId, arrivalDate, departureDate, ct );

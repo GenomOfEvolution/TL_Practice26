@@ -13,7 +13,7 @@ public class PropertyRepository : BaseRepository<Property>, IPropertyRepository
 
     public async Task<IEnumerable<Property>> GetByCityAsync( string city, CancellationToken ct = default )
     {
-        return await Entities
+        return await Context.Set<Property>()
             .Where( p => p.City == city )
             .ToListAsync( ct );
     }

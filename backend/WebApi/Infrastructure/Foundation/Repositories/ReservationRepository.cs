@@ -14,34 +14,14 @@ public class ReservationRepository : BaseRepository<Reservation>, IReservationRe
 
     public async Task<IEnumerable<Reservation>> GetByFiltersAsync( ReservationFilter filter, CancellationToken ct = default )
     {
-        IQueryable<Reservation> query = Entities;
-
-        if ( filter.PropertyId.HasValue )
-        {
-            query = query.Where( r => r.PropertyId == filter.PropertyId.Value );
-        }
-
-        if ( !String.IsNullOrWhiteSpace( filter.GuestName ) )
-        {
-            query = query.Where( r => r.GuestName.Contains( filter.GuestName ) );
-        }
-
-        if ( filter.DateFrom.HasValue )
-        {
-            query = query.Where( r => r.ArrivalDate >= filter.DateFrom.Value );
-        }
-
-        if ( filter.DateTo.HasValue )
-        {
-            query = query.Where( r => r.DepartureDate <= filter.DateTo.Value );
-        }
-
-        return await query.ToListAsync( ct );
+        return await Context.Set<Reservation>()
+            .ApplyFilter( filter )
+            .ToListAsync( ct );
     }
 
     public async Task<IEnumerable<Reservation>> GetOverlappingAsync( int roomTypeId, DateOnly arrival, DateOnly departure, CancellationToken ct = default )
     {
-        return await Entities
+        return await Context.Set<Reservation>()
             .Where( r => r.RoomTypeId == roomTypeId
                 && !r.IsCanceled
                 && r.ArrivalDate < departure

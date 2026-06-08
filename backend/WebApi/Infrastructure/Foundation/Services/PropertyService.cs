@@ -17,7 +17,7 @@ public class PropertyService : IPropertyService
 
     public async Task<int> CreateAsync( Property property, CancellationToken ct = default )
     {
-        ValidateProperty( property );
+        ThrowIfInvalidProperty( property );
 
         await _propertyRepository.AddAsync( property, ct );
         await _unitOfWork.SaveChangesAsync( ct );
@@ -48,13 +48,13 @@ public class PropertyService : IPropertyService
 
     public async Task UpdateAsync( Property property, CancellationToken ct = default )
     {
-        ValidateProperty( property );
+        ThrowIfInvalidProperty( property );
 
         Property? existing = await _propertyRepository.GetByIdAsync( property.Id, ct );
 
         if ( existing is null )
         {
-            return;
+            throw new ArgumentException( $"Средство размещения с id {property.Id} не найдено." );
         }
 
         existing.Update( property );
@@ -62,41 +62,47 @@ public class PropertyService : IPropertyService
         await _unitOfWork.SaveChangesAsync( ct );
     }
 
-    private static void ValidateProperty( Property property )
+    private static void ThrowIfInvalidProperty( Property property )
     {
         if ( string.IsNullOrWhiteSpace( property.Name ) )
         {
-            throw new ArgumentException( "Название средства размещения не может быть пустым.",
+            throw new ArgumentException( $"{nameof( property.Name )} не может быть пустым.",
                 nameof( property.Name ) );
         }
 
         if ( string.IsNullOrWhiteSpace( property.Country ) )
         {
-            throw new ArgumentException( "Страна не может быть пустой.",
+            throw new ArgumentException( $"{nameof( property.Country )} не может быть пустой.",
                 nameof( property.Country ) );
         }
 
         if ( string.IsNullOrWhiteSpace( property.City ) )
         {
-            throw new ArgumentException( "Город не может быть пустым.",
+            throw new ArgumentException( $"{nameof( property.City )} не может быть пустым.",
                 nameof( property.City ) );
         }
 
         if ( string.IsNullOrWhiteSpace( property.Address ) )
         {
-            throw new ArgumentException( "Адрес не может быть пустым.",
+            throw new ArgumentException( $"{nameof( property.Address )} не может быть пустым.",
                 nameof( property.Address ) );
         }
 
-        if ( property.Latitude < -90.0 || property.Latitude > 90.0 )
+        const double MinLatitude = -90.0;
+        const double MaxLatitude = 90.0;
+
+        if ( property.Latitude < MinLatitude || property.Latitude > MaxLatitude )
         {
-            throw new ArgumentException( "Широта (Latitude) должна быть в диапазоне от -90 до 90.",
+            throw new ArgumentException( $"{nameof( property.Latitude )} должна быть в диапазоне от {MinLatitude} до {MaxLatitude}.",
                 nameof( property.Latitude ) );
         }
 
-        if ( property.Longitude < -180.0 || property.Longitude > 180.0 )
+        const double MinLongitude = -180.0;
+        const double MaxLongitude = 180.0;
+
+        if ( property.Longitude < MinLongitude || property.Longitude > MaxLongitude )
         {
-            throw new ArgumentException( "Долгота (Longitude) должна быть в диапазоне от -180 до 180.",
+            throw new ArgumentException( $"{nameof( property.Longitude )} должна быть в диапазоне от {MinLongitude} до {MaxLongitude}.",
                 nameof( property.Longitude ) );
         }
     }

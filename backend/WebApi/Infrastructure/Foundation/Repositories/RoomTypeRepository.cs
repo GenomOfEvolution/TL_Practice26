@@ -13,7 +13,7 @@ public class RoomTypeRepository : BaseRepository<RoomType>, IRoomTypeRepository
 
     public async Task<IEnumerable<RoomType>> GetByPropertyIdAsync( int propertyId, CancellationToken ct = default )
     {
-        return await Entities
+        return await Context.Set<RoomType>()
             .Where( rt => rt.PropertyId == propertyId )
             .ToListAsync( ct );
     }

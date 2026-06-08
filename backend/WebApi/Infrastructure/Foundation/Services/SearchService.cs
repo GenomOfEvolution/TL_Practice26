@@ -27,7 +27,7 @@ public class SearchService : ISearchService
 
         IReadOnlyList<Property> properties = ( await _propertyRepository.GetByCityAsync( filter.City, ct ) ).ToList();
 
-        foreach ( var property in properties )
+        foreach ( Property? property in properties )
         {
             IReadOnlyList<RoomType> roomTypes = ( await _roomTypeRepository.GetByPropertyIdAsync( property.Id, ct ) ).ToList();
 
@@ -39,9 +39,9 @@ public class SearchService : ISearchService
                 matchingRoomTypes = matchingRoomTypes.Where( rt => rt.DailyPrice <= filter.MaxPrice.Value );
             }
 
-            foreach ( var roomType in matchingRoomTypes )
+            foreach ( RoomType? roomType in matchingRoomTypes )
             {
-                var overlaps = await _reservationRepository.GetOverlappingAsync(
+                IEnumerable<Reservation> overlaps = await _reservationRepository.GetOverlappingAsync(
                     roomType.Id, filter.ArrivalDate, filter.DepartureDate, ct );
 
                 int roomsLeft = roomType.TotalRoomsCount - overlaps.Count();
