@@ -23,7 +23,6 @@ public class SearchController : ControllerBase
         var results = await _searchService.SearchAsync( filter );
 
         return Ok( results
-            .Select( EntityToSearchResultDtoMapper.Map )
-            .ToList() );
+            .Select( EntityToSearchResultDtoMapper.Map ) );
     }
 }

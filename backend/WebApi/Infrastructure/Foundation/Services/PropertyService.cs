@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Repositories;
 using Domain.Services;
 
@@ -27,13 +28,11 @@ public class PropertyService : IPropertyService
 
     public async Task DeleteAsync( int id, CancellationToken ct = default )
     {
-        Property? property = await _propertyRepository.GetByIdAsync( id, ct );
+        Property property = await _propertyRepository.GetByIdAsync( id, ct )
+            ?? throw new DomainException( $"Средство размещения с id {id} не найдено." );
 
-        if ( property is not null )
-        {
-            _propertyRepository.Delete( property );
-            await _unitOfWork.SaveChangesAsync( ct );
-        }
+        _propertyRepository.Delete( property );
+        await _unitOfWork.SaveChangesAsync( ct );
     }
 
     public async Task<IReadOnlyList<Property>> GetAllAsync( CancellationToken ct = default )
@@ -54,7 +53,7 @@ public class PropertyService : IPropertyService
 
         if ( existing is null )
         {
-            throw new ArgumentException( $"Средство размещения с id {property.Id} не найдено." );
+            throw new DomainException( $"Средство размещения с id {property.Id} не найдено." );
         }
 
         existing.Update( property );
@@ -66,26 +65,22 @@ public class PropertyService : IPropertyService
     {
         if ( string.IsNullOrWhiteSpace( property.Name ) )
         {
-            throw new ArgumentException( $"{nameof( property.Name )} не может быть пустым.",
-                nameof( property.Name ) );
+            throw new DomainException( $"{nameof( property.Name )} не может быть пустым." );
         }
 
         if ( string.IsNullOrWhiteSpace( property.Country ) )
         {
-            throw new ArgumentException( $"{nameof( property.Country )} не может быть пустой.",
-                nameof( property.Country ) );
+            throw new DomainException( $"{nameof( property.Country )} не может быть пустой." );
         }
 
         if ( string.IsNullOrWhiteSpace( property.City ) )
         {
-            throw new ArgumentException( $"{nameof( property.City )} не может быть пустым.",
-                nameof( property.City ) );
+            throw new DomainException( $"{nameof( property.City )} не может быть пустым." );
         }
 
         if ( string.IsNullOrWhiteSpace( property.Address ) )
         {
-            throw new ArgumentException( $"{nameof( property.Address )} не может быть пустым.",
-                nameof( property.Address ) );
+            throw new DomainException( $"{nameof( property.Address )} не может быть пустым." );
         }
 
         const double MinLatitude = -90.0;
@@ -93,8 +88,7 @@ public class PropertyService : IPropertyService
 
         if ( property.Latitude < MinLatitude || property.Latitude > MaxLatitude )
         {
-            throw new ArgumentException( $"{nameof( property.Latitude )} должна быть в диапазоне от {MinLatitude} до {MaxLatitude}.",
-                nameof( property.Latitude ) );
+            throw new DomainException( $"{nameof( property.Latitude )} должна быть в диапазоне от {MinLatitude} до {MaxLatitude}." );
         }
 
         const double MinLongitude = -180.0;
@@ -102,8 +96,7 @@ public class PropertyService : IPropertyService
 
         if ( property.Longitude < MinLongitude || property.Longitude > MaxLongitude )
         {
-            throw new ArgumentException( $"{nameof( property.Longitude )} должна быть в диапазоне от {MinLongitude} до {MaxLongitude}.",
-                nameof( property.Longitude ) );
+            throw new DomainException( $"{nameof( property.Longitude )} должна быть в диапазоне от {MinLongitude} до {MaxLongitude}." );
         }
     }
 }

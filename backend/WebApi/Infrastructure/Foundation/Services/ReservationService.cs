@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Filters;
 using Domain.Repositories;
 using Domain.Services;
@@ -22,14 +23,12 @@ public class ReservationService : IReservationService
 
     public async Task CancelAsync( int id, CancellationToken ct = default )
     {
-        Reservation? reservation = await GetByIdAsync( id, ct );
+        Reservation reservation = await GetByIdAsync( id, ct )
+            ?? throw new DomainException( $"Бронь с id {id} не найдена." );
 
-        if ( reservation != null )
-        {
-            reservation.SetCanceled( true );
+        reservation.SetCanceled( true );
 
-            await _unitOfWork.SaveChangesAsync( ct );
-        }
+        await _unitOfWork.SaveChangesAsync( ct );
     }
 
     public async Task<int> CreateAsync( Reservation reservation, CancellationToken ct = default )
@@ -83,20 +82,17 @@ public class ReservationService : IReservationService
 
         if ( arrivalDate < today )
         {
-            throw new ArgumentException( "Дата заезда не может быть в прошлом.",
-                nameof( arrivalDate ) );
+            throw new DomainException( "Дата заезда не может быть в прошлом." );
         }
 
         if ( departureDate <= arrivalDate )
         {
-            throw new ArgumentException( "Дата выезда должна быть строго позже даты заезда.",
-                nameof( departureDate ) );
+            throw new DomainException( "Дата выезда должна быть строго позже даты заезда." );
         }
 
         if ( departureDate == arrivalDate && departureTime <= arrivalTime )
         {
-            throw new ArgumentException( "При заезде и выезде в один день время выезда должно быть позже времени заезда.",
-                nameof( departureTime ) );
+            throw new DomainException( "При заезде и выезде в один день время выезда должно быть позже времени заезда." );
         }
     }
 
@@ -104,33 +100,29 @@ public class ReservationService : IReservationService
     {
         if ( string.IsNullOrWhiteSpace( guestName ) )
         {
-            throw new ArgumentException( "Имя гостя не может быть пустым.",
-                nameof( guestName ) );
+            throw new DomainException( "Имя гостя не может быть пустым." );
         }
 
         if ( string.IsNullOrWhiteSpace( guestPhoneNumber ) )
         {
-            throw new ArgumentException( "Номер телефона гостя не может быть пустым.",
-                nameof( guestPhoneNumber ) );
+            throw new DomainException( "Номер телефона гостя не может быть пустым." );
         }
     }
 
     private async Task<Property> ThrowIfPropertyNotExists( int propertyId )
     {
         return await _propertyService.GetByIdAsync( propertyId )
-            ?? throw new ArgumentException( "Средство размещения с указанным ID не найдено.", nameof( propertyId ) );
+            ?? throw new DomainException( "Средство размещения с указанным ID не найдено." );
     }
 
     private async Task<RoomType> ThrowIfInvalidRoomType( int roomTypeId, int propertyId )
     {
         RoomType roomType = await _roomTypeService.GetByIdAsync( roomTypeId )
-            ?? throw new ArgumentException( "Тип номера с указанным ID не найден.",
-            nameof( roomTypeId ) );
+            ?? throw new DomainException( "Тип номера с указанным ID не найден." );
 
         if ( roomType.PropertyId != propertyId )
         {
-            throw new ArgumentException( "Тип номера не относится к указанному средству размещения.",
-                nameof( roomTypeId ) );
+            throw new DomainException( "Тип номера не относится к указанному средству размещения." );
         }
 
         return roomType;
@@ -157,7 +149,7 @@ public class ReservationService : IReservationService
 
         if ( bookedRooms >= totalRoomsCount )
         {
-            throw new InvalidOperationException( "На выбранные даты нет доступных номеров данного типа." );
+            throw new DomainException( "На выбранные даты нет доступных номеров данного типа." );
         }
     }
 }

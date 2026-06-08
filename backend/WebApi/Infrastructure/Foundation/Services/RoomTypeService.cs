@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Repositories;
 using Domain.Services;
 
@@ -29,13 +30,11 @@ public class RoomTypeService : IRoomTypeService
 
     public async Task DeleteAsync( int id, CancellationToken ct = default )
     {
-        RoomType? roomType = await GetByIdAsync( id, ct );
+        RoomType roomType = await GetByIdAsync( id, ct )
+            ?? throw new DomainException( $"Тип номера с id {id} не найден." );
 
-        if ( roomType is not null )
-        {
-            _roomTypeRepository.Delete( roomType );
-            await _unitOfWork.SaveChangesAsync( ct );
-        }
+        _roomTypeRepository.Delete( roomType );
+        await _unitOfWork.SaveChangesAsync( ct );
     }
 
     public async Task<RoomType?> GetByIdAsync( int id, CancellationToken ct = default )
@@ -52,12 +51,8 @@ public class RoomTypeService : IRoomTypeService
     {
         await ValidateRoomTypeAsync( roomType );
 
-        RoomType? existing = await _roomTypeRepository.GetByIdAsync( roomType.Id, ct );
-
-        if ( existing is null )
-        {
-            return;
-        }
+        RoomType existing = await _roomTypeRepository.GetByIdAsync( roomType.Id, ct )
+            ?? throw new DomainException( $"Тип номера с id {roomType.Id} не найден." );
 
         existing.Update( roomType );
 
@@ -66,37 +61,32 @@ public class RoomTypeService : IRoomTypeService
 
     private async Task ValidateRoomTypeAsync( RoomType roomType )
     {
-        Property? property = await _propertyService.GetByIdAsync( roomType.PropertyId )
-            ?? throw new ArgumentException( "Средство размещения с указанным ID не найдено.", nameof( roomType.PropertyId ) );
+        _ = await _propertyService.GetByIdAsync( roomType.PropertyId )
+            ?? throw new DomainException( "Средство размещения с указанным ID не найдено." );
 
         if ( string.IsNullOrWhiteSpace( roomType.Name ) )
         {
-            throw new ArgumentException( "Название типа номера не может быть пустым.",
-                nameof( roomType.Name ) );
+            throw new DomainException( "Название типа номера не может быть пустым." );
         }
 
         if ( roomType.DailyPrice < 0 )
         {
-            throw new ArgumentException( "Суточная цена не может быть отрицательной.",
-                nameof( roomType.DailyPrice ) );
+            throw new DomainException( "Суточная цена не может быть отрицательной." );
         }
 
         if ( roomType.MinPersonCount <= 0 )
         {
-            throw new ArgumentException( "Минимальное количество гостей должно быть больше 0.",
-                nameof( roomType.MinPersonCount ) );
+            throw new DomainException( "Минимальное количество гостей должно быть больше 0." );
         }
 
         if ( roomType.MinPersonCount > roomType.MaxPersonCount )
         {
-            throw new ArgumentException( "Минимальное количество гостей не может превышать максимальное.",
-                nameof( roomType.MaxPersonCount ) );
+            throw new DomainException( "Минимальное количество гостей не может превышать максимальное." );
         }
 
-        if ( roomType.TotalRoomsCount <= 0 )
+        if ( roomType.TotalRoomsCount < 0 )
         {
-            throw new ArgumentException( "Общее количество номеров должно быть больше 0.",
-                nameof( roomType.TotalRoomsCount ) );
+            throw new DomainException( "Общее количество номеров должно быть больше 0." );
         }
     }
 }

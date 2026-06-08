@@ -1,3 +1,4 @@
+using API.Middleware;
 using Infrastructure.Foundation;
 
 var builder = WebApplication.CreateBuilder( args );
@@ -8,6 +9,8 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 if ( app.Environment.IsDevelopment() )
 {

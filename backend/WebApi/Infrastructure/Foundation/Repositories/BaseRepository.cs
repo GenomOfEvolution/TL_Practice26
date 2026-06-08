@@ -25,7 +25,9 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity>
 
     public async Task<IEnumerable<TEntity>> GetAllAsync( CancellationToken ct = default )
     {
-        return await Context.Set<TEntity>().ToListAsync( ct );
+        return await Context.Set<TEntity>()
+            .AsNoTracking()
+            .ToListAsync( ct );
     }
 
     public async Task<TEntity?> GetByIdAsync( int id, CancellationToken ct = default )
