@@ -15,14 +15,14 @@ public class PropertyService : IPropertyService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Property> CreateAsync( Property property, CancellationToken ct = default )
+    public async Task<int> CreateAsync( Property property, CancellationToken ct = default )
     {
         ValidateProperty( property );
 
         await _propertyRepository.AddAsync( property, ct );
         await _unitOfWork.SaveChangesAsync( ct );
 
-        return property;
+        return property.Id;
     }
 
     public async Task DeleteAsync( int id, CancellationToken ct = default )
@@ -36,9 +36,9 @@ public class PropertyService : IPropertyService
         }
     }
 
-    public async Task<IEnumerable<Property>> GetAllAsync( CancellationToken ct = default )
+    public async Task<IReadOnlyList<Property>> GetAllAsync( CancellationToken ct = default )
     {
-        return await _propertyRepository.GetAllAsync( ct );
+        return ( await _propertyRepository.GetAllAsync( ct ) ).ToList();
     }
 
     public async Task<Property?> GetByIdAsync( int id, CancellationToken ct = default )

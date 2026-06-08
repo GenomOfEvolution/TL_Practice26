@@ -11,8 +11,9 @@ public class RoomTypeConfiguration : IEntityTypeConfiguration<RoomType>
 {
     public void Configure( EntityTypeBuilder<RoomType> builder )
     {
-        builder.ToTable( nameof( RoomType ) )
-            .HasKey( rt => rt.Id );
+        builder.ToTable( nameof( RoomType ) );
+        builder.HasKey( rt => rt.Id );
+        builder.Property( rt => rt.Id ).HasColumnName( "id_roomtype" );
 
         builder.HasOne<Property>()
             .WithMany()

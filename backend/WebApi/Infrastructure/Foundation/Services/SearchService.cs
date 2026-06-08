@@ -21,15 +21,15 @@ public class SearchService : ISearchService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<IEnumerable<SearchResult>> SearchAsync( SearchFilter filter, CancellationToken ct = default )
+    public async Task<IReadOnlyList<SearchResult>> SearchAsync( SearchFilter filter, CancellationToken ct = default )
     {
         var results = new List<SearchResult>();
 
-        IEnumerable<Property> properties = await _propertyRepository.GetByCityAsync( filter.City, ct );
+        IReadOnlyList<Property> properties = ( await _propertyRepository.GetByCityAsync( filter.City, ct ) ).ToList();
 
         foreach ( var property in properties )
         {
-            var roomTypes = await _roomTypeRepository.GetByPropertyIdAsync( property.Id, ct );
+            IReadOnlyList<RoomType> roomTypes = ( await _roomTypeRepository.GetByPropertyIdAsync( property.Id, ct ) ).ToList();
 
             IEnumerable<RoomType> matchingRoomTypes = roomTypes
                 .Where( rt => rt.MinPersonCount <= filter.Guests && rt.MaxPersonCount >= filter.Guests );

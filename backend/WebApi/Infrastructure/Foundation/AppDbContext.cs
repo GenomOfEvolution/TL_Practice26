@@ -1,5 +1,4 @@
-﻿using Domain.Entities;
-using Infrastructure.Foundation.Configurations;
+﻿using Infrastructure.Foundation.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Foundation;
@@ -10,10 +9,6 @@ public class AppDbContext : DbContext
         : base( options )
     {
     }
-
-    public DbSet<Property> Properties { get; set; }
-    public DbSet<RoomType> RoomTypes { get; set; }
-    public DbSet<Reservation> Reservations { get; set; }
 
     protected override void OnModelCreating( ModelBuilder modelBuilder )
     {

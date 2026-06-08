@@ -5,5 +5,5 @@ namespace Domain.Services;
 
 public interface ISearchService
 {
-    Task<IEnumerable<SearchResult>> SearchAsync( SearchFilter filter, CancellationToken ct = default );
+    Task<IReadOnlyList<SearchResult>> SearchAsync( SearchFilter filter, CancellationToken ct = default );
 }

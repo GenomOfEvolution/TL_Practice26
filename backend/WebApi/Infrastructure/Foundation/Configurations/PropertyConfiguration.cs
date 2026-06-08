@@ -9,8 +9,9 @@ public class PropertyConfiguration : IEntityTypeConfiguration<Property>
 {
     public void Configure( EntityTypeBuilder<Property> builder )
     {
-        builder.ToTable( nameof( Property ) )
-            .HasKey( p => p.Id );
+        builder.ToTable( nameof( Property ) );
+        builder.HasKey( p => p.Id );
+        builder.Property( p => p.Id ).HasColumnName( "id_property" );
 
         builder.Property( p => p.Name )
             .HasMaxLength( 100 )

@@ -9,8 +9,8 @@ public static class EntityToSearchResultDtoMapper
     {
         return new SearchResultDTO
         {
-            Property = EntityToPropertyDtoMapper.Map( result.Property ),
-            RoomType = EntityToRoomTypeDtoMapper.Map( result.RoomType ),
+            Property = EntityToPropertyDtoMapper.Map( result.Property! ),
+            RoomType = EntityToRoomTypeDtoMapper.Map( result.RoomType! ),
             RoomsLeft = result.RoomsLeft
         };
     }

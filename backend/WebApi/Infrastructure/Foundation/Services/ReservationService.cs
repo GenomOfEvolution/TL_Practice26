@@ -32,7 +32,7 @@ public class ReservationService : IReservationService
         }
     }
 
-    public async Task<Reservation> CreateAsync( Reservation reservation, CancellationToken ct = default )
+    public async Task<int> CreateAsync( Reservation reservation, CancellationToken ct = default )
     {
         ValidateDates( reservation.ArrivalDate, reservation.DepartureDate, reservation.ArrivalTime, reservation.DepartureTime );
         ValidateGuestInfo( reservation.GuestName, reservation.GuestPhoneNumber );
@@ -56,7 +56,7 @@ public class ReservationService : IReservationService
         await _reservationRepository.AddAsync( reservation, ct );
         await _unitOfWork.SaveChangesAsync( ct );
 
-        return reservation;
+        return reservation.Id;
     }
 
     public async Task<Reservation?> GetByIdAsync( int id, CancellationToken ct = default )
@@ -64,9 +64,9 @@ public class ReservationService : IReservationService
         return await _reservationRepository.GetByIdAsync( id, ct );
     }
 
-    public async Task<IEnumerable<Reservation>> GetListAsync( ReservationFilter filter, CancellationToken ct = default )
+    public async Task<IReadOnlyList<Reservation>> GetListAsync( ReservationFilter filter, CancellationToken ct = default )
     {
-        return await _reservationRepository.GetByFiltersAsync( filter, ct );
+        return ( await _reservationRepository.GetByFiltersAsync( filter, ct ) ).ToList();
     }
 
     private static void ValidateDates( DateOnly arrivalDate, DateOnly departureDate, TimeOnly arrivalTime, TimeOnly departureTime )

@@ -17,14 +17,14 @@ public class RoomTypeService : IRoomTypeService
         _propertyService = propertyService;
     }
 
-    public async Task<RoomType> CreateAsync( RoomType roomType, CancellationToken ct = default )
+    public async Task<int> CreateAsync( RoomType roomType, CancellationToken ct = default )
     {
         await ValidateRoomTypeAsync( roomType );
 
         await _roomTypeRepository.AddAsync( roomType, ct );
         await _unitOfWork.SaveChangesAsync( ct );
 
-        return roomType;
+        return roomType.Id;
     }
 
     public async Task DeleteAsync( int id, CancellationToken ct = default )
@@ -43,9 +43,9 @@ public class RoomTypeService : IRoomTypeService
         return await _roomTypeRepository.GetByIdAsync( id, ct );
     }
 
-    public async Task<IEnumerable<RoomType>> GetByPropertyIdAsync( int propertyId, CancellationToken ct = default )
+    public async Task<IReadOnlyList<RoomType>> GetByPropertyIdAsync( int propertyId, CancellationToken ct = default )
     {
-        return await _roomTypeRepository.GetByPropertyIdAsync( propertyId, ct );
+        return ( await _roomTypeRepository.GetByPropertyIdAsync( propertyId, ct ) ).ToList();
     }
 
     public async Task UpdateAsync( RoomType roomType, CancellationToken ct = default )

@@ -8,8 +8,9 @@ public class ReservationConfiguration : IEntityTypeConfiguration<Reservation>
 {
     public void Configure( EntityTypeBuilder<Reservation> builder )
     {
-        builder.ToTable( nameof( Reservation ) )
-            .HasKey( r => r.Id );
+        builder.ToTable( nameof( Reservation ) );
+        builder.HasKey( r => r.Id );
+        builder.Property( r => r.Id ).HasColumnName( "id_reservation" );
 
         builder.HasOne<Property>()
             .WithMany()
@@ -48,10 +49,9 @@ public class ReservationConfiguration : IEntityTypeConfiguration<Reservation>
             .IsRequired();
 
         builder.Property( r => r.IsCanceled )
-            .HasDefaultValue( false )
             .IsRequired();
 
-        builder.HasIndex( r => r.PropertyId );
-        builder.HasIndex( r => r.RoomTypeId );
+        builder.HasIndex( r => new { r.RoomTypeId, r.PropertyId } )
+            .HasDatabaseName( "IX_roomtype_id_property" );
     }
 }

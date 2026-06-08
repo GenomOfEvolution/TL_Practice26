@@ -22,12 +22,12 @@ public class ReservationsController : ControllerBase
     {
         var reservation = CreateReservationRequestToEntityMapper.Map( request );
 
-        var created = await _reservationService.CreateAsync( reservation );
+        var id = await _reservationService.CreateAsync( reservation );
 
         return CreatedAtAction(
             nameof( GetReservationById ),
-            new { id = created.Id },
-            EntityToReservationDtoMapper.Map( created ) );
+            new { id },
+            null );
     }
 
     [HttpGet]

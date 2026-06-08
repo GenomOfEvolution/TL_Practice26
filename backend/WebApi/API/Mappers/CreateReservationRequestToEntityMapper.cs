@@ -20,8 +20,6 @@ public static class CreateReservationRequestToEntityMapper
 
             GuestName = request.GuestName,
             GuestPhoneNumber = request.GuestPhoneNumber,
-
-            IsCanceled = false
         };
     }
 }

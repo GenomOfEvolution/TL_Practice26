@@ -57,12 +57,12 @@ public class PropertiesController : ControllerBase
     public async Task<ActionResult<PropertyDTO>> AddProperty( [FromBody] PropertyDTO propertyDTO )
     {
         var entity = PropertyDtoToEntityMapper.Map( propertyDTO );
-        var created = await _propertyService.CreateAsync( entity );
+        var id = await _propertyService.CreateAsync( entity );
 
         return CreatedAtAction(
             nameof( GetById ),
-            new { id = created.Id },
-            EntityToPropertyDtoMapper.Map( created ) );
+            new { id },
+            null );
     }
 
     [HttpPut( "{id:int}" )]

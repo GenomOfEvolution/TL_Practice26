@@ -3,7 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Foundation.Repositories;
 
-public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
+public class BaseRepository<TEntity> : IBaseRepository<TEntity>
+    where TEntity : class
 {
     protected readonly DbSet<TEntity> Entities;
 
