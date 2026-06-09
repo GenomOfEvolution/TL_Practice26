@@ -1,36 +1,48 @@
+import { useState } from 'react';
+import type { Currency } from '../../models';
 import styles from './MoreAboutSection.module.scss';
 import { MoreAboutButton } from './MoreAboutButton';
 import { CurrencyInfo } from '../CurrencyInfo/CurrencyInfo';
 
-const currencyData: Record<string, { title: string; description: string }> = {
-  PLN: {
-    title: 'Polish zloty - PLN - zł',
-    description:
-      'This is the official currency and legal tender of Poland. It is subdivided into 100 grosz-y (gr). It is the most traded currency in Central and Eastern Europe and ranks 21st most-traded in the foreign exchange market.'
-  },
-  JPY: {
-    title: 'Japanese yen - JPY - ¥',
-    description:
-      'The yen is the official currency of Japan. It is the third-most traded currency in the foreign exchange market, after the United States dollar and the euro. It is also widely used as a third reserve currency after the US dollar and the euro.'
-  }
-};
-
 type MoreAboutSectionProps = {
-  fromValue: string;
-  toValue: string;
+  from: Currency;
+  to: Currency;
 };
 
-export const MoreAboutSection = ({ fromValue, toValue }: MoreAboutSectionProps) => {
-  const from = currencyData[fromValue];
-  const to = currencyData[toValue];
+export const MoreAboutSection = ({ from, to }: MoreAboutSectionProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleToggle = () => {
+    setIsOpen((prev) => !prev);
+  };
 
   return (
     <div className={styles.section}>
-      <div className={styles.buttonWrapper}>
-        <MoreAboutButton fromValue={fromValue} toValue={toValue} testId="more-about-button" />
+      <div>
+        <div className={styles.buttonWrapper}>
+          <MoreAboutButton
+            fromValue={from.code}
+            toValue={to.code}
+            arrowUp={isOpen}
+            onClick={handleToggle}
+            testId="more-about-button"
+          />
+        </div>
+        {isOpen && (
+          <>
+            <CurrencyInfo
+              testId="first-info"
+              title={`${from.name} - ${from.code} - ${from.symbol}`}
+              description={from.description || 'No description available.'}
+            />
+            <CurrencyInfo
+              testId="second-info"
+              title={`${to.name} - ${to.code} - ${to.symbol}`}
+              description={to.description || 'No description available.'}
+            />
+          </>
+        )}
       </div>
-      {from && <CurrencyInfo testId="first-info" title={from.title} description={from.description} />}
-      {to && <CurrencyInfo testId="second-info" title={to.title} description={to.description} />}
     </div>
   );
 };

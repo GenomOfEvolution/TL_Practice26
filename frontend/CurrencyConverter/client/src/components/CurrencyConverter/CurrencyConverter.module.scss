@@ -5,10 +5,15 @@
   flex-direction: column;
   justify-content: center;
 
-  inline-size: 1257px;
-  block-size: 662px;
-  padding-inline-start: 28px;
+  inline-size: clamp(320px, 90vw, 1257px);
+  padding: 48px 28px;
 
   background-color: #fff;
   border-radius: 30px;
+}
+
+.swap-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-block-end: 20px;
 }

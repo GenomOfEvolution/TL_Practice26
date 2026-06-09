@@ -1,15 +1,18 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { MoreAboutSection } from './MoreAboutSection';
+import { currencies } from '../../mocks';
 
 describe('MoreAboutSection', () => {
   it('renders the MoreAboutButton with testId', () => {
-    render(<MoreAboutSection fromValue="PLN" toValue="JPY" />);
+    render(<MoreAboutSection from={currencies[0]} to={currencies[1]} />);
 
     expect(screen.getByTestId('more-about-button')).toBeInTheDocument();
   });
 
-  it('renders CurrencyInfo components with testIds based on currency codes', () => {
-    render(<MoreAboutSection fromValue="PLN" toValue="JPY" />);
+  it('shows CurrencyInfo after clicking the button', () => {
+    render(<MoreAboutSection from={currencies[0]} to={currencies[1]} />);
+
+    fireEvent.click(screen.getByTestId('more-about-button'));
 
     expect(screen.getByTestId('first-info')).toBeInTheDocument();
     expect(screen.getByTestId('second-info')).toBeInTheDocument();
