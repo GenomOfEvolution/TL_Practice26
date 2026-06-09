@@ -1,27 +1,59 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { useCurrencyConverter } from './useCurrencyConverter';
-import { act, renderHook } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
+import type { CurrencyDto, PriceChangeDto } from '../models/dto';
+import currenciesJson from '../mocks/2_hw_mock_currencies.json';
+import priceChangesJson from '../mocks/2_hw_mock_price_changes.json';
+
+vi.mock('../api/currencyApi', () => ({
+  fetchCurrencies: vi.fn(),
+  fetchPriceChanges: vi.fn()
+}));
+
+import { fetchCurrencies, fetchPriceChanges } from '../api/currencyApi';
+
+const mockedFetchCurrencies = vi.mocked(fetchCurrencies);
+const mockedFetchPriceChanges = vi.mocked(fetchPriceChanges);
+
+const mockCurrenciesDto = currenciesJson as CurrencyDto[];
+const mockPriceChangesMap = priceChangesJson as Record<string, Record<string, PriceChangeDto>>;
+
+const getPriceChangesArray = (paymentCurrency: string, purchasedCurrency: string): PriceChangeDto[] => {
+  const entry = mockPriceChangesMap[paymentCurrency]?.[purchasedCurrency];
+  return entry ? [entry] : [];
+};
+
+beforeEach(() => {
+  mockedFetchCurrencies.mockResolvedValue(mockCurrenciesDto);
+  mockedFetchPriceChanges.mockImplementation((paymentCurrency, purchasedCurrency) =>
+    Promise.resolve(getPriceChangesArray(paymentCurrency, purchasedCurrency))
+  );
+});
 
 describe('useCurrencyConverter', () => {
-  it('auto-replaces to when setFrom matches current to', () => {
+  it('auto-replaces to when setFrom matches current to', async () => {
     const { result } = renderHook(() => useCurrencyConverter());
+
+    await waitFor(() => expect(result.current.from).not.toBeNull());
 
     act(() => {
       result.current.setTo('PLN');
     });
 
-    expect(result.current.to.code).toBe('PLN');
+    expect(result.current.to?.code).toBe('PLN');
 
     act(() => {
       result.current.setFrom('PLN');
     });
 
-    expect(result.current.from.code).toBe('PLN');
-    expect(result.current.to.code).not.toBe('PLN');
+    expect(result.current.from?.code).toBe('PLN');
+    expect(result.current.to?.code).not.toBe('PLN');
   });
 
-  it('swap correctly recalculates result', () => {
+  it('swap correctly recalculates result', async () => {
     const { result } = renderHook(() => useCurrencyConverter());
+
+    await waitFor(() => expect(result.current.from).not.toBeNull());
 
     act(() => {
       result.current.setFrom('PLN');
@@ -29,14 +61,17 @@ describe('useCurrencyConverter', () => {
       result.current.setAmount('1');
     });
 
+    await waitFor(() => expect(result.current.result).not.toBe(''));
+
     const oldResult = Number(result.current.result);
 
     act(() => {
       result.current.swap();
     });
 
-    const newResult = Number(result.current.result);
-
-    expect(oldResult * newResult).toBeCloseTo(1, 1);
+    await waitFor(() => {
+      const newResult = Number(result.current.result);
+      expect(oldResult * newResult).toBeCloseTo(1, 1);
+    });
   });
 });
