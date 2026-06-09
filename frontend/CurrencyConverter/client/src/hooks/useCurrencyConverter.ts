@@ -25,8 +25,8 @@ export const useCurrencyConverter = () => {
     const load = async () => {
       dispatchCurrencies({ type: 'LOADING' });
       try {
-        const dtos = await fetchCurrencies(abortController.signal);
-        const mapped = dtos.map(mapCurrency);
+        const response = await fetchCurrencies(abortController.signal);
+        const mapped = response.map(mapCurrency);
 
         dispatchCurrencies({ type: 'SUCCESS', payload: mapped });
         setFromState(mapped[0]);
@@ -56,17 +56,17 @@ export const useCurrencyConverter = () => {
     const load = async () => {
       dispatchPrices({ type: 'LOADING' });
       try {
-        const dtos = await fetchPriceChanges(
+        const response = await fetchPriceChanges(
           from.code,
           to.code,
           new Date(0).toISOString(),
           undefined,
           abortController.signal
         );
-        const mapped = dtos.map(mapPriceChange);
+        const mapped = response.map(mapPriceChange);
         dispatchPrices({ type: 'SUCCESS', payload: mapped });
       } catch (err) {
-        if (err instanceof DOMException && err.name === 'AbortError') return;
+        if (err instanceof Error && err.name === 'AbortError') return;
 
         dispatchPrices({
           type: 'ERROR',
@@ -85,21 +85,19 @@ export const useCurrencyConverter = () => {
   const currencies = currenciesState.data ?? [];
   const priceChanges = pricesState.data ?? [];
 
-  const setFrom = (code: string) => {
-    const currency = currencies.find((c) => c.code === code);
-    if (!currency || !to) return;
+  const setFrom = (currency: Currency) => {
+    if (!to) return;
     setFromState(currency);
-    if (code === to.code) {
-      setToState(findFirstDifferent(currencies, code));
+    if (currency.code === to.code) {
+      setToState(findFirstDifferent(currencies, currency.code));
     }
   };
 
-  const setTo = (code: string) => {
-    const currency = currencies.find((c) => c.code === code);
-    if (!currency || !from) return;
+  const setTo = (currency: Currency) => {
+    if (!from) return;
     setToState(currency);
-    if (code === from.code) {
-      setFromState(findFirstDifferent(currencies, code));
+    if (currency.code === from.code) {
+      setFromState(findFirstDifferent(currencies, currency.code));
     }
   };
 

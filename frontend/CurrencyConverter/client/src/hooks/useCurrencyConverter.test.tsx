@@ -2,21 +2,29 @@ import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { useCurrencyConverter } from './useCurrencyConverter';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import type { CurrencyDto, PriceChangeDto } from '../models/dto';
+import type { Currency } from '../models';
+import { mapCurrency } from '../models/mappers';
 import currenciesJson from '../mocks/2_hw_mock_currencies.json';
 import priceChangesJson from '../mocks/2_hw_mock_price_changes.json';
 
-vi.mock('../api/currencyApi', () => ({
-  fetchCurrencies: vi.fn(),
-  fetchPriceChanges: vi.fn(),
+const { mockedFetchCurrencies, mockedFetchPriceChanges } = vi.hoisted(() => ({
+  mockedFetchCurrencies: vi.fn(),
+  mockedFetchPriceChanges: vi.fn(),
 }));
 
-import { fetchCurrencies, fetchPriceChanges } from '../api/currencyApi';
-
-const mockedFetchCurrencies = vi.mocked(fetchCurrencies);
-const mockedFetchPriceChanges = vi.mocked(fetchPriceChanges);
+vi.mock('../api/currencyApi', () => ({
+  fetchCurrencies: mockedFetchCurrencies,
+  fetchPriceChanges: mockedFetchPriceChanges,
+}));
 
 const mockCurrenciesDto = currenciesJson as CurrencyDto[];
 const mockPriceChangesMap = priceChangesJson as Record<string, Record<string, PriceChangeDto>>;
+
+const getCurrency = (code: string): Currency => {
+  const dto = mockCurrenciesDto.find((c) => c.code === code);
+  if (!dto) throw new Error(`Currency ${code} not found`);
+  return mapCurrency(dto);
+};
 
 const getPriceChangesArray = (paymentCurrency: string, purchasedCurrency: string): PriceChangeDto[] => {
   const entry = mockPriceChangesMap[paymentCurrency]?.[purchasedCurrency];
@@ -37,7 +45,7 @@ describe('useCurrencyConverter', () => {
     await waitFor(() => expect(result.current.from).not.toBeNull());
 
     act(() => {
-      result.current.setTo('PLN');
+      result.current.setTo(getCurrency('PLN'));
     });
 
     await waitFor(() => {
@@ -45,7 +53,7 @@ describe('useCurrencyConverter', () => {
     });
 
     act(() => {
-      result.current.setFrom('PLN');
+      result.current.setFrom(getCurrency('PLN'));
     });
 
     await waitFor(() => {
@@ -60,8 +68,8 @@ describe('useCurrencyConverter', () => {
     await waitFor(() => expect(result.current.from).not.toBeNull());
 
     act(() => {
-      result.current.setFrom('PLN');
-      result.current.setTo('CAD');
+      result.current.setFrom(getCurrency('PLN'));
+      result.current.setTo(getCurrency('CAD'));
       result.current.setAmount('1');
     });
 

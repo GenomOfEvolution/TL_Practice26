@@ -1,4 +1,4 @@
-import { useReducer, useEffect, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useCurrencyConverter } from '../../hooks/useCurrencyConverter';
 import { ConversionHeader } from '../ConversionHeader/ConversionHeader';
 import { CurrencyInput } from '../CurrencyInput/CurrencyInput';
@@ -6,21 +6,6 @@ import { MoreAboutSection } from '../MoreAboutSection/MoreAboutSection';
 import { SwapButton } from './SwapButton';
 import { Toast } from '../Toast/Toast';
 import styles from './CurrencyConverter.module.scss';
-
-type ToastState = { message: string | null };
-
-type ToastAction = { type: 'SHOW'; message: string } | { type: 'HIDE' };
-
-const toastReducer = (_state: ToastState, action: ToastAction): ToastState => {
-  switch (action.type) {
-    case 'SHOW':
-      return { message: action.message };
-    case 'HIDE':
-      return { message: null };
-    default:
-      return { message: null };
-  }
-};
 
 export const CurrencyConverter = () => {
   const {
@@ -36,24 +21,24 @@ export const CurrencyConverter = () => {
     setFrom,
     setTo,
     setAmount,
-    swap,
+    swap
   } = useCurrencyConverter();
 
-  const [toastState, dispatchToast] = useReducer(toastReducer, { message: null });
+  const [dismissedError, setDismissedError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const toastMessage = pricesError && pricesError !== dismissedError ? pricesError : null;
+
+  const closeToast = useCallback(() => {
     if (pricesError) {
-      dispatchToast({ type: 'SHOW', message: pricesError });
+      setDismissedError(pricesError);
     }
   }, [pricesError]);
-
-  const closeToast = useCallback(() => dispatchToast({ type: 'HIDE' }), []);
 
   if (currenciesLoading) {
     return (
       <div className={styles.exchanger}>
         <div className={styles.loadingState}>
-          <span className={styles.loader} />
+          <span className={styles.loader} data-testid="currency-converter-main-loader" />
         </div>
       </div>
     );
@@ -84,11 +69,11 @@ export const CurrencyConverter = () => {
 
   return (
     <div className={styles.exchanger}>
-      {toastState.message && <Toast message={toastState.message} onClose={closeToast} />}
+      {toastMessage && <Toast message={toastMessage} onClose={closeToast} />}
       <ConversionHeader from={from} to={to} amount={amount} result={result} dateTime={dateTime} />
       <CurrencyInput
         value={amount}
-        currency={from.code}
+        currency={from}
         currencies={currencies}
         onAmountChange={setAmount}
         onCurrencyChange={setFrom}
@@ -98,7 +83,7 @@ export const CurrencyConverter = () => {
       </div>
       <CurrencyInput
         value={result}
-        currency={to.code}
+        currency={to}
         currencies={currencies}
         onAmountChange={setAmount}
         onCurrencyChange={setTo}

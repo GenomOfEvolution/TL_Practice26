@@ -5,10 +5,10 @@ import { CurrencyListButton } from './CurrencyListButton';
 
 type CurrencyInputProps = {
   value: string;
-  currency: string;
+  currency: Currency;
   currencies: Currency[];
   onAmountChange: (value: string) => void;
-  onCurrencyChange: (code: string) => void;
+  onCurrencyChange: (currency: Currency) => void;
   readOnly?: boolean;
 };
 
@@ -25,7 +25,8 @@ export const CurrencyInput = ({
   };
 
   const handleCurrencyChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    onCurrencyChange(e.target.value);
+    const selected = currencies.find((c) => c.code === e.target.value);
+    if (selected) onCurrencyChange(selected);
   };
 
   return (
@@ -33,7 +34,7 @@ export const CurrencyInput = ({
       <input className={styles.input} type="text" value={value} onChange={handleAmountChange} readOnly={readOnly} />
       <div className={styles.separator} />
       <div className={styles.dropdown}>
-        <select className={styles.select} value={currency} onChange={handleCurrencyChange}>
+        <select className={styles.select} value={currency.code} onChange={handleCurrencyChange}>
           {currencies.map((c) => (
             <option key={c.code} value={c.code}>
               {c.code}

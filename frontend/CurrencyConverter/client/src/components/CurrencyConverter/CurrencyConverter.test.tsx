@@ -5,15 +5,15 @@ import type { CurrencyDto, PriceChangeDto } from '../../models/dto';
 import currenciesJson from '../../mocks/2_hw_mock_currencies.json';
 import priceChangesJson from '../../mocks/2_hw_mock_price_changes.json';
 
-const { mockedFetchCurrencies, mockedFetchPriceChanges } = vi.hoisted(() => ({
-  mockedFetchCurrencies: vi.fn(),
-  mockedFetchPriceChanges: vi.fn(),
+vi.mock('../../api/currencyApi', () => ({
+  fetchCurrencies: vi.fn(),
+  fetchPriceChanges: vi.fn()
 }));
 
-vi.mock('../../api/currencyApi', () => ({
-  fetchCurrencies: mockedFetchCurrencies,
-  fetchPriceChanges: mockedFetchPriceChanges,
-}));
+import { fetchCurrencies, fetchPriceChanges } from '../../api/currencyApi';
+
+const mockedFetchCurrencies = vi.mocked(fetchCurrencies);
+const mockedFetchPriceChanges = vi.mocked(fetchPriceChanges);
 
 const mockCurrenciesDto = currenciesJson as CurrencyDto[];
 const mockPriceChangesMap = priceChangesJson as Record<string, Record<string, PriceChangeDto>>;
@@ -40,9 +40,9 @@ describe('CurrencyConverter', () => {
         })
     );
 
-    const { container } = render(<CurrencyConverter />);
+    render(<CurrencyConverter />);
 
-    expect(container.querySelector('span')).toBeInTheDocument();
+    expect(screen.getByTestId('currency-converter-main-loader')).toBeInTheDocument();
 
     await act(async () => {
       resolvePromise!(mockCurrenciesDto);
