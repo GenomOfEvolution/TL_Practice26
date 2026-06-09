@@ -12,8 +12,52 @@
   border-radius: 30px;
 }
 
+.loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-block-size: 200px;
+}
+
 .swap-wrapper {
   display: flex;
   justify-content: center;
   margin-block-end: 20px;
+}
+
+.error-block {
+  color: #721c24;
+  font-family: 'Inter Variable', sans-serif;
+  text-align: center;
+}
+
+.loader {
+  box-sizing: border-box;
+
+  display: block;
+
+  inline-size: 48px;
+  block-size: 48px;
+  margin: auto;
+
+  border: 5px solid #d1d5db;
+  border-radius: 50%;
+
+  animation: rotation 1s linear infinite;
+
+  border-block-end-color: transparent;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.error-block h2 {
+  margin-block-end: 8px;
 }
