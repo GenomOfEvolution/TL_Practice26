@@ -2,8 +2,8 @@ import type { CurrencyDto, PriceChangeDto } from '../models/dto';
 
 const BASE_URL = 'http://localhost:5081';
 
-export const fetchCurrencies = async (): Promise<CurrencyDto[]> => {
-  const response = await fetch(`${BASE_URL}/Currency`);
+export const fetchCurrencies = async (signal?: AbortSignal): Promise<CurrencyDto[]> => {
+  const response = await fetch(`${BASE_URL}/Currency`, { signal });
 
   if (!response.ok) {
     throw new Error(`Failed to fetch currencies: ${response.status}`);
@@ -17,6 +17,7 @@ export const fetchPriceChanges = async (
   purchasedCurrency: string,
   fromDateTime: string,
   toDateTime?: string,
+  signal?: AbortSignal,
 ): Promise<PriceChangeDto[]> => {
   const params = new URLSearchParams({
     paymentCurrency,
@@ -28,7 +29,7 @@ export const fetchPriceChanges = async (
     params.set('toDateTime', toDateTime);
   }
 
-  const response = await fetch(`${BASE_URL}/prices?${params}`);
+  const response = await fetch(`${BASE_URL}/prices?${params}`, { signal });
 
   if (!response.ok) {
     throw new Error(`Failed to fetch prices: ${response.status}`);

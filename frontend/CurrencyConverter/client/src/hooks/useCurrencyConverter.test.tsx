@@ -7,7 +7,7 @@ import priceChangesJson from '../mocks/2_hw_mock_price_changes.json';
 
 vi.mock('../api/currencyApi', () => ({
   fetchCurrencies: vi.fn(),
-  fetchPriceChanges: vi.fn()
+  fetchPriceChanges: vi.fn(),
 }));
 
 import { fetchCurrencies, fetchPriceChanges } from '../api/currencyApi';
@@ -26,7 +26,7 @@ const getPriceChangesArray = (paymentCurrency: string, purchasedCurrency: string
 beforeEach(() => {
   mockedFetchCurrencies.mockResolvedValue(mockCurrenciesDto);
   mockedFetchPriceChanges.mockImplementation((paymentCurrency, purchasedCurrency) =>
-    Promise.resolve(getPriceChangesArray(paymentCurrency, purchasedCurrency))
+    Promise.resolve(getPriceChangesArray(paymentCurrency, purchasedCurrency)),
   );
 });
 
@@ -40,14 +40,18 @@ describe('useCurrencyConverter', () => {
       result.current.setTo('PLN');
     });
 
-    expect(result.current.to?.code).toBe('PLN');
+    await waitFor(() => {
+      expect(result.current.to?.code).toBe('PLN');
+    });
 
     act(() => {
       result.current.setFrom('PLN');
     });
 
-    expect(result.current.from?.code).toBe('PLN');
-    expect(result.current.to?.code).not.toBe('PLN');
+    await waitFor(() => {
+      expect(result.current.from?.code).toBe('PLN');
+      expect(result.current.to?.code).not.toBe('PLN');
+    });
   });
 
   it('swap correctly recalculates result', async () => {
