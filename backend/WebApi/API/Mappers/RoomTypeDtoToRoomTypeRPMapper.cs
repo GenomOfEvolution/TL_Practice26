@@ -16,8 +16,8 @@ public static class RoomTypeDtoToRoomTypeRPMapper
             MinPersonCount = dto.MinPersonCount,
             MaxPersonCount = dto.MaxPersonCount,
             TotalRoomsCount = dto.TotalRoomsCount,
-            Services = dto.Services,
-            Amenities = dto.Amenities,
+            Services = dto.Services.Select( s => s.ToString() ).ToList(),
+            Amenities = dto.Amenities.Select( a => a.ToString() ).ToList(),
             Currency = dto.Currency,
         };
     }

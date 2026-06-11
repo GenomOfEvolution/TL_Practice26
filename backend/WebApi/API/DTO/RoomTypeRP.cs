@@ -11,7 +11,7 @@ public class RoomTypeRP
     public int MinPersonCount { get; init; }
     public int MaxPersonCount { get; init; }
     public int TotalRoomsCount { get; init; }
-    public List<ServiceType> Services { get; init; } = [];
-    public List<AmenitiesType> Amenities { get; init; } = [];
+    public List<string> Services { get; init; } = [];
+    public List<string> Amenities { get; init; } = [];
     public Currency Currency { get; init; }
 }

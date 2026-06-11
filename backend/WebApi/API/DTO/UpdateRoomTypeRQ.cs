@@ -10,7 +10,7 @@ public class UpdateRoomTypeRQ
     public int MinPersonCount { get; set; }
     public int MaxPersonCount { get; set; }
     public int TotalRoomsCount { get; set; }
-    public List<ServiceType> Services { get; set; } = [];
-    public List<AmenitiesType> Amenities { get; set; } = [];
+    public List<string> Services { get; set; } = [];
+    public List<string> Amenities { get; set; } = [];
     public Currency Currency { get; set; }
 }

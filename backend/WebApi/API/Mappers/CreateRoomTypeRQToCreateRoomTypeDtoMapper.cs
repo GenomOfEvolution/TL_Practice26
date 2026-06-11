@@ -1,5 +1,6 @@
 using API.DTO;
 using Application.DTO;
+using Domain.Enums;
 
 namespace API.Mappers;
 
@@ -15,8 +16,8 @@ public static class CreateRoomTypeRQToCreateRoomTypeDtoMapper
             MinPersonCount = request.MinPersonCount,
             MaxPersonCount = request.MaxPersonCount,
             TotalRoomsCount = request.TotalRoomsCount,
-            Services = request.Services,
-            Amenities = request.Amenities,
+            Services = request.Services.Select( s => Enum.Parse<ServiceType>( s ) ).ToList(),
+            Amenities = request.Amenities.Select( a => Enum.Parse<AmenitiesType>( a ) ).ToList(),
             Currency = request.Currency,
         };
     }

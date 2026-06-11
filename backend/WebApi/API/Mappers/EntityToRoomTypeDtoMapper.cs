@@ -16,8 +16,8 @@ public static class EntityToRoomTypeDtoMapper
             MinPersonCount = entity.MinPersonCount,
             MaxPersonCount = entity.MaxPersonCount,
             TotalRoomsCount = entity.TotalRoomsCount,
-            Services = entity.Services,
-            Amenities = entity.Amenities,
+            Services = entity.Services.Select( s => s.ToString() ).ToList(),
+            Amenities = entity.Amenities.Select( a => a.ToString() ).ToList(),
             Currency = entity.Currency,
         };
     }
