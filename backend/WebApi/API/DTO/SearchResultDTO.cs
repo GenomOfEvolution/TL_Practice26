@@ -1,8 +1,8 @@
 namespace API.DTO;
 
-public class SearchResultDTO
+public class SearchResultDto
 {
-    public PropertyRP Property { get; set; } = null!;
-    public RoomTypeRP RoomType { get; set; } = null!;
-    public int RoomsLeft { get; set; }
+    public PropertyRP? Property { get; init; }
+    public RoomTypeRP? RoomType { get; init; }
+    public int RoomsLeft { get; init; }
 }

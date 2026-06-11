@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers;
 
 [ApiController]
-[Route( "properties" )]
+[Route( "[controller]" )]
 public class PropertiesController : ControllerBase
 {
     private readonly IPropertyService _propertyService;

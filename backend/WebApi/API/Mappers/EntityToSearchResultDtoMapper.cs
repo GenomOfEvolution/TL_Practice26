@@ -5,9 +5,9 @@ namespace API.Mappers;
 
 public static class EntityToSearchResultDtoMapper
 {
-    public static SearchResultDTO Map( SearchResultDto result )
+    public static API.DTO.SearchResultDto Map( Application.Search.SearchResultDto result )
     {
-        return new SearchResultDTO
+        return new API.DTO.SearchResultDto
         {
             Property = PropertyDtoToPropertyRPMapper.Map( result.Property! ),
             RoomType = RoomTypeDtoToRoomTypeRPMapper.Map( result.RoomType! ),

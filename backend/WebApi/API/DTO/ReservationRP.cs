@@ -4,16 +4,16 @@ namespace API.DTO;
 
 public class ReservationRP
 {
-    public int Id { get; set; }
-    public int PropertyId { get; set; }
-    public int RoomTypeId { get; set; }
-    public DateOnly ArrivalDate { get; set; }
-    public TimeOnly ArrivalTime { get; set; }
-    public DateOnly DepartureDate { get; set; }
-    public TimeOnly DepartureTime { get; set; }
-    public string GuestName { get; set; } = string.Empty;
-    public string GuestPhoneNumber { get; set; } = string.Empty;
-    public decimal Total { get; set; }
-    public Currency Currency { get; set; }
-    public bool IsCanceled { get; set; }
+    public int Id { get; init; }
+    public int PropertyId { get; init; }
+    public int RoomTypeId { get; init; }
+    public DateOnly ArrivalDate { get; init; }
+    public TimeOnly ArrivalTime { get; init; }
+    public DateOnly DepartureDate { get; init; }
+    public TimeOnly DepartureTime { get; init; }
+    public string GuestName { get; init; } = string.Empty;
+    public string GuestPhoneNumber { get; init; } = string.Empty;
+    public decimal Total { get; init; }
+    public Currency Currency { get; init; }
+    public bool IsCanceled { get; init; }
 }

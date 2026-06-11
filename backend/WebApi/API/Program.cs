@@ -1,11 +1,14 @@
 using API.Middleware;
+using Application;
 using Infrastructure.Foundation;
 
 var builder = WebApplication.CreateBuilder( args );
 
+builder.Services.AddApplication();
 builder.Services.AddInfrastructure( builder.Configuration );
 
 builder.Services.AddControllers();
+builder.Services.AddRouting( options => options.LowercaseUrls = true );
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();

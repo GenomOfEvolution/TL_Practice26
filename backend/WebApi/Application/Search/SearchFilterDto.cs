@@ -2,9 +2,9 @@ namespace Application.Search;
 
 public class SearchFilterDto
 {
-    public string City { get; set; } = string.Empty;
-    public DateOnly ArrivalDate { get; set; }
-    public DateOnly DepartureDate { get; set; }
-    public int Guests { get; set; }
-    public decimal? MaxPrice { get; set; }
+    public string City { get; init; } = string.Empty;
+    public DateOnly ArrivalDate { get; init; }
+    public DateOnly DepartureDate { get; init; }
+    public int Guests { get; init; }
+    public decimal? MaxPrice { get; init; }
 }

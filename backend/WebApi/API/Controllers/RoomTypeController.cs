@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers;
 
 [ApiController]
-[Route( "roomtypes" )]
+[Route( "[controller]" )]
 public class RoomTypeController : ControllerBase
 {
     private readonly IRoomTypeService _roomTypeService;
