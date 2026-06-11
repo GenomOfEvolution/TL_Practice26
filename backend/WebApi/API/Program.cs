@@ -5,11 +5,11 @@ using Infrastructure.Foundation;
 var builder = WebApplication.CreateBuilder( args );
 
 builder.Services.AddApplication();
-builder.Services.AddInfrastructure( builder.Configuration );
+builder.Services.AddInfrastructure(
+    builder.Configuration,
+    typeof( Infrastructure.Migrations.AssemblyMarker ).Assembly.GetName().Name! );
 
-builder.Services.AddControllers()
-    .AddJsonOptions( options =>
-        options.JsonSerializerOptions.Converters.Add( new System.Text.Json.Serialization.JsonStringEnumConverter() ) );
+builder.Services.AddControllers();
 builder.Services.AddRouting( options => options.LowercaseUrls = true );
 builder.Services.AddSwaggerGen();
 

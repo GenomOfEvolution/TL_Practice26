@@ -8,16 +8,18 @@ namespace Infrastructure.Foundation;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure( this IServiceCollection services, IConfiguration configuration )
+    public static IServiceCollection AddInfrastructure(
+        this IServiceCollection services, IConfiguration configuration, string migrationsAssemblyName )
     {
         ArgumentNullException.ThrowIfNull( configuration );
+        ArgumentNullException.ThrowIfNull( migrationsAssemblyName );
 
         string? connectionString = configuration.GetConnectionString( "DefaultConnection" );
 
         services.AddDbContext<AppDbContext>( options =>
             options.UseSqlServer( connectionString, sql =>
             {
-                sql.MigrationsAssembly( "Infrastructure.Migrations" );
+                sql.MigrationsAssembly( migrationsAssemblyName );
                 sql.MigrationsHistoryTable( "__EFMigrationsHistory" );
             } )
             .UseSnakeCaseNamingConvention() );
