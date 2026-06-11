@@ -1,7 +1,7 @@
 ﻿using API.DTO;
 using API.Mappers;
-using Domain.Filters;
-using Domain.Services;
+using Application.Interfaces;
+using Application.Reservations;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -18,11 +18,11 @@ public class ReservationsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<ReservationDTO>> CreateReservation( [FromBody] CreateReservationRequest request )
+    public async Task<ActionResult<ReservationRP>> CreateReservation( [FromBody] CreateReservationRQ request )
     {
-        var reservation = CreateReservationRequestToEntityMapper.Map( request );
+        var dto = CreateReservationRQToCreateReservationDtoMapper.Map( request );
 
-        var id = await _reservationService.CreateAsync( reservation );
+        int id = await _reservationService.CreateAsync( dto );
 
         return CreatedAtAction(
             nameof( GetReservationById ),
@@ -31,26 +31,26 @@ public class ReservationsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<ReservationDTO>>> GetReservations( [FromQuery] ReservationFilter filter )
+    public async Task<ActionResult<List<ReservationRP>>> GetReservations( [FromQuery] ReservationFilterRQ request )
     {
-        var reservations = await _reservationService.GetListAsync( filter );
+        ReservationFilterDto filter = ReservationFilterRQToReservationFilterDtoMapper.Map( request );
+        IReadOnlyList<ReservationDto> reservations = await _reservationService.GetListAsync( filter );
 
         return Ok( reservations
-            .Select( EntityToReservationDtoMapper.Map )
-            .ToList() );
+            .Select( ReservationDtoToReservationRPMapper.Map ) );
     }
 
     [HttpGet( "{id:int}" )]
-    public async Task<ActionResult<ReservationDTO>> GetReservationById( [FromRoute] int id )
+    public async Task<ActionResult<ReservationRP>> GetReservationById( [FromRoute] int id )
     {
-        var reservation = await _reservationService.GetByIdAsync( id );
+        ReservationDto? reservation = await _reservationService.GetByIdAsync( id );
 
         if ( reservation == null )
         {
             return NotFound();
         }
 
-        return Ok( EntityToReservationDtoMapper.Map( reservation ) );
+        return Ok( ReservationDtoToReservationRPMapper.Map( reservation ) );
     }
 
     [HttpDelete( "{id:int}" )]

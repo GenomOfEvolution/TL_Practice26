@@ -1,7 +1,5 @@
 using Domain.Repositories;
-using Domain.Services;
 using Infrastructure.Foundation.Repositories;
-using Infrastructure.Foundation.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,11 +27,6 @@ public static class DependencyInjection
         services.AddScoped<IPropertyRepository, PropertyRepository>();
         services.AddScoped<IReservationRepository, ReservationRepository>();
         services.AddScoped<IRoomTypeRepository, RoomTypeRepository>();
-
-        services.AddScoped<IPropertyService, PropertyService>();
-        services.AddScoped<IRoomTypeService, RoomTypeService>();
-        services.AddScoped<IReservationService, ReservationService>();
-        services.AddScoped<ISearchService, SearchService>();
 
         return services;
     }

@@ -1,13 +1,13 @@
-﻿using API.DTO;
+using Application.DTO;
 using Domain.Entities;
 
-namespace API.Mappers;
+namespace Application.Mappers;
 
 public static class EntityToRoomTypeDtoMapper
 {
-    public static RoomTypeRP Map( RoomType entity )
+    public static RoomTypeDto Map( RoomType entity )
     {
-        return new RoomTypeRP
+        return new RoomTypeDto
         {
             Id = entity.Id,
             PropertyId = entity.PropertyId,

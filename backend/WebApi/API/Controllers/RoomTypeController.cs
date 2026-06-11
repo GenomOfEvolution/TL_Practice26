@@ -1,6 +1,7 @@
 ﻿using API.DTO;
 using API.Mappers;
-using Domain.Services;
+using Application.DTO;
+using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -17,23 +18,23 @@ public class RoomTypeController : ControllerBase
     }
 
     [HttpGet( "{id:int}" )]
-    public async Task<ActionResult<RoomTypeDTO>> GetById( [FromRoute] int id )
+    public async Task<ActionResult<RoomTypeRP>> GetById( [FromRoute] int id )
     {
-        var roomType = await _roomTypeService.GetByIdAsync( id );
+        RoomTypeDto? roomType = await _roomTypeService.GetByIdAsync( id );
 
         if ( roomType is null )
         {
             return NotFound();
         }
 
-        return EntityToRoomTypeDtoMapper.Map( roomType );
+        return RoomTypeDtoToRoomTypeRPMapper.Map( roomType );
     }
 
     [HttpPost]
-    public async Task<ActionResult<RoomTypeDTO>> AddRoomType( [FromBody] RoomTypeDTO roomTypeDTO )
+    public async Task<ActionResult<RoomTypeRP>> AddRoomType( [FromBody] CreateRoomTypeRQ request )
     {
-        var entity = RoomTypeDtoToEntityMapper.Map( roomTypeDTO );
-        var id = await _roomTypeService.CreateAsync( entity );
+        var dto = CreateRoomTypeRQToCreateRoomTypeDtoMapper.Map( request );
+        int id = await _roomTypeService.CreateAsync( dto );
 
         return CreatedAtAction(
             nameof( GetById ),
@@ -42,18 +43,18 @@ public class RoomTypeController : ControllerBase
     }
 
     [HttpPut( "{id:int}" )]
-    public async Task<IActionResult> UpdateRoomType( [FromRoute] int id, [FromBody] RoomTypeDTO roomTypeDTO )
+    public async Task<IActionResult> UpdateRoomType( [FromRoute] int id, [FromBody] UpdateRoomTypeRQ request )
     {
-        var existing = await _roomTypeService.GetByIdAsync( id );
+        RoomTypeDto? existing = await _roomTypeService.GetByIdAsync( id );
 
         if ( existing is null )
         {
             return NotFound();
         }
 
-        var roomType = RoomTypeDtoToEntityMapper.Map( roomTypeDTO, id );
+        var dto = UpdateRoomTypeRQToUpdateRoomTypeDtoMapper.Map( request, id );
 
-        await _roomTypeService.UpdateAsync( roomType );
+        await _roomTypeService.UpdateAsync( dto );
 
         return NoContent();
     }
@@ -61,7 +62,7 @@ public class RoomTypeController : ControllerBase
     [HttpDelete( "{id:int}" )]
     public async Task<IActionResult> DeleteRoomType( [FromRoute] int id )
     {
-        var existing = await _roomTypeService.GetByIdAsync( id );
+        RoomTypeDto? existing = await _roomTypeService.GetByIdAsync( id );
 
         if ( existing is null )
         {

@@ -1,7 +1,7 @@
 using API.DTO;
 using API.Mappers;
-using Domain.Filters;
-using Domain.Services;
+using Application.Interfaces;
+using Application.Search;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -18,9 +18,10 @@ public class SearchController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<SearchResultDTO>>> Search( [FromQuery] SearchFilter filter )
+    public async Task<ActionResult<List<SearchResultDTO>>> Search( [FromQuery] SearchRQ request )
     {
-        var results = await _searchService.SearchAsync( filter );
+        var filter = SearchRQToSearchFilterDtoMapper.Map( request );
+        IReadOnlyList<SearchResultDto> results = await _searchService.SearchAsync( filter );
 
         return Ok( results
             .Select( EntityToSearchResultDtoMapper.Map ) );

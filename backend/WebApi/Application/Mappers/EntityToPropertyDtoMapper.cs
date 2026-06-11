@@ -1,13 +1,13 @@
-﻿using API.DTO;
+using Application.DTO;
 using Domain.Entities;
 
-namespace API.Mappers;
+namespace Application.Mappers;
 
 public static class EntityToPropertyDtoMapper
 {
-    public static PropertyRP Map( Property entity )
+    public static PropertyDto Map( Property entity )
     {
-        return new PropertyRP
+        return new PropertyDto
         {
             Id = entity.Id,
             Name = entity.Name,
