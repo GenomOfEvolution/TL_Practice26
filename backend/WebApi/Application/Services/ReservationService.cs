@@ -1,9 +1,11 @@
 using Application.DTO;
+using Application.Exceptions;
 using Application.Interfaces;
 using Application.Mappers;
 using Application.Reservations;
 using Domain.Entities;
 using Domain.Exceptions;
+using Domain.Filters;
 using Domain.Repositories;
 
 namespace Application.Services;
@@ -15,7 +17,11 @@ public class ReservationService : IReservationService
     private readonly IPropertyService _propertyService;
     private readonly IRoomTypeService _roomTypeService;
 
-    public ReservationService( IReservationRepository reservationRepository, IUnitOfWork unitOfWork, IPropertyService propertyService, IRoomTypeService roomTypeService )
+    public ReservationService(
+        IReservationRepository reservationRepository,
+        IUnitOfWork unitOfWork,
+        IPropertyService propertyService,
+        IRoomTypeService roomTypeService )
     {
         _reservationRepository = reservationRepository;
         _unitOfWork = unitOfWork;
@@ -25,15 +31,7 @@ public class ReservationService : IReservationService
 
     public async Task CancelAsync( int id, CancellationToken ct )
     {
-        ReservationDto? reservationDto = await GetByIdAsync( id, ct );
-
-        if ( reservationDto is null )
-        {
-            throw new DomainException( $"Бронь с id {id} не найдена." );
-        }
-
-        Reservation reservation = await _reservationRepository.GetByIdAsync( id, ct )
-            ?? throw new DomainException( $"Бронь с id {id} не найдена." );
+        Reservation reservation = await GetByIdOrThrow( id, ct );
 
         reservation.SetCanceled( true );
 
@@ -42,17 +40,17 @@ public class ReservationService : IReservationService
 
     public async Task<int> CreateAsync( CreateReservationDto dto, CancellationToken ct )
     {
-        Reservation reservation = CreateReservationDtoToEntityMapper.Map( dto );
-
         ThrowIfInvalidDates(
-            reservation.ArrivalDate,
-            reservation.DepartureDate,
-            reservation.ArrivalTime,
-            reservation.DepartureTime );
-        ThrowIfInvalidGuestInfo( reservation.GuestName, reservation.GuestPhoneNumber );
+            dto.ArrivalDate,
+            dto.DepartureDate,
+            dto.ArrivalTime,
+            dto.DepartureTime );
+        ThrowIfInvalidGuestInfo( dto.GuestName, dto.GuestPhoneNumber );
 
-        PropertyDto property = await ThrowIfPropertyNotExists( reservation.PropertyId );
-        RoomTypeDto roomType = await ThrowIfInvalidRoomType( reservation.RoomTypeId, reservation.PropertyId );
+        PropertyDto property = await GetPropertyByIdOrThrow( dto.PropertyId );
+        RoomTypeDto roomType = await GetByRoomTypeIdOrThrow( dto.RoomTypeId, dto.PropertyId );
+
+        Reservation reservation = CreateReservationDtoToEntityMapper.Map( dto );
 
         reservation.Total = CalculateTotal(
             roomType.DailyPrice,
@@ -73,16 +71,16 @@ public class ReservationService : IReservationService
         return reservation.Id;
     }
 
-    public async Task<ReservationDto?> GetByIdAsync( int id, CancellationToken ct )
+    public async Task<ReservationDto> GetByIdAsync( int reservationId, CancellationToken ct )
     {
-        Reservation? reservation = await _reservationRepository.GetByIdAsync( id, ct );
+        Reservation reservation = await GetByIdOrThrow( reservationId, ct );
 
-        return reservation is null ? null : EntityToReservationDtoMapper.Map( reservation );
+        return EntityToReservationDtoMapper.Map( reservation );
     }
 
     public async Task<IReadOnlyList<ReservationDto>> GetListAsync( ReservationFilterDto filter, CancellationToken ct )
     {
-        var domainFilter = new Domain.Filters.ReservationFilter
+        var domainFilter = new ReservationFilter
         {
             PropertyId = filter.PropertyId,
             GuestName = filter.GuestName,
@@ -95,6 +93,11 @@ public class ReservationService : IReservationService
         return reservations.Select( EntityToReservationDtoMapper.Map ).ToList();
     }
 
+    private async Task<Reservation> GetByIdOrThrow( int reservationId, CancellationToken ct )
+    {
+        return await _reservationRepository.GetByIdAsync( reservationId, ct )
+            ?? throw new EntityNotFoundException( $"Бронь с id {reservationId} не найдена." );
+    }
     private static void ThrowIfInvalidDates(
         DateOnly arrivalDate,
         DateOnly departureDate,
@@ -105,17 +108,17 @@ public class ReservationService : IReservationService
 
         if ( arrivalDate < today )
         {
-            throw new DomainException( "Дата заезда не может быть в прошлом." );
+            throw new ApplicationValidationException( "Дата заезда не может быть в прошлом." );
         }
 
         if ( departureDate <= arrivalDate )
         {
-            throw new DomainException( "Дата выезда должна быть строго позже даты заезда." );
+            throw new ApplicationValidationException( "Дата выезда должна быть строго позже даты заезда." );
         }
 
         if ( departureDate == arrivalDate && departureTime <= arrivalTime )
         {
-            throw new DomainException( "При заезде и выезде в один день время выезда должно быть позже времени заезда." );
+            throw new ApplicationValidationException( "При заезде и выезде в один день время выезда должно быть позже времени заезда." );
         }
     }
 
@@ -123,29 +126,27 @@ public class ReservationService : IReservationService
     {
         if ( string.IsNullOrWhiteSpace( guestName ) )
         {
-            throw new DomainException( "Имя гостя не может быть пустым." );
+            throw new ApplicationValidationException( "Имя гостя не может быть пустым." );
         }
 
         if ( string.IsNullOrWhiteSpace( guestPhoneNumber ) )
         {
-            throw new DomainException( "Номер телефона гостя не может быть пустым." );
+            throw new ApplicationValidationException( "Номер телефона гостя не может быть пустым." );
         }
     }
 
-    private async Task<PropertyDto> ThrowIfPropertyNotExists( int propertyId )
+    private async Task<PropertyDto> GetPropertyByIdOrThrow( int propertyId )
     {
-        return await _propertyService.GetByIdAsync( propertyId, CancellationToken.None )
-            ?? throw new DomainException( "Средство размещения с указанным ID не найдено." );
+        return await _propertyService.GetByIdAsync( propertyId, CancellationToken.None );
     }
 
-    private async Task<RoomTypeDto> ThrowIfInvalidRoomType( int roomTypeId, int propertyId )
+    private async Task<RoomTypeDto> GetByRoomTypeIdOrThrow( int roomTypeId, int propertyId )
     {
-        RoomTypeDto roomType = await _roomTypeService.GetByIdAsync( roomTypeId, CancellationToken.None )
-            ?? throw new DomainException( "Тип номера с указанным ID не найден." );
+        RoomTypeDto roomType = await _roomTypeService.GetByIdAsync( roomTypeId, CancellationToken.None );
 
         if ( roomType.PropertyId != propertyId )
         {
-            throw new DomainException( "Тип номера не относится к указанному средству размещения." );
+            throw new ApplicationValidationException( "Тип номера не относится к указанному средству размещения." );
         }
 
         return roomType;

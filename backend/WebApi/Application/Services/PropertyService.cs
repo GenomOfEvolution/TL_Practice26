@@ -1,8 +1,8 @@
 using Application.DTO;
+using Application.Exceptions;
 using Application.Interfaces;
 using Application.Mappers;
 using Domain.Entities;
-using Domain.Exceptions;
 using Domain.Repositories;
 
 namespace Application.Services;
@@ -20,9 +20,9 @@ public class PropertyService : IPropertyService
 
     public async Task<int> CreateAsync( CreatePropertyDto dto, CancellationToken ct )
     {
-        Property property = CreatePropertyDtoToEntityMapper.Map( dto );
+        ThrowIfInvalidProperty( dto.Name, dto.Country, dto.City, dto.Address, dto.Latitude, dto.Longitude );
 
-        ThrowIfInvalidProperty( property );
+        Property property = CreatePropertyDtoToEntityMapper.Map( dto );
 
         await _propertyRepository.AddAsync( property, ct );
         await _unitOfWork.SaveChangesAsync( ct );
@@ -32,8 +32,7 @@ public class PropertyService : IPropertyService
 
     public async Task DeleteAsync( int id, CancellationToken ct )
     {
-        Property property = await _propertyRepository.GetByIdAsync( id, ct )
-            ?? throw new DomainException( $"Средство размещения с id {id} не найдено." );
+        Property property = await GetByIdOrThrow( id, ct );
 
         _propertyRepository.Delete( property );
         await _unitOfWork.SaveChangesAsync( ct );
@@ -46,67 +45,77 @@ public class PropertyService : IPropertyService
         return properties.Select( EntityToPropertyDtoMapper.Map ).ToList();
     }
 
-    public async Task<PropertyDto?> GetByIdAsync( int id, CancellationToken ct )
+    public async Task<PropertyDto> GetByIdAsync( int id, CancellationToken ct )
     {
-        Property? property = await _propertyRepository.GetByIdAsync( id, ct );
+        Property property = await GetByIdOrThrow( id, ct );
 
-        return property is null ? null : EntityToPropertyDtoMapper.Map( property );
+        return EntityToPropertyDtoMapper.Map( property );
     }
 
     public async Task UpdateAsync( UpdatePropertyDto dto, CancellationToken ct )
     {
-        Property property = UpdatePropertyDtoToEntityMapper.Map( dto );
+        ThrowIfInvalidProperty( dto.Name, dto.Country, dto.City, dto.Address, dto.Latitude, dto.Longitude );
 
-        ThrowIfInvalidProperty( property );
+        Property existing = await GetByIdOrThrow( dto.Id, ct );
 
-        Property? existing = await _propertyRepository.GetByIdAsync( property.Id, ct );
-
-        if ( existing is null )
-        {
-            throw new DomainException( $"Средство размещения с id {property.Id} не найдено." );
-        }
-
-        existing.Update( property );
+        existing.Name = dto.Name;
+        existing.Country = dto.Country;
+        existing.City = dto.City;
+        existing.Address = dto.Address;
+        existing.Latitude = dto.Latitude;
+        existing.Longitude = dto.Longitude;
 
         await _unitOfWork.SaveChangesAsync( ct );
     }
 
-    private static void ThrowIfInvalidProperty( Property property )
+    private async Task<Property> GetByIdOrThrow( int id, CancellationToken ct )
     {
-        if ( string.IsNullOrWhiteSpace( property.Name ) )
+        return await _propertyRepository.GetByIdAsync( id, ct )
+            ?? throw new EntityNotFoundException( $"Средство размещения с id {id} не найдено." );
+    }
+
+    private static void ThrowIfInvalidProperty(
+        string name,
+        string country,
+        string city,
+        string address,
+        double latitude,
+        double longitude )
+    {
+        if ( string.IsNullOrWhiteSpace( name ) )
         {
-            throw new DomainException( $"{nameof( property.Name )} не может быть пустым." );
+            throw new ApplicationValidationException( "Name не может быть пустым." );
         }
 
-        if ( string.IsNullOrWhiteSpace( property.Country ) )
+        if ( string.IsNullOrWhiteSpace( country ) )
         {
-            throw new DomainException( $"{nameof( property.Country )} не может быть пустой." );
+            throw new ApplicationValidationException( "Country не может быть пустой." );
         }
 
-        if ( string.IsNullOrWhiteSpace( property.City ) )
+        if ( string.IsNullOrWhiteSpace( city ) )
         {
-            throw new DomainException( $"{nameof( property.City )} не может быть пустым." );
+            throw new ApplicationValidationException( "City не может быть пустым." );
         }
 
-        if ( string.IsNullOrWhiteSpace( property.Address ) )
+        if ( string.IsNullOrWhiteSpace( address ) )
         {
-            throw new DomainException( $"{nameof( property.Address )} не может быть пустым." );
+            throw new ApplicationValidationException( "Address не может быть пустым." );
         }
 
         const double minLatitude = -90.0;
         const double maxLatitude = 90.0;
 
-        if ( property.Latitude < minLatitude || property.Latitude > maxLatitude )
+        if ( latitude < minLatitude || latitude > maxLatitude )
         {
-            throw new DomainException( $"{nameof( property.Latitude )} должна быть в диапазоне от {minLatitude} до {maxLatitude}." );
+            throw new ApplicationValidationException( $"Latitude должна быть в диапазоне от {minLatitude} до {maxLatitude}." );
         }
 
         const double minLongitude = -180.0;
         const double maxLongitude = 180.0;
 
-        if ( property.Longitude < minLongitude || property.Longitude > maxLongitude )
+        if ( longitude < minLongitude || longitude > maxLongitude )
         {
-            throw new DomainException( $"{nameof( property.Longitude )} должна быть в диапазоне от {minLongitude} до {maxLongitude}." );
+            throw new ApplicationValidationException( $"Longitude должна быть в диапазоне от {minLongitude} до {maxLongitude}." );
         }
     }
 }

@@ -1,8 +1,8 @@
 using Application.DTO;
+using Application.Exceptions;
 using Application.Interfaces;
 using Application.Mappers;
 using Domain.Entities;
-using Domain.Exceptions;
 using Domain.Repositories;
 
 namespace Application.Services;
@@ -22,9 +22,11 @@ public class RoomTypeService : IRoomTypeService
 
     public async Task<int> CreateAsync( CreateRoomTypeDto dto, CancellationToken ct )
     {
-        RoomType roomType = CreateRoomTypeDtoToEntityMapper.Map( dto );
+        ThrowIfInvalidRoomType( dto.Name, dto.DailyPrice, dto.MinPersonCount, dto.MaxPersonCount, dto.TotalRoomsCount );
 
-        await ValidateRoomTypeAsync( roomType );
+        await _propertyService.GetByIdAsync( dto.PropertyId, CancellationToken.None );
+
+        RoomType roomType = CreateRoomTypeDtoToEntityMapper.Map( dto );
 
         await _roomTypeRepository.AddAsync( roomType, ct );
         await _unitOfWork.SaveChangesAsync( ct );
@@ -34,18 +36,17 @@ public class RoomTypeService : IRoomTypeService
 
     public async Task DeleteAsync( int id, CancellationToken ct )
     {
-        RoomType roomType = await _roomTypeRepository.GetByIdAsync( id, ct )
-            ?? throw new DomainException( $"Тип номера с id {id} не найден." );
+        RoomType roomType = await GetByIdOrThrow( id, ct );
 
         _roomTypeRepository.Delete( roomType );
         await _unitOfWork.SaveChangesAsync( ct );
     }
 
-    public async Task<RoomTypeDto?> GetByIdAsync( int id, CancellationToken ct )
+    public async Task<RoomTypeDto> GetByIdAsync( int id, CancellationToken ct )
     {
-        RoomType? roomType = await _roomTypeRepository.GetByIdAsync( id, ct );
+        RoomType roomType = await GetByIdOrThrow( id, ct );
 
-        return roomType is null ? null : EntityToRoomTypeDtoMapper.Map( roomType );
+        return EntityToRoomTypeDtoMapper.Map( roomType );
     }
 
     public async Task<IReadOnlyList<RoomTypeDto>> GetByPropertyIdAsync( int propertyId, CancellationToken ct )
@@ -57,46 +58,61 @@ public class RoomTypeService : IRoomTypeService
 
     public async Task UpdateAsync( UpdateRoomTypeDto dto, CancellationToken ct )
     {
-        RoomType roomType = UpdateRoomTypeDtoToEntityMapper.Map( dto );
+        ThrowIfInvalidRoomType( dto.Name, dto.DailyPrice, dto.MinPersonCount, dto.MaxPersonCount, dto.TotalRoomsCount );
 
-        await ValidateRoomTypeAsync( roomType );
+        await _propertyService.GetByIdAsync( dto.PropertyId, CancellationToken.None );
 
-        RoomType existing = await _roomTypeRepository.GetByIdAsync( roomType.Id, ct )
-            ?? throw new DomainException( $"Тип номера с id {roomType.Id} не найден." );
+        RoomType existing = await GetByIdOrThrow( dto.Id, ct );
 
-        existing.Update( roomType );
+        existing.Name = dto.Name;
+        existing.PropertyId = dto.PropertyId;
+        existing.DailyPrice = dto.DailyPrice;
+        existing.MinPersonCount = dto.MinPersonCount;
+        existing.MaxPersonCount = dto.MaxPersonCount;
+        existing.TotalRoomsCount = dto.TotalRoomsCount;
+        existing.Services = dto.Services;
+        existing.Amenities = dto.Amenities;
+        existing.Currency = dto.Currency;
 
         await _unitOfWork.SaveChangesAsync( ct );
     }
 
-    private async Task ValidateRoomTypeAsync( RoomType roomType )
+    private async Task<RoomType> GetByIdOrThrow( int id, CancellationToken ct )
     {
-        _ = await _propertyService.GetByIdAsync( roomType.PropertyId, CancellationToken.None )
-            ?? throw new DomainException( "Средство размещения с указанным ID не найдено." );
+        return await _roomTypeRepository.GetByIdAsync( id, ct )
+            ?? throw new EntityNotFoundException( $"Тип номера с id {id} не найден." );
+    }
 
-        if ( string.IsNullOrWhiteSpace( roomType.Name ) )
+    private static void ThrowIfInvalidRoomType(
+        string name,
+        decimal dailyPrice,
+        int minPersonCount,
+        int maxPersonCount,
+        int totalRoomsCount )
+    {
+        if ( string.IsNullOrWhiteSpace( name ) )
         {
-            throw new DomainException( "Название типа номера не может быть пустым." );
+            throw new ApplicationValidationException( "Name не может быть пустым." );
         }
 
-        if ( roomType.DailyPrice < 0 )
+        if ( dailyPrice < 0 )
         {
-            throw new DomainException( "Суточная цена не может быть отрицательной." );
+            throw new ApplicationValidationException( "DailyPrice не может быть отрицательной." );
         }
 
-        if ( roomType.MinPersonCount <= 0 )
+        if ( minPersonCount <= 0 )
         {
-            throw new DomainException( "Минимальное количество гостей должно быть больше 0." );
+            throw new ApplicationValidationException( "MinPersonCount должен быть больше 0." );
         }
 
-        if ( roomType.MinPersonCount > roomType.MaxPersonCount )
+        if ( minPersonCount > maxPersonCount )
         {
-            throw new DomainException( "Минимальное количество гостей не может превышать максимальное." );
+            throw new ApplicationValidationException( "MinPersonCount не может превышать MaxPersonCount." );
         }
 
-        if ( roomType.TotalRoomsCount < 0 )
+        if ( totalRoomsCount < 0 )
         {
-            throw new DomainException( "Общее количество номеров должно быть больше 0." );
+            throw new ApplicationValidationException( "TotalRoomsCount должен быть больше 0." );
         }
     }
 }

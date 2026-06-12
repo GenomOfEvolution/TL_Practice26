@@ -43,12 +43,7 @@ public class ReservationsController : ControllerBase
     [HttpGet( "{id:int}" )]
     public async Task<ActionResult<ReservationRP>> GetReservationById( [FromRoute] int id, CancellationToken ct )
     {
-        ReservationDto? reservation = await _reservationService.GetByIdAsync( id, ct );
-
-        if ( reservation == null )
-        {
-            return NotFound();
-        }
+        ReservationDto reservation = await _reservationService.GetByIdAsync( id, ct );
 
         return Ok( ReservationDtoToReservationRPMapper.Map( reservation ) );
     }

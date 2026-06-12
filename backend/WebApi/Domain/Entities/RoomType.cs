@@ -20,17 +20,4 @@ public class RoomType
     public List<AmenitiesType> Amenities { get; set; } = [];
 
     public Currency Currency { get; set; }
-
-    public void Update( RoomType roomType )
-    {
-        PropertyId = roomType.PropertyId;
-        Name = roomType.Name;
-        DailyPrice = roomType.DailyPrice;
-        MinPersonCount = roomType.MinPersonCount;
-        MaxPersonCount = roomType.MaxPersonCount;
-        TotalRoomsCount = roomType.TotalRoomsCount;
-        Services = roomType.Services;
-        Amenities = roomType.Amenities;
-        Currency = roomType.Currency;
-    }
 }

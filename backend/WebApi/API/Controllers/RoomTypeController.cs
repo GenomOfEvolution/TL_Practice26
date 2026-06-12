@@ -20,12 +20,7 @@ public class RoomTypeController : ControllerBase
     [HttpGet( "{id:int}" )]
     public async Task<ActionResult<RoomTypeRP>> GetById( [FromRoute] int id, CancellationToken ct )
     {
-        RoomTypeDto? roomType = await _roomTypeService.GetByIdAsync( id, ct );
-
-        if ( roomType is null )
-        {
-            return NotFound();
-        }
+        RoomTypeDto roomType = await _roomTypeService.GetByIdAsync( id, ct );
 
         return RoomTypeDtoToRoomTypeRPMapper.Map( roomType );
     }
@@ -45,13 +40,6 @@ public class RoomTypeController : ControllerBase
     [HttpPut( "{id:int}" )]
     public async Task<IActionResult> UpdateRoomType( [FromRoute] int id, [FromBody] UpdateRoomTypeRQ request, CancellationToken ct )
     {
-        RoomTypeDto? existing = await _roomTypeService.GetByIdAsync( id, ct );
-
-        if ( existing is null )
-        {
-            return NotFound();
-        }
-
         var dto = UpdateRoomTypeRQToUpdateRoomTypeDtoMapper.Map( request, id );
 
         await _roomTypeService.UpdateAsync( dto, ct );
@@ -62,13 +50,6 @@ public class RoomTypeController : ControllerBase
     [HttpDelete( "{id:int}" )]
     public async Task<IActionResult> DeleteRoomType( [FromRoute] int id, CancellationToken ct )
     {
-        RoomTypeDto? existing = await _roomTypeService.GetByIdAsync( id, ct );
-
-        if ( existing is null )
-        {
-            return NotFound();
-        }
-
         await _roomTypeService.DeleteAsync( id, ct );
 
         return NoContent();

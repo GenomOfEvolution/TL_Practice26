@@ -33,12 +33,7 @@ public class PropertiesController : ControllerBase
     [HttpGet( "{id:int}" )]
     public async Task<ActionResult<PropertyRP>> GetById( [FromRoute] int id, CancellationToken ct )
     {
-        PropertyDto? property = await _propertyService.GetByIdAsync( id, ct );
-
-        if ( property is null )
-        {
-            return NotFound();
-        }
+        PropertyDto property = await _propertyService.GetByIdAsync( id, ct );
 
         return PropertyDtoToPropertyRPMapper.Map( property );
     }
@@ -67,13 +62,6 @@ public class PropertiesController : ControllerBase
     [HttpPut( "{id:int}" )]
     public async Task<IActionResult> UpdateProperty( [FromRoute] int id, [FromBody] UpdatePropertyRQ request, CancellationToken ct )
     {
-        PropertyDto? existing = await _propertyService.GetByIdAsync( id, ct );
-
-        if ( existing is null )
-        {
-            return NotFound();
-        }
-
         var dto = UpdatePropertyRQToUpdatePropertyDtoMapper.Map( request, id );
 
         await _propertyService.UpdateAsync( dto, ct );
@@ -84,13 +72,6 @@ public class PropertiesController : ControllerBase
     [HttpDelete( "{id:int}" )]
     public async Task<IActionResult> DeleteProperty( [FromRoute] int id, CancellationToken ct )
     {
-        PropertyDto? existing = await _propertyService.GetByIdAsync( id, ct );
-
-        if ( existing is null )
-        {
-            return NotFound();
-        }
-
         await _propertyService.DeleteAsync( id, ct );
 
         return NoContent();
