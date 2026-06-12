@@ -19,10 +19,10 @@ public class SearchController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<SearchResultDto>>> Search( [FromQuery] SearchRQ request, CancellationToken ct )
     {
-        var filter = SearchRQToSearchFilterDtoMapper.Map( request );
+        var filter = request.MapToSearchFilterDto();
         var results = await _searchService.SearchAsync( filter, ct );
 
         return Ok( results
-            .Select( EntityToSearchResultDtoMapper.Map ) );
+            .Select( r => r.MapToSearchResultDto() ) );
     }
 }

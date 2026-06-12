@@ -22,7 +22,7 @@ public class PropertyService : IPropertyService
     {
         ThrowIfInvalidProperty( dto.Name, dto.Country, dto.City, dto.Address, dto.Latitude, dto.Longitude );
 
-        Property property = CreatePropertyDtoToEntityMapper.Map( dto );
+        Property property = dto.MapToPropertyEntity();
 
         await _propertyRepository.AddAsync( property, ct );
         await _unitOfWork.SaveChangesAsync( ct );
@@ -42,14 +42,14 @@ public class PropertyService : IPropertyService
     {
         IReadOnlyList<Property> properties = await _propertyRepository.GetAllAsync( ct );
 
-        return properties.Select( EntityToPropertyDtoMapper.Map ).ToList();
+        return properties.Select( p => p.MapToPropertyDto() ).ToList();
     }
 
     public async Task<PropertyDto> GetByIdAsync( int id, CancellationToken ct )
     {
         Property property = await GetByIdOrThrow( id, ct );
 
-        return EntityToPropertyDtoMapper.Map( property );
+        return property.MapToPropertyDto();
     }
 
     public async Task UpdateAsync( UpdatePropertyDto dto, CancellationToken ct )

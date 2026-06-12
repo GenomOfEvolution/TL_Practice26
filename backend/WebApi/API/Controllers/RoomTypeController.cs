@@ -22,13 +22,13 @@ public class RoomTypeController : ControllerBase
     {
         RoomTypeDto roomType = await _roomTypeService.GetByIdAsync( id, ct );
 
-        return RoomTypeDtoToRoomTypeRPMapper.Map( roomType );
+        return roomType.MapToRoomTypeRP();
     }
 
     [HttpPost]
     public async Task<ActionResult<RoomTypeRP>> AddRoomType( [FromBody] CreateRoomTypeRQ request, CancellationToken ct )
     {
-        var dto = CreateRoomTypeRQToCreateRoomTypeDtoMapper.Map( request );
+        var dto = request.MapToCreateRoomTypeDto();
         int id = await _roomTypeService.CreateAsync( dto, ct );
 
         return CreatedAtAction(
@@ -40,7 +40,7 @@ public class RoomTypeController : ControllerBase
     [HttpPut( "{id:int}" )]
     public async Task<IActionResult> UpdateRoomType( [FromRoute] int id, [FromBody] UpdateRoomTypeRQ request, CancellationToken ct )
     {
-        var dto = UpdateRoomTypeRQToUpdateRoomTypeDtoMapper.Map( request, id );
+        var dto = request.MapToUpdateRoomTypeDto( id );
 
         await _roomTypeService.UpdateAsync( dto, ct );
 

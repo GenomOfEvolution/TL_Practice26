@@ -20,7 +20,7 @@ public class ReservationsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ReservationRP>> CreateReservation( [FromBody] CreateReservationRQ request, CancellationToken ct )
     {
-        var dto = CreateReservationRQToCreateReservationDtoMapper.Map( request );
+        var dto = request.MapToCreateReservationDto();
 
         int id = await _reservationService.CreateAsync( dto, ct );
 
@@ -33,11 +33,11 @@ public class ReservationsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<ReservationRP>>> GetReservations( [FromQuery] ReservationFilterRQ request, CancellationToken ct )
     {
-        ReservationFilterDto filter = ReservationFilterRQToReservationFilterDtoMapper.Map( request );
+        ReservationFilterDto filter = request.MapToReservationFilterDto();
         IReadOnlyList<ReservationDto> reservations = await _reservationService.GetListAsync( filter, ct );
 
         return Ok( reservations
-            .Select( ReservationDtoToReservationRPMapper.Map ) );
+            .Select( r => r.MapToReservationRP() ) );
     }
 
     [HttpGet( "{id:int}" )]
@@ -45,7 +45,7 @@ public class ReservationsController : ControllerBase
     {
         ReservationDto reservation = await _reservationService.GetByIdAsync( id, ct );
 
-        return Ok( ReservationDtoToReservationRPMapper.Map( reservation ) );
+        return Ok( reservation.MapToReservationRP() );
     }
 
     [HttpDelete( "{id:int}" )]

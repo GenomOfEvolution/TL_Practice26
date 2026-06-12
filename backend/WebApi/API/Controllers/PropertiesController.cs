@@ -27,7 +27,7 @@ public class PropertiesController : ControllerBase
         IReadOnlyList<PropertyDto> properties = await _propertyService.GetAllAsync( ct );
 
         return Ok( properties
-            .Select( PropertyDtoToPropertyRPMapper.Map ) );
+            .Select( p => p.MapToPropertyRP() ) );
     }
 
     [HttpGet( "{id:int}" )]
@@ -35,7 +35,7 @@ public class PropertiesController : ControllerBase
     {
         PropertyDto property = await _propertyService.GetByIdAsync( id, ct );
 
-        return PropertyDtoToPropertyRPMapper.Map( property );
+        return property.MapToPropertyRP();
     }
 
     [HttpGet( "{id:int}/roomtypes" )]
@@ -44,13 +44,13 @@ public class PropertiesController : ControllerBase
         IReadOnlyList<RoomTypeDto> roomTypes = await _roomTypeService.GetByPropertyIdAsync( id, ct );
 
         return Ok( roomTypes
-            .Select( RoomTypeDtoToRoomTypeRPMapper.Map ) );
+            .Select( r => r.MapToRoomTypeRP() ) );
     }
 
     [HttpPost]
     public async Task<ActionResult<PropertyRP>> AddProperty( [FromBody] CreatePropertyRQ request, CancellationToken ct )
     {
-        CreatePropertyDto dto = CreatePropertyRQToCreatePropertyDtoMapper.Map( request );
+        CreatePropertyDto dto = request.MapToCreatePropertyDto();
         int id = await _propertyService.CreateAsync( dto, ct );
 
         return CreatedAtAction(
@@ -62,7 +62,7 @@ public class PropertiesController : ControllerBase
     [HttpPut( "{id:int}" )]
     public async Task<IActionResult> UpdateProperty( [FromRoute] int id, [FromBody] UpdatePropertyRQ request, CancellationToken ct )
     {
-        var dto = UpdatePropertyRQToUpdatePropertyDtoMapper.Map( request, id );
+        var dto = request.MapToUpdatePropertyDto( id );
 
         await _propertyService.UpdateAsync( dto, ct );
 

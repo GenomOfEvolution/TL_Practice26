@@ -31,7 +31,7 @@ public class SearchService : ISearchService
 
         foreach ( Property property in properties )
         {
-            PropertyDto propertyDto = EntityToPropertyDtoMapper.Map( property );
+            PropertyDto propertyDto = property.MapToPropertyDto();
 
             IReadOnlyList<RoomType> roomTypes = ( await _roomTypeRepository.GetByPropertyIdAsync( property.Id, ct ) ).ToList();
 
@@ -52,7 +52,7 @@ public class SearchService : ISearchService
 
                 if ( roomsLeft > 0 )
                 {
-                    RoomTypeDto roomTypeDto = EntityToRoomTypeDtoMapper.Map( roomType );
+                    RoomTypeDto roomTypeDto = roomType.MapToRoomTypeDto();
                     results.Add( new SearchResultDto( propertyDto, roomTypeDto, roomsLeft ) );
                 }
             }

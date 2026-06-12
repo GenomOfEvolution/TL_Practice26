@@ -50,7 +50,7 @@ public class ReservationService : IReservationService
         PropertyDto property = await GetPropertyByIdOrThrow( dto.PropertyId );
         RoomTypeDto roomType = await GetByRoomTypeIdOrThrow( dto.RoomTypeId, dto.PropertyId );
 
-        Reservation reservation = CreateReservationDtoToEntityMapper.Map( dto );
+        Reservation reservation = dto.MapToReservationEntity();
 
         reservation.Total = CalculateTotal(
             roomType.DailyPrice,
@@ -75,7 +75,7 @@ public class ReservationService : IReservationService
     {
         Reservation reservation = await GetByIdOrThrow( reservationId, ct );
 
-        return EntityToReservationDtoMapper.Map( reservation );
+        return reservation.MapToReservationDto();
     }
 
     public async Task<IReadOnlyList<ReservationDto>> GetListAsync( ReservationFilterDto filter, CancellationToken ct )
@@ -90,7 +90,7 @@ public class ReservationService : IReservationService
 
         IEnumerable<Reservation> reservations = await _reservationRepository.GetByFiltersAsync( domainFilter, ct );
 
-        return reservations.Select( EntityToReservationDtoMapper.Map ).ToList();
+        return reservations.Select( r => r.MapToReservationDto() ).ToList();
     }
 
     private async Task<Reservation> GetByIdOrThrow( int reservationId, CancellationToken ct )

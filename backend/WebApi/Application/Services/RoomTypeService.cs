@@ -26,7 +26,7 @@ public class RoomTypeService : IRoomTypeService
 
         await _propertyService.GetByIdAsync( dto.PropertyId, CancellationToken.None );
 
-        RoomType roomType = CreateRoomTypeDtoToEntityMapper.Map( dto );
+        RoomType roomType = dto.MapToRoomTypeEntity();
 
         await _roomTypeRepository.AddAsync( roomType, ct );
         await _unitOfWork.SaveChangesAsync( ct );
@@ -46,14 +46,14 @@ public class RoomTypeService : IRoomTypeService
     {
         RoomType roomType = await GetByIdOrThrow( id, ct );
 
-        return EntityToRoomTypeDtoMapper.Map( roomType );
+        return roomType.MapToRoomTypeDto();
     }
 
     public async Task<IReadOnlyList<RoomTypeDto>> GetByPropertyIdAsync( int propertyId, CancellationToken ct )
     {
         IReadOnlyList<RoomType> roomTypes = ( await _roomTypeRepository.GetByPropertyIdAsync( propertyId, ct ) ).ToList();
 
-        return roomTypes.Select( EntityToRoomTypeDtoMapper.Map ).ToList();
+        return roomTypes.Select( r => r.MapToRoomTypeDto() ).ToList();
     }
 
     public async Task UpdateAsync( UpdateRoomTypeDto dto, CancellationToken ct )
