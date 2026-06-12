@@ -18,9 +18,9 @@ public class RoomTypeController : ControllerBase
     }
 
     [HttpGet( "{id:int}" )]
-    public async Task<ActionResult<RoomTypeRP>> GetById( [FromRoute] int id )
+    public async Task<ActionResult<RoomTypeRP>> GetById( [FromRoute] int id, CancellationToken ct )
     {
-        RoomTypeDto? roomType = await _roomTypeService.GetByIdAsync( id );
+        RoomTypeDto? roomType = await _roomTypeService.GetByIdAsync( id, ct );
 
         if ( roomType is null )
         {
@@ -31,10 +31,10 @@ public class RoomTypeController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<RoomTypeRP>> AddRoomType( [FromBody] CreateRoomTypeRQ request )
+    public async Task<ActionResult<RoomTypeRP>> AddRoomType( [FromBody] CreateRoomTypeRQ request, CancellationToken ct )
     {
         var dto = CreateRoomTypeRQToCreateRoomTypeDtoMapper.Map( request );
-        int id = await _roomTypeService.CreateAsync( dto );
+        int id = await _roomTypeService.CreateAsync( dto, ct );
 
         return CreatedAtAction(
             nameof( GetById ),
@@ -43,9 +43,9 @@ public class RoomTypeController : ControllerBase
     }
 
     [HttpPut( "{id:int}" )]
-    public async Task<IActionResult> UpdateRoomType( [FromRoute] int id, [FromBody] UpdateRoomTypeRQ request )
+    public async Task<IActionResult> UpdateRoomType( [FromRoute] int id, [FromBody] UpdateRoomTypeRQ request, CancellationToken ct )
     {
-        RoomTypeDto? existing = await _roomTypeService.GetByIdAsync( id );
+        RoomTypeDto? existing = await _roomTypeService.GetByIdAsync( id, ct );
 
         if ( existing is null )
         {
@@ -54,22 +54,22 @@ public class RoomTypeController : ControllerBase
 
         var dto = UpdateRoomTypeRQToUpdateRoomTypeDtoMapper.Map( request, id );
 
-        await _roomTypeService.UpdateAsync( dto );
+        await _roomTypeService.UpdateAsync( dto, ct );
 
         return NoContent();
     }
 
     [HttpDelete( "{id:int}" )]
-    public async Task<IActionResult> DeleteRoomType( [FromRoute] int id )
+    public async Task<IActionResult> DeleteRoomType( [FromRoute] int id, CancellationToken ct )
     {
-        RoomTypeDto? existing = await _roomTypeService.GetByIdAsync( id );
+        RoomTypeDto? existing = await _roomTypeService.GetByIdAsync( id, ct );
 
         if ( existing is null )
         {
             return NotFound();
         }
 
-        await _roomTypeService.DeleteAsync( id );
+        await _roomTypeService.DeleteAsync( id, ct );
 
         return NoContent();
     }

@@ -20,7 +20,7 @@ public class RoomTypeService : IRoomTypeService
         _propertyService = propertyService;
     }
 
-    public async Task<int> CreateAsync( CreateRoomTypeDto dto, CancellationToken ct = default )
+    public async Task<int> CreateAsync( CreateRoomTypeDto dto, CancellationToken ct )
     {
         RoomType roomType = CreateRoomTypeDtoToEntityMapper.Map( dto );
 
@@ -32,7 +32,7 @@ public class RoomTypeService : IRoomTypeService
         return roomType.Id;
     }
 
-    public async Task DeleteAsync( int id, CancellationToken ct = default )
+    public async Task DeleteAsync( int id, CancellationToken ct )
     {
         RoomType roomType = await _roomTypeRepository.GetByIdAsync( id, ct )
             ?? throw new DomainException( $"Тип номера с id {id} не найден." );
@@ -41,21 +41,21 @@ public class RoomTypeService : IRoomTypeService
         await _unitOfWork.SaveChangesAsync( ct );
     }
 
-    public async Task<RoomTypeDto?> GetByIdAsync( int id, CancellationToken ct = default )
+    public async Task<RoomTypeDto?> GetByIdAsync( int id, CancellationToken ct )
     {
         RoomType? roomType = await _roomTypeRepository.GetByIdAsync( id, ct );
 
         return roomType is null ? null : EntityToRoomTypeDtoMapper.Map( roomType );
     }
 
-    public async Task<IReadOnlyList<RoomTypeDto>> GetByPropertyIdAsync( int propertyId, CancellationToken ct = default )
+    public async Task<IReadOnlyList<RoomTypeDto>> GetByPropertyIdAsync( int propertyId, CancellationToken ct )
     {
         IReadOnlyList<RoomType> roomTypes = ( await _roomTypeRepository.GetByPropertyIdAsync( propertyId, ct ) ).ToList();
 
         return roomTypes.Select( EntityToRoomTypeDtoMapper.Map ).ToList();
     }
 
-    public async Task UpdateAsync( UpdateRoomTypeDto dto, CancellationToken ct = default )
+    public async Task UpdateAsync( UpdateRoomTypeDto dto, CancellationToken ct )
     {
         RoomType roomType = UpdateRoomTypeDtoToEntityMapper.Map( dto );
 
@@ -71,7 +71,7 @@ public class RoomTypeService : IRoomTypeService
 
     private async Task ValidateRoomTypeAsync( RoomType roomType )
     {
-        _ = await _propertyService.GetByIdAsync( roomType.PropertyId )
+        _ = await _propertyService.GetByIdAsync( roomType.PropertyId, CancellationToken.None )
             ?? throw new DomainException( "Средство размещения с указанным ID не найдено." );
 
         if ( string.IsNullOrWhiteSpace( roomType.Name ) )

@@ -23,7 +23,7 @@ public class ReservationService : IReservationService
         _roomTypeService = roomTypeService;
     }
 
-    public async Task CancelAsync( int id, CancellationToken ct = default )
+    public async Task CancelAsync( int id, CancellationToken ct )
     {
         ReservationDto? reservationDto = await GetByIdAsync( id, ct );
 
@@ -40,7 +40,7 @@ public class ReservationService : IReservationService
         await _unitOfWork.SaveChangesAsync( ct );
     }
 
-    public async Task<int> CreateAsync( CreateReservationDto dto, CancellationToken ct = default )
+    public async Task<int> CreateAsync( CreateReservationDto dto, CancellationToken ct )
     {
         Reservation reservation = CreateReservationDtoToEntityMapper.Map( dto );
 
@@ -73,14 +73,14 @@ public class ReservationService : IReservationService
         return reservation.Id;
     }
 
-    public async Task<ReservationDto?> GetByIdAsync( int id, CancellationToken ct = default )
+    public async Task<ReservationDto?> GetByIdAsync( int id, CancellationToken ct )
     {
         Reservation? reservation = await _reservationRepository.GetByIdAsync( id, ct );
 
         return reservation is null ? null : EntityToReservationDtoMapper.Map( reservation );
     }
 
-    public async Task<IReadOnlyList<ReservationDto>> GetListAsync( ReservationFilterDto filter, CancellationToken ct = default )
+    public async Task<IReadOnlyList<ReservationDto>> GetListAsync( ReservationFilterDto filter, CancellationToken ct )
     {
         var domainFilter = new Domain.Filters.ReservationFilter
         {
@@ -134,13 +134,13 @@ public class ReservationService : IReservationService
 
     private async Task<PropertyDto> ThrowIfPropertyNotExists( int propertyId )
     {
-        return await _propertyService.GetByIdAsync( propertyId )
+        return await _propertyService.GetByIdAsync( propertyId, CancellationToken.None )
             ?? throw new DomainException( "Средство размещения с указанным ID не найдено." );
     }
 
     private async Task<RoomTypeDto> ThrowIfInvalidRoomType( int roomTypeId, int propertyId )
     {
-        RoomTypeDto roomType = await _roomTypeService.GetByIdAsync( roomTypeId )
+        RoomTypeDto roomType = await _roomTypeService.GetByIdAsync( roomTypeId, CancellationToken.None )
             ?? throw new DomainException( "Тип номера с указанным ID не найден." );
 
         if ( roomType.PropertyId != propertyId )
@@ -163,7 +163,7 @@ public class ReservationService : IReservationService
         DateOnly arrivalDate,
         DateOnly departureDate,
         int totalRoomsCount,
-        CancellationToken ct = default )
+        CancellationToken ct )
     {
         IEnumerable<Reservation> overlaps = await _reservationRepository.GetOverlappingAsync(
             roomTypeId, arrivalDate, departureDate, ct );

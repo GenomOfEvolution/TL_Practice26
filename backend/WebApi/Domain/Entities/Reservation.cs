@@ -23,7 +23,7 @@ public class Reservation
     public decimal Total { get; set; }
     public Currency Currency { get; set; }
 
-    public bool IsCanceled { get; private set; } = false;
+    public bool IsCanceled { get; private set; }
 
     public void SetCanceled( bool isCanceled )
     {

@@ -13,7 +13,7 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity>
         Context = context;
     }
 
-    public async Task AddAsync( TEntity entity, CancellationToken ct = default )
+    public async Task AddAsync( TEntity entity, CancellationToken ct )
     {
         await Context.Set<TEntity>().AddAsync( entity, ct );
     }
@@ -23,14 +23,14 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity>
         Context.Set<TEntity>().Remove( entity );
     }
 
-    public async Task<IEnumerable<TEntity>> GetAllAsync( CancellationToken ct = default )
+    public async Task<IReadOnlyList<TEntity>> GetAllAsync( CancellationToken ct )
     {
         return await Context.Set<TEntity>()
             .AsNoTracking()
             .ToListAsync( ct );
     }
 
-    public async Task<TEntity?> GetByIdAsync( int id, CancellationToken ct = default )
+    public async Task<TEntity?> GetByIdAsync( int id, CancellationToken ct )
     {
         return await Context.Set<TEntity>().FindAsync( id, ct );
     }

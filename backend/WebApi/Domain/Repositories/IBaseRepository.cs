@@ -2,8 +2,8 @@
 
 public interface IBaseRepository<TEntity> where TEntity : class
 {
-    Task<IEnumerable<TEntity>> GetAllAsync( CancellationToken ct = default );
-    Task<TEntity?> GetByIdAsync( int id, CancellationToken ct = default );
-    Task AddAsync( TEntity entity, CancellationToken ct = default );
+    Task<IReadOnlyList<TEntity>> GetAllAsync( CancellationToken ct );
+    Task<TEntity?> GetByIdAsync( int id, CancellationToken ct );
+    Task AddAsync( TEntity entity, CancellationToken ct );
     void Delete( TEntity entity );
 }

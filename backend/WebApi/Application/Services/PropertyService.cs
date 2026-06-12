@@ -18,7 +18,7 @@ public class PropertyService : IPropertyService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<int> CreateAsync( CreatePropertyDto dto, CancellationToken ct = default )
+    public async Task<int> CreateAsync( CreatePropertyDto dto, CancellationToken ct )
     {
         Property property = CreatePropertyDtoToEntityMapper.Map( dto );
 
@@ -30,7 +30,7 @@ public class PropertyService : IPropertyService
         return property.Id;
     }
 
-    public async Task DeleteAsync( int id, CancellationToken ct = default )
+    public async Task DeleteAsync( int id, CancellationToken ct )
     {
         Property property = await _propertyRepository.GetByIdAsync( id, ct )
             ?? throw new DomainException( $"Средство размещения с id {id} не найдено." );
@@ -39,21 +39,21 @@ public class PropertyService : IPropertyService
         await _unitOfWork.SaveChangesAsync( ct );
     }
 
-    public async Task<IReadOnlyList<PropertyDto>> GetAllAsync( CancellationToken ct = default )
+    public async Task<IReadOnlyList<PropertyDto>> GetAllAsync( CancellationToken ct )
     {
-        IEnumerable<Property> properties = await _propertyRepository.GetAllAsync( ct );
+        IReadOnlyList<Property> properties = await _propertyRepository.GetAllAsync( ct );
 
         return properties.Select( EntityToPropertyDtoMapper.Map ).ToList();
     }
 
-    public async Task<PropertyDto?> GetByIdAsync( int id, CancellationToken ct = default )
+    public async Task<PropertyDto?> GetByIdAsync( int id, CancellationToken ct )
     {
         Property? property = await _propertyRepository.GetByIdAsync( id, ct );
 
         return property is null ? null : EntityToPropertyDtoMapper.Map( property );
     }
 
-    public async Task UpdateAsync( UpdatePropertyDto dto, CancellationToken ct = default )
+    public async Task UpdateAsync( UpdatePropertyDto dto, CancellationToken ct )
     {
         Property property = UpdatePropertyDtoToEntityMapper.Map( dto );
 
@@ -93,20 +93,20 @@ public class PropertyService : IPropertyService
             throw new DomainException( $"{nameof( property.Address )} не может быть пустым." );
         }
 
-        const double MinLatitude = -90.0;
-        const double MaxLatitude = 90.0;
+        const double minLatitude = -90.0;
+        const double maxLatitude = 90.0;
 
-        if ( property.Latitude < MinLatitude || property.Latitude > MaxLatitude )
+        if ( property.Latitude < minLatitude || property.Latitude > maxLatitude )
         {
-            throw new DomainException( $"{nameof( property.Latitude )} должна быть в диапазоне от {MinLatitude} до {MaxLatitude}." );
+            throw new DomainException( $"{nameof( property.Latitude )} должна быть в диапазоне от {minLatitude} до {maxLatitude}." );
         }
 
-        const double MinLongitude = -180.0;
-        const double MaxLongitude = 180.0;
+        const double minLongitude = -180.0;
+        const double maxLongitude = 180.0;
 
-        if ( property.Longitude < MinLongitude || property.Longitude > MaxLongitude )
+        if ( property.Longitude < minLongitude || property.Longitude > maxLongitude )
         {
-            throw new DomainException( $"{nameof( property.Longitude )} должна быть в диапазоне от {MinLongitude} до {MaxLongitude}." );
+            throw new DomainException( $"{nameof( property.Longitude )} должна быть в диапазоне от {minLongitude} до {maxLongitude}." );
         }
     }
 }

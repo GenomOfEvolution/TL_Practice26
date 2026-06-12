@@ -26,7 +26,7 @@ public class SearchService : ISearchService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<IReadOnlyList<SearchResultDto>> SearchAsync( SearchFilterDto filter, CancellationToken ct = default )
+    public async Task<IReadOnlyList<SearchResultDto>> SearchAsync( SearchFilterDto filter, CancellationToken ct )
     {
         var results = new List<SearchResultDto>();
 

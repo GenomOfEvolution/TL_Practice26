@@ -22,18 +22,18 @@ public class PropertiesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<PropertyRP>>> GetProperties()
+    public async Task<ActionResult<List<PropertyRP>>> GetProperties( CancellationToken ct )
     {
-        IReadOnlyList<PropertyDto> properties = await _propertyService.GetAllAsync();
+        IReadOnlyList<PropertyDto> properties = await _propertyService.GetAllAsync( ct );
 
         return Ok( properties
             .Select( PropertyDtoToPropertyRPMapper.Map ) );
     }
 
     [HttpGet( "{id:int}" )]
-    public async Task<ActionResult<PropertyRP>> GetById( [FromRoute] int id )
+    public async Task<ActionResult<PropertyRP>> GetById( [FromRoute] int id, CancellationToken ct )
     {
-        var property = await _propertyService.GetByIdAsync( id );
+        var property = await _propertyService.GetByIdAsync( id, ct );
 
         if ( property is null )
         {
@@ -44,19 +44,19 @@ public class PropertiesController : ControllerBase
     }
 
     [HttpGet( "{id:int}/roomtypes" )]
-    public async Task<ActionResult<List<RoomTypeRP>>> GetRoomTypes( [FromRoute] int id )
+    public async Task<ActionResult<List<RoomTypeRP>>> GetRoomTypes( [FromRoute] int id, CancellationToken ct )
     {
-        IReadOnlyList<RoomTypeDto> roomTypes = await _roomTypeService.GetByPropertyIdAsync( id );
+        IReadOnlyList<RoomTypeDto> roomTypes = await _roomTypeService.GetByPropertyIdAsync( id, ct );
 
         return Ok( roomTypes
             .Select( RoomTypeDtoToRoomTypeRPMapper.Map ) );
     }
 
     [HttpPost]
-    public async Task<ActionResult<PropertyRP>> AddProperty( [FromBody] CreatePropertyRQ request )
+    public async Task<ActionResult<PropertyRP>> AddProperty( [FromBody] CreatePropertyRQ request, CancellationToken ct )
     {
         CreatePropertyDto dto = CreatePropertyRQToCreatePropertyDtoMapper.Map( request );
-        int id = await _propertyService.CreateAsync( dto );
+        int id = await _propertyService.CreateAsync( dto, ct );
 
         return CreatedAtAction(
             nameof( GetById ),
@@ -65,9 +65,9 @@ public class PropertiesController : ControllerBase
     }
 
     [HttpPut( "{id:int}" )]
-    public async Task<IActionResult> UpdateProperty( [FromRoute] int id, [FromBody] UpdatePropertyRQ request )
+    public async Task<IActionResult> UpdateProperty( [FromRoute] int id, [FromBody] UpdatePropertyRQ request, CancellationToken ct )
     {
-        PropertyDto? existing = await _propertyService.GetByIdAsync( id );
+        PropertyDto? existing = await _propertyService.GetByIdAsync( id, ct );
 
         if ( existing is null )
         {
@@ -76,22 +76,22 @@ public class PropertiesController : ControllerBase
 
         var dto = UpdatePropertyRQToUpdatePropertyDtoMapper.Map( request, id );
 
-        await _propertyService.UpdateAsync( dto );
+        await _propertyService.UpdateAsync( dto, ct );
 
         return NoContent();
     }
 
     [HttpDelete( "{id:int}" )]
-    public async Task<IActionResult> DeleteProperty( [FromRoute] int id )
+    public async Task<IActionResult> DeleteProperty( [FromRoute] int id, CancellationToken ct )
     {
-        PropertyDto? existing = await _propertyService.GetByIdAsync( id );
+        PropertyDto? existing = await _propertyService.GetByIdAsync( id, ct );
 
         if ( existing is null )
         {
             return NotFound();
         }
 
-        await _propertyService.DeleteAsync( id );
+        await _propertyService.DeleteAsync( id, ct );
 
         return NoContent();
     }

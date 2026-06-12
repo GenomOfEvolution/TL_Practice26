@@ -18,11 +18,11 @@ public class ReservationsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<ReservationRP>> CreateReservation( [FromBody] CreateReservationRQ request )
+    public async Task<ActionResult<ReservationRP>> CreateReservation( [FromBody] CreateReservationRQ request, CancellationToken ct )
     {
         var dto = CreateReservationRQToCreateReservationDtoMapper.Map( request );
 
-        int id = await _reservationService.CreateAsync( dto );
+        int id = await _reservationService.CreateAsync( dto, ct );
 
         return CreatedAtAction(
             nameof( GetReservationById ),
@@ -31,19 +31,19 @@ public class ReservationsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<ReservationRP>>> GetReservations( [FromQuery] ReservationFilterRQ request )
+    public async Task<ActionResult<List<ReservationRP>>> GetReservations( [FromQuery] ReservationFilterRQ request, CancellationToken ct )
     {
         ReservationFilterDto filter = ReservationFilterRQToReservationFilterDtoMapper.Map( request );
-        IReadOnlyList<ReservationDto> reservations = await _reservationService.GetListAsync( filter );
+        IReadOnlyList<ReservationDto> reservations = await _reservationService.GetListAsync( filter, ct );
 
         return Ok( reservations
             .Select( ReservationDtoToReservationRPMapper.Map ) );
     }
 
     [HttpGet( "{id:int}" )]
-    public async Task<ActionResult<ReservationRP>> GetReservationById( [FromRoute] int id )
+    public async Task<ActionResult<ReservationRP>> GetReservationById( [FromRoute] int id, CancellationToken ct )
     {
-        ReservationDto? reservation = await _reservationService.GetByIdAsync( id );
+        ReservationDto? reservation = await _reservationService.GetByIdAsync( id, ct );
 
         if ( reservation == null )
         {
@@ -54,9 +54,9 @@ public class ReservationsController : ControllerBase
     }
 
     [HttpDelete( "{id:int}" )]
-    public async Task<IActionResult> DeleteReservation( [FromRoute] int id )
+    public async Task<IActionResult> DeleteReservation( [FromRoute] int id, CancellationToken ct )
     {
-        await _reservationService.CancelAsync( id );
+        await _reservationService.CancelAsync( id, ct );
 
         return NoContent();
     }

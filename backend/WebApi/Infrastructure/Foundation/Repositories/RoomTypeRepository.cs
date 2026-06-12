@@ -11,7 +11,7 @@ public class RoomTypeRepository : BaseRepository<RoomType>, IRoomTypeRepository
     {
     }
 
-    public async Task<IEnumerable<RoomType>> GetByPropertyIdAsync( int propertyId, CancellationToken ct = default )
+    public async Task<IEnumerable<RoomType>> GetByPropertyIdAsync( int propertyId, CancellationToken ct )
     {
         return await Context.Set<RoomType>()
             .Where( rt => rt.PropertyId == propertyId )
