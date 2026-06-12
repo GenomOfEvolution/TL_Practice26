@@ -13,5 +13,5 @@ public class RoomTypeResponse
     public int TotalRoomsCount { get; init; }
     public List<string> Services { get; init; } = [];
     public List<string> Amenities { get; init; } = [];
-    public Currency Currency { get; init; }
+    public string Currency { get; init; } = string.Empty;
 }

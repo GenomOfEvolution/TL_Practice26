@@ -4,8 +4,8 @@ namespace Application.Search;
 
 public class SearchResultDto
 {
-    public PropertyDto? Property { get; init; }
-    public RoomTypeDto? RoomType { get; init; }
+    public PropertyDto Property { get; init; }
+    public RoomTypeDto RoomType { get; init; }
     public int RoomsLeft { get; init; }
 
     public SearchResultDto( PropertyDto property, RoomTypeDto roomType, int roomsLeft )

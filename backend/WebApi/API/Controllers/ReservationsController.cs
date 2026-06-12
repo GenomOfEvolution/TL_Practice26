@@ -34,7 +34,7 @@ public class ReservationsController : ControllerBase
     public async Task<ActionResult<List<ReservationResponse>>> GetReservations( [FromQuery] ReservationFilterRequest request, CancellationToken ct )
     {
         ReservationFilterDto filter = request.MapToReservationFilterDto();
-        IReadOnlyList<ReservationDto> reservations = await _reservationService.GetListAsync( filter, ct );
+        IReadOnlyList<ReservationDto> reservations = await _reservationService.GetAllAsync( filter, ct );
 
         return Ok( reservations
             .Select( r => r.MapToReservationResponse() ) );
@@ -48,7 +48,7 @@ public class ReservationsController : ControllerBase
         return Ok( reservation.MapToReservationResponse() );
     }
 
-    [HttpDelete( "{id:int}" )]
+    [HttpPost( "{id:int}/cancel" )]
     public async Task<IActionResult> DeleteReservation( [FromRoute] int id, CancellationToken ct )
     {
         await _reservationService.CancelAsync( id, ct );

@@ -2,9 +2,9 @@ namespace API.DTO;
 
 public class SearchRequest
 {
-    public string? City { get; set; }
-    public DateOnly? ArrivalDate { get; set; }
-    public DateOnly? DepartureDate { get; set; }
-    public int? Guests { get; set; }
-    public decimal? MaxPrice { get; set; }
+    public string? City { get; init; }
+    public DateOnly? ArrivalDate { get; init; }
+    public DateOnly? DepartureDate { get; init; }
+    public int? Guests { get; init; }
+    public decimal? MaxPrice { get; init; }
 }

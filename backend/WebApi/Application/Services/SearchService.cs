@@ -29,7 +29,7 @@ public class SearchService : ISearchService
 
         IReadOnlyList<Property> properties = string.IsNullOrWhiteSpace( filter.City )
             ? await _propertyRepository.GetAllAsync( ct )
-            : ( await _propertyRepository.GetByCityAsync( filter.City, ct ) ).ToList();
+            : await _propertyRepository.GetByCityAsync( filter.City, ct );
 
         foreach ( Property property in properties )
         {

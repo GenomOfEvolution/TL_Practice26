@@ -33,7 +33,7 @@ public class ReservationService : IReservationService
     {
         Reservation reservation = await GetByIdOrThrow( reservationId, ct );
 
-        reservation.SetCanceled( true );
+        reservation.Cancel();
 
         await _unitOfWork.SaveChangesAsync( ct );
     }
@@ -78,7 +78,7 @@ public class ReservationService : IReservationService
         return reservation.MapToReservationDto();
     }
 
-    public async Task<IReadOnlyList<ReservationDto>> GetListAsync( ReservationFilterDto filter, CancellationToken ct )
+    public async Task<IReadOnlyList<ReservationDto>> GetAllAsync( ReservationFilterDto filter, CancellationToken ct )
     {
         var domainFilter = new ReservationFilter
         {
@@ -111,7 +111,7 @@ public class ReservationService : IReservationService
             throw new ApplicationValidationException( "Дата заезда не может быть в прошлом." );
         }
 
-        if ( departureDate <= arrivalDate )
+        if ( departureDate < arrivalDate )
         {
             throw new ApplicationValidationException( "Дата выезда должна быть строго позже даты заезда." );
         }

@@ -2,8 +2,8 @@ namespace API.DTO;
 
 public class ReservationFilterRequest
 {
-    public int? PropertyId { get; set; }
-    public string? GuestName { get; set; }
-    public DateOnly? DateFrom { get; set; }
-    public DateOnly? DateTo { get; set; }
+    public int? PropertyId { get; init; }
+    public string? GuestName { get; init; }
+    public DateOnly? DateFrom { get; init; }
+    public DateOnly? DateTo { get; init; }
 }

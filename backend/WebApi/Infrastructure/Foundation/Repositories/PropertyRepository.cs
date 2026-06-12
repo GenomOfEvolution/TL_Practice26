@@ -11,7 +11,7 @@ public class PropertyRepository : BaseRepository<Property>, IPropertyRepository
     {
     }
 
-    public async Task<IEnumerable<Property>> GetByCityAsync( string city, CancellationToken ct )
+    public async Task<IReadOnlyList<Property>> GetByCityAsync( string city, CancellationToken ct )
     {
         return await Context.Set<Property>()
             .Where( p => p.City == city )

@@ -25,8 +25,8 @@ public class Reservation
 
     public bool IsCanceled { get; private set; }
 
-    public void SetCanceled( bool isCanceled )
+    public void Cancel()
     {
-        IsCanceled = isCanceled;
+        IsCanceled = true;
     }
 }

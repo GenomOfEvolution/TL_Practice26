@@ -71,8 +71,14 @@ public static class MappingExtensions
             MinPersonCount = request.MinPersonCount,
             MaxPersonCount = request.MaxPersonCount,
             TotalRoomsCount = request.TotalRoomsCount,
-            Services = request.Services.Select( s => Enum.Parse<ServiceType>( s ) ).ToList(),
-            Amenities = request.Amenities.Select( a => Enum.Parse<AmenitiesType>( a ) ).ToList(),
+            Services = request.Services.ConvertAll( s =>
+                Enum.TryParse<ServiceType>( s, out var service )
+                    ? service
+                    : throw new ApplicationValidationException( $"Недопустимое значение услуги: {s}" ) ),
+            Amenities = request.Amenities.ConvertAll( a =>
+                Enum.TryParse<AmenitiesType>( a, out var amenity )
+                    ? amenity
+                    : throw new ApplicationValidationException( $"Недопустимое значение удобства: {a}" ) ),
             Currency = request.Currency,
         };
     }
@@ -140,9 +146,9 @@ public static class MappingExtensions
             MinPersonCount = dto.MinPersonCount,
             MaxPersonCount = dto.MaxPersonCount,
             TotalRoomsCount = dto.TotalRoomsCount,
-            Services = dto.Services.Select( s => s.ToString() ).ToList(),
-            Amenities = dto.Amenities.Select( a => a.ToString() ).ToList(),
-            Currency = dto.Currency,
+            Services = dto.Services.ConvertAll( s => s.ToString() ),
+            Amenities = dto.Amenities.ConvertAll( a => a.ToString() ),
+            Currency = dto.Currency.ToString(),
         };
     }
 
@@ -169,8 +175,8 @@ public static class MappingExtensions
     {
         return new ApiSearchResult
         {
-            Property = result.Property!.MapToPropertyResponse(),
-            RoomType = result.RoomType!.MapToRoomTypeResponse(),
+            Property = result.Property.MapToPropertyResponse(),
+            RoomType = result.RoomType.MapToRoomTypeResponse(),
             RoomsLeft = result.RoomsLeft
         };
     }
