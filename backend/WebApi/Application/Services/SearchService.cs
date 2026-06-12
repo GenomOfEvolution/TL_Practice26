@@ -27,33 +27,48 @@ public class SearchService : ISearchService
     {
         var results = new List<SearchResultDto>();
 
-        IReadOnlyList<Property> properties = ( await _propertyRepository.GetByCityAsync( filter.City, ct ) ).ToList();
+        IReadOnlyList<Property> properties = string.IsNullOrWhiteSpace( filter.City )
+            ? await _propertyRepository.GetAllAsync( ct )
+            : ( await _propertyRepository.GetByCityAsync( filter.City, ct ) ).ToList();
 
         foreach ( Property property in properties )
         {
             PropertyDto propertyDto = property.MapToPropertyDto();
 
-            IReadOnlyList<RoomType> roomTypes = ( await _roomTypeRepository.GetByPropertyIdAsync( property.Id, ct ) ).ToList();
+            IEnumerable<RoomType> roomTypes = await _roomTypeRepository.GetByPropertyIdAsync( property.Id, ct );
 
-            IEnumerable<RoomType> matchingRoomTypes = roomTypes
-                .Where( rt => rt.MinPersonCount <= filter.Guests && rt.MaxPersonCount >= filter.Guests );
+            IEnumerable<RoomType> matchingRoomTypes = roomTypes;
+
+            if ( filter.Guests.HasValue )
+            {
+                matchingRoomTypes = matchingRoomTypes
+                    .Where( rt => rt.MinPersonCount <= filter.Guests.Value && rt.MaxPersonCount >= filter.Guests.Value );
+            }
 
             if ( filter.MaxPrice.HasValue )
             {
                 matchingRoomTypes = matchingRoomTypes.Where( rt => rt.DailyPrice <= filter.MaxPrice.Value );
             }
 
+            DateOnly? arrivalDate = filter.ArrivalDate;
+            DateOnly? departureDate = filter.DepartureDate;
+
             foreach ( RoomType roomType in matchingRoomTypes )
             {
-                IEnumerable<Reservation> overlaps = await _reservationRepository.GetOverlappingAsync(
-                    roomType.Id, filter.ArrivalDate, filter.DepartureDate, ct );
-
-                int roomsLeft = roomType.TotalRoomsCount - overlaps.Count();
-
-                if ( roomsLeft > 0 )
+                if ( arrivalDate.HasValue && departureDate.HasValue )
                 {
-                    RoomTypeDto roomTypeDto = roomType.MapToRoomTypeDto();
-                    results.Add( new SearchResultDto( propertyDto, roomTypeDto, roomsLeft ) );
+                    IEnumerable<Reservation> overlaps = await _reservationRepository.GetOverlappingAsync(
+                        roomType.Id, arrivalDate.Value, departureDate.Value, ct );
+
+                    int roomsLeft = roomType.TotalRoomsCount - overlaps.Count();
+                    if ( roomsLeft > 0 )
+                    {
+                        results.Add( new SearchResultDto( propertyDto, roomType.MapToRoomTypeDto(), roomsLeft ) );
+                    }
+                }
+                else
+                {
+                    results.Add( new SearchResultDto( propertyDto, roomType.MapToRoomTypeDto(), roomType.TotalRoomsCount ) );
                 }
             }
         }

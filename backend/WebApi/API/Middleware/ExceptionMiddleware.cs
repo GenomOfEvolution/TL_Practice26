@@ -1,4 +1,3 @@
-using System.Net;
 using Application.Exceptions;
 using Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
@@ -20,40 +19,41 @@ public class ExceptionMiddleware
         {
             await _next( context );
         }
-        catch ( EntityNotFoundException ex )
+        catch ( Exception exception )
         {
-            await WriteProblemDetailsAsync( context, ( int )HttpStatusCode.NotFound, ex.Message );
-        }
-        catch ( ApplicationValidationException ex )
-        {
-            await WriteProblemDetailsAsync( context, ( int )HttpStatusCode.BadRequest, ex.Message );
-        }
-        catch ( DomainException ex )
-        {
-            await WriteProblemDetailsAsync( context, ( int )HttpStatusCode.BadRequest, ex.Message );
+            var problemDetails = GetProblemDetails( exception );
+
+            context.Response.StatusCode = problemDetails.Status.GetValueOrDefault();
+
+            await context.Response.WriteAsJsonAsync( problemDetails );
         }
     }
 
-    private static async Task WriteProblemDetailsAsync( HttpContext context, int statusCode, string detail )
+    private static ProblemDetails GetProblemDetails( Exception exception )
     {
-        context.Response.StatusCode = statusCode;
-        context.Response.ContentType = "application/problem+json";
-
-        var problemDetails = new ProblemDetails
+        return exception switch
         {
-            Status = statusCode,
-            Title = GetTitleForStatusCode( statusCode ),
-            Detail = detail,
-            Instance = context.Request.Path,
+            EntityNotFoundException => new ProblemDetails
+            {
+                Status = StatusCodes.Status404NotFound,
+                Type = "NotFound",
+                Title = "Not Found",
+                Detail = exception.Message,
+            },
+            ApplicationValidationException or DomainException => new ProblemDetails
+            {
+                Status = StatusCodes.Status400BadRequest,
+                Type = "ValidationFailure",
+                Title = "Validation error",
+                Detail = exception.Message,
+            },
+            _ => new ProblemDetails
+            {
+                Status = StatusCodes.Status500InternalServerError,
+                Type = "ServerError",
+                Title = "Server error",
+                Detail = "An unexpected error has occured",
+            }
         };
-
-        await context.Response.WriteAsJsonAsync( problemDetails );
     }
-
-    private static string GetTitleForStatusCode( int statusCode ) => statusCode switch
-    {
-        400 => "Bad Request",
-        404 => "Not Found",
-        _ => "Error",
-    };
 }
