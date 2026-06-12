@@ -22,6 +22,12 @@ public class ReservationConfiguration : IEntityTypeConfiguration<Reservation>
             .HasForeignKey( r => r.RoomTypeId )
             .OnDelete( DeleteBehavior.Restrict );
 
+        builder.Property( r => r.PropertyId )
+            .HasColumnName( "id_property" );
+
+        builder.Property( r => r.RoomTypeId )
+            .HasColumnName( "id_roomtype" );
+
         builder.Property( r => r.ArrivalDate )
             .IsRequired();
 
@@ -52,6 +58,6 @@ public class ReservationConfiguration : IEntityTypeConfiguration<Reservation>
             .IsRequired();
 
         builder.HasIndex( r => new { r.RoomTypeId, r.PropertyId } )
-            .HasDatabaseName( "IX_roomtype_id_property" );
+            .HasDatabaseName( "IX_Reservation_RoomTypeId_PropertyId" );
     }
 }

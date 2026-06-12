@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers;
 
 [ApiController]
-[Route( "[controller]" )]
+[Route( "api/[controller]" )]
 public class PropertiesController : ControllerBase
 {
     private readonly IPropertyService _propertyService;
@@ -33,7 +33,7 @@ public class PropertiesController : ControllerBase
     [HttpGet( "{id:int}" )]
     public async Task<ActionResult<PropertyRP>> GetById( [FromRoute] int id, CancellationToken ct )
     {
-        var property = await _propertyService.GetByIdAsync( id, ct );
+        PropertyDto? property = await _propertyService.GetByIdAsync( id, ct );
 
         if ( property is null )
         {

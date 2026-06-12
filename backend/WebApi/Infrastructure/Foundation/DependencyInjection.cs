@@ -15,6 +15,7 @@ public static class DependencyInjection
         ArgumentNullException.ThrowIfNull( migrationsAssemblyName );
 
         string? connectionString = configuration.GetConnectionString( "DefaultConnection" );
+        ArgumentNullException.ThrowIfNull( connectionString );
 
         services.AddDbContext<AppDbContext>( options =>
             options.UseSqlServer( connectionString, sql =>
@@ -23,7 +24,6 @@ public static class DependencyInjection
                 sql.MigrationsHistoryTable( "__EFMigrationsHistory" );
             } )
             .UseSnakeCaseNamingConvention() );
-
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IPropertyRepository, PropertyRepository>();

@@ -3,7 +3,7 @@ using Domain.Filters;
 
 namespace Infrastructure.Foundation.Repositories;
 
-internal static class ReservationFilterExtensions
+public static class ReservationFilterExtensions
 {
     public static IQueryable<Reservation> ApplyFilter( this IQueryable<Reservation> query, ReservationFilter filter )
     {
