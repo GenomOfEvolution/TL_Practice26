@@ -19,7 +19,11 @@ public class ReservationRepository : BaseRepository<Reservation>, IReservationRe
             .ToListAsync( ct );
     }
 
-    public async Task<IEnumerable<Reservation>> GetOverlappingAsync( int roomTypeId, DateOnly arrival, DateOnly departure, CancellationToken ct )
+    public async Task<IEnumerable<Reservation>> GetOverlappingAsync(
+        int roomTypeId,
+        DateOnly arrival,
+        DateOnly departure,
+        CancellationToken ct )
     {
         return await Context.Set<Reservation>()
             .Where( r => r.RoomTypeId == roomTypeId

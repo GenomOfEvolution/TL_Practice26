@@ -1,6 +1,6 @@
 namespace API.DTO;
 
-public class SearchRQ
+public class SearchRequest
 {
     public string City { get; set; } = string.Empty;
     public DateOnly ArrivalDate { get; set; }

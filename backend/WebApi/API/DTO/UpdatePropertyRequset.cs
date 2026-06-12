@@ -1,6 +1,6 @@
 namespace API.DTO;
 
-public class CreatePropertyRQ
+public class UpdatePropertyRequset
 {
     public string Name { get; set; } = string.Empty;
     public string Country { get; set; } = string.Empty;

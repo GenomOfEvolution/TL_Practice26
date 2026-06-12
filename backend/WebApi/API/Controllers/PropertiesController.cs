@@ -22,33 +22,32 @@ public class PropertiesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<PropertyRP>>> GetProperties( CancellationToken ct )
+    public async Task<ActionResult<List<PropertyResponse>>> GetProperties( CancellationToken ct )
     {
         IReadOnlyList<PropertyDto> properties = await _propertyService.GetAllAsync( ct );
 
-        return Ok( properties
-            .Select( p => p.MapToPropertyRP() ) );
+        return Ok( properties.Select( p => p.MapToPropertyResponse() ) );
     }
 
     [HttpGet( "{id:int}" )]
-    public async Task<ActionResult<PropertyRP>> GetById( [FromRoute] int id, CancellationToken ct )
+    public async Task<ActionResult<PropertyResponse>> GetById( [FromRoute] int id, CancellationToken ct )
     {
         PropertyDto property = await _propertyService.GetByIdAsync( id, ct );
 
-        return property.MapToPropertyRP();
+        return property.MapToPropertyResponse();
     }
 
     [HttpGet( "{id:int}/roomtypes" )]
-    public async Task<ActionResult<List<RoomTypeRP>>> GetRoomTypes( [FromRoute] int id, CancellationToken ct )
+    public async Task<ActionResult<List<RoomTypeResponse>>> GetRoomTypes( [FromRoute] int id, CancellationToken ct )
     {
         IReadOnlyList<RoomTypeDto> roomTypes = await _roomTypeService.GetByPropertyIdAsync( id, ct );
 
         return Ok( roomTypes
-            .Select( r => r.MapToRoomTypeRP() ) );
+            .Select( r => r.MapToRoomTypeResponse() ) );
     }
 
     [HttpPost]
-    public async Task<ActionResult<PropertyRP>> AddProperty( [FromBody] CreatePropertyRQ request, CancellationToken ct )
+    public async Task<ActionResult<PropertyResponse>> AddProperty( [FromBody] CreatePropertyRequest request, CancellationToken ct )
     {
         CreatePropertyDto dto = request.MapToCreatePropertyDto();
         int id = await _propertyService.CreateAsync( dto, ct );
@@ -60,7 +59,7 @@ public class PropertiesController : ControllerBase
     }
 
     [HttpPut( "{id:int}" )]
-    public async Task<IActionResult> UpdateProperty( [FromRoute] int id, [FromBody] UpdatePropertyRQ request, CancellationToken ct )
+    public async Task<IActionResult> UpdateProperty( [FromRoute] int id, [FromBody] UpdatePropertyRequset request, CancellationToken ct )
     {
         var dto = request.MapToUpdatePropertyDto( id );
 

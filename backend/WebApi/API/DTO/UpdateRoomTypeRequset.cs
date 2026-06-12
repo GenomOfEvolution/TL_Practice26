@@ -2,7 +2,7 @@ using Domain.Enums;
 
 namespace API.DTO;
 
-public class UpdateRoomTypeRQ
+public class UpdateRoomTypeRequset
 {
     public int PropertyId { get; set; }
     public string Name { get; set; } = string.Empty;

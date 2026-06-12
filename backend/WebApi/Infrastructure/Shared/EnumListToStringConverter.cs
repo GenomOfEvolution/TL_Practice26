@@ -2,7 +2,8 @@
 
 namespace Infrastructure.Shared;
 
-public class EnumListToStringConverter<T> : ValueConverter<List<T>, string> where T : Enum
+public class EnumListToStringConverter<T> : ValueConverter<List<T>, string>
+    where T : Enum
 {
     public EnumListToStringConverter()
         : base(

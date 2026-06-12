@@ -1,6 +1,6 @@
 namespace API.DTO;
 
-public class CreateReservationRQ
+public class CreateReservationRequest
 {
     public int PropertyId { get; set; }
     public int RoomTypeId { get; set; }

@@ -17,7 +17,7 @@ public class SearchController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<SearchResultDto>>> Search( [FromQuery] SearchRQ request, CancellationToken ct )
+    public async Task<ActionResult<List<SearchResultDto>>> Search( [FromQuery] SearchRequest request, CancellationToken ct )
     {
         var filter = request.MapToSearchFilterDto();
         var results = await _searchService.SearchAsync( filter, ct );

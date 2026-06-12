@@ -2,7 +2,7 @@ using Domain.Enums;
 
 namespace API.DTO;
 
-public class RoomTypeRP
+public class RoomTypeResponse
 {
     public int Id { get; init; }
     public int PropertyId { get; init; }

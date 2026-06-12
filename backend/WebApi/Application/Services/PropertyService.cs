@@ -20,7 +20,13 @@ public class PropertyService : IPropertyService
 
     public async Task<int> CreateAsync( CreatePropertyDto dto, CancellationToken ct )
     {
-        ThrowIfInvalidProperty( dto.Name, dto.Country, dto.City, dto.Address, dto.Latitude, dto.Longitude );
+        ThrowIfInvalidProperty(
+            dto.Name,
+            dto.Country,
+            dto.City,
+            dto.Address,
+            dto.Latitude,
+            dto.Longitude );
 
         Property property = dto.MapToPropertyEntity();
 
@@ -30,9 +36,9 @@ public class PropertyService : IPropertyService
         return property.Id;
     }
 
-    public async Task DeleteAsync( int id, CancellationToken ct )
+    public async Task DeleteAsync( int propertyId, CancellationToken ct )
     {
-        Property property = await GetByIdOrThrow( id, ct );
+        Property property = await GetByIdOrThrow( propertyId, ct );
 
         _propertyRepository.Delete( property );
         await _unitOfWork.SaveChangesAsync( ct );
@@ -45,9 +51,9 @@ public class PropertyService : IPropertyService
         return properties.Select( p => p.MapToPropertyDto() ).ToList();
     }
 
-    public async Task<PropertyDto> GetByIdAsync( int id, CancellationToken ct )
+    public async Task<PropertyDto> GetByIdAsync( int propertyId, CancellationToken ct )
     {
-        Property property = await GetByIdOrThrow( id, ct );
+        Property property = await GetByIdOrThrow( propertyId, ct );
 
         return property.MapToPropertyDto();
     }
@@ -68,10 +74,10 @@ public class PropertyService : IPropertyService
         await _unitOfWork.SaveChangesAsync( ct );
     }
 
-    private async Task<Property> GetByIdOrThrow( int id, CancellationToken ct )
+    private async Task<Property> GetByIdOrThrow( int propertyId, CancellationToken ct )
     {
-        return await _propertyRepository.GetByIdAsync( id, ct )
-            ?? throw new EntityNotFoundException( $"Средство размещения с id {id} не найдено." );
+        return await _propertyRepository.GetByIdAsync( propertyId, ct )
+            ?? throw new EntityNotFoundException( $"Средство размещения с id {propertyId} не найдено." );
     }
 
     private static void ThrowIfInvalidProperty(

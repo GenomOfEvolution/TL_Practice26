@@ -29,9 +29,9 @@ public class ReservationService : IReservationService
         _roomTypeService = roomTypeService;
     }
 
-    public async Task CancelAsync( int id, CancellationToken ct )
+    public async Task CancelAsync( int reservationId, CancellationToken ct )
     {
-        Reservation reservation = await GetByIdOrThrow( id, ct );
+        Reservation reservation = await GetByIdOrThrow( reservationId, ct );
 
         reservation.SetCanceled( true );
 

@@ -1,6 +1,6 @@
 namespace API.DTO;
 
-public class PropertyRP
+public class PropertyResponse
 {
     public int Id { get; init; }
     public string Name { get; init; } = string.Empty;

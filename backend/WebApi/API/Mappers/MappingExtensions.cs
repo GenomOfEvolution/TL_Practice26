@@ -1,18 +1,17 @@
-using ApiSearchResult = API.DTO.SearchResultDto;
-using ApplicationSearchResult = Application.Search.SearchResultDto;
 using API.DTO;
 using Application.DTO;
 using Application.Exceptions;
 using Application.Reservations;
 using Application.Search;
-using Domain.Entities;
 using Domain.Enums;
+using ApiSearchResult = API.DTO.SearchResultDto;
+using ApplicationSearchResult = Application.Search.SearchResultDto;
 
 namespace API.Mappers;
 
 public static class MappingExtensions
 {
-    public static CreatePropertyDto MapToCreatePropertyDto( this CreatePropertyRQ request )
+    public static CreatePropertyDto MapToCreatePropertyDto( this CreatePropertyRequest request )
     {
         return new CreatePropertyDto
         {
@@ -25,7 +24,7 @@ public static class MappingExtensions
         };
     }
 
-    public static UpdatePropertyDto MapToUpdatePropertyDto( this UpdatePropertyRQ request, int id )
+    public static UpdatePropertyDto MapToUpdatePropertyDto( this UpdatePropertyRequset request, int id )
     {
         return new UpdatePropertyDto
         {
@@ -39,7 +38,7 @@ public static class MappingExtensions
         };
     }
 
-    public static CreateRoomTypeDto MapToCreateRoomTypeDto( this CreateRoomTypeRQ request )
+    public static CreateRoomTypeDto MapToCreateRoomTypeDto( this CreateRoomTypeRequset request )
     {
         return new CreateRoomTypeDto
         {
@@ -61,7 +60,7 @@ public static class MappingExtensions
         };
     }
 
-    public static UpdateRoomTypeDto MapToUpdateRoomTypeDto( this UpdateRoomTypeRQ request, int id )
+    public static UpdateRoomTypeDto MapToUpdateRoomTypeDto( this UpdateRoomTypeRequset request, int id )
     {
         return new UpdateRoomTypeDto
         {
@@ -78,7 +77,7 @@ public static class MappingExtensions
         };
     }
 
-    public static CreateReservationDto MapToCreateReservationDto( this CreateReservationRQ request )
+    public static CreateReservationDto MapToCreateReservationDto( this CreateReservationRequest request )
     {
         return new CreateReservationDto
         {
@@ -93,7 +92,7 @@ public static class MappingExtensions
         };
     }
 
-    public static ReservationFilterDto MapToReservationFilterDto( this ReservationFilterRQ request )
+    public static ReservationFilterDto MapToReservationFilterDto( this ReservationFilterRequest request )
     {
         return new ReservationFilterDto
         {
@@ -104,7 +103,7 @@ public static class MappingExtensions
         };
     }
 
-    public static SearchFilterDto MapToSearchFilterDto( this SearchRQ request )
+    public static SearchFilterDto MapToSearchFilterDto( this SearchRequest request )
     {
         return new SearchFilterDto
         {
@@ -116,9 +115,9 @@ public static class MappingExtensions
         };
     }
 
-    public static PropertyRP MapToPropertyRP( this PropertyDto dto )
+    public static PropertyResponse MapToPropertyResponse( this PropertyDto dto )
     {
-        return new PropertyRP
+        return new PropertyResponse
         {
             Id = dto.Id,
             Name = dto.Name,
@@ -130,9 +129,9 @@ public static class MappingExtensions
         };
     }
 
-    public static RoomTypeRP MapToRoomTypeRP( this RoomTypeDto dto )
+    public static RoomTypeResponse MapToRoomTypeResponse( this RoomTypeDto dto )
     {
-        return new RoomTypeRP
+        return new RoomTypeResponse
         {
             Id = dto.Id,
             PropertyId = dto.PropertyId,
@@ -147,9 +146,9 @@ public static class MappingExtensions
         };
     }
 
-    public static ReservationRP MapToReservationRP( this ReservationDto dto )
+    public static ReservationResponse MapToReservationResponse( this ReservationDto dto )
     {
-        return new ReservationRP
+        return new ReservationResponse
         {
             Id = dto.Id,
             PropertyId = dto.PropertyId,
@@ -170,8 +169,8 @@ public static class MappingExtensions
     {
         return new ApiSearchResult
         {
-            Property = result.Property!.MapToPropertyRP(),
-            RoomType = result.RoomType!.MapToRoomTypeRP(),
+            Property = result.Property!.MapToPropertyResponse(),
+            RoomType = result.RoomType!.MapToRoomTypeResponse(),
             RoomsLeft = result.RoomsLeft
         };
     }

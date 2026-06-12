@@ -1,6 +1,6 @@
 namespace API.DTO;
 
-public class ReservationFilterRQ
+public class ReservationFilterRequest
 {
     public int? PropertyId { get; set; }
     public string? GuestName { get; set; }

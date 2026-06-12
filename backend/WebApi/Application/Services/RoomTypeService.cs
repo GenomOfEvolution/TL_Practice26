@@ -51,7 +51,7 @@ public class RoomTypeService : IRoomTypeService
 
     public async Task<IReadOnlyList<RoomTypeDto>> GetByPropertyIdAsync( int propertyId, CancellationToken ct )
     {
-        IReadOnlyList<RoomType> roomTypes = ( await _roomTypeRepository.GetByPropertyIdAsync( propertyId, ct ) ).ToList();
+        IEnumerable<RoomType> roomTypes = await _roomTypeRepository.GetByPropertyIdAsync( propertyId, ct );
 
         return roomTypes.Select( r => r.MapToRoomTypeDto() ).ToList();
     }
