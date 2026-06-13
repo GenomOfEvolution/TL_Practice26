@@ -14,8 +14,8 @@ public static class DependencyInjection
         ArgumentNullException.ThrowIfNull( configuration );
         ArgumentNullException.ThrowIfNull( migrationsAssemblyName );
 
-        string connectionString = configuration.GetConnectionString( "DefaultConnection" )
-            ?? throw new InvalidOperationException( "Connection string 'DefaultConnection' is not configured." );
+        string? connectionString = configuration.GetConnectionString( "DefaultConnection" );
+        ArgumentNullException.ThrowIfNull( connectionString );
 
         services.AddDbContext<AppDbContext>( options =>
             options.UseSqlServer( connectionString, sql =>

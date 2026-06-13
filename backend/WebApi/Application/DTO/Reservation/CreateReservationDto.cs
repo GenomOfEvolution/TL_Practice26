@@ -1,4 +1,4 @@
-namespace Application.Reservations;
+namespace Application.DTO.Reservation;
 
 public class CreateReservationDto
 {

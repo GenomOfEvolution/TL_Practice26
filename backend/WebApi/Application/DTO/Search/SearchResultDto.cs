@@ -1,6 +1,6 @@
 using Application.DTO;
 
-namespace Application.Search;
+namespace Application.DTO.Search;
 
 public class SearchResultDto
 {

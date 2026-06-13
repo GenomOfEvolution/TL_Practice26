@@ -12,14 +12,14 @@ public class ReservationRepository : BaseRepository<Reservation>, IReservationRe
     {
     }
 
-    public async Task<IEnumerable<Reservation>> GetByFiltersAsync( ReservationFilter filter, CancellationToken ct )
+    public async Task<IReadOnlyList<Reservation>> GetByFiltersAsync( ReservationFilter filter, CancellationToken ct )
     {
         return await Context.Set<Reservation>()
             .ApplyFilter( filter )
             .ToListAsync( ct );
     }
 
-    public async Task<IEnumerable<Reservation>> GetOverlappingAsync(
+    public async Task<IReadOnlyList<Reservation>> GetOverlappingAsync(
         int roomTypeId,
         DateOnly arrival,
         DateOnly departure,

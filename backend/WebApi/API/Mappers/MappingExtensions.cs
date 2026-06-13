@@ -1,11 +1,11 @@
 using API.DTO;
 using Application.DTO;
+using Application.DTO.Reservation;
+using Application.DTO.Search;
 using Application.Exceptions;
-using Application.Reservations;
-using Application.Search;
 using Domain.Enums;
 using ApiSearchResult = API.DTO.SearchResultDto;
-using ApplicationSearchResult = Application.Search.SearchResultDto;
+using ApplicationSearchResult = Application.DTO.Search.SearchResultDto;
 
 namespace API.Mappers;
 

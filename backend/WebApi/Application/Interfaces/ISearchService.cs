@@ -1,4 +1,4 @@
-using Application.Search;
+using Application.DTO.Search;
 
 namespace Application.Interfaces;
 

@@ -1,8 +1,8 @@
 using Application.DTO;
+using Application.DTO.Reservation;
 using Application.Exceptions;
 using Application.Interfaces;
 using Application.Mappers;
-using Application.Reservations;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Filters;

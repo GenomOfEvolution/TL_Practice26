@@ -1,5 +1,5 @@
 using Application.DTO;
-using Application.Reservations;
+using Application.DTO.Reservation;
 using Domain.Entities;
 
 namespace Application.Mappers;

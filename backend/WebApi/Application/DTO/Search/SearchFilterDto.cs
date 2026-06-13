@@ -1,4 +1,4 @@
-namespace Application.Search;
+namespace Application.DTO.Search;
 
 public class SearchFilterDto
 {

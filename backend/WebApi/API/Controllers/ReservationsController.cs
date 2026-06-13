@@ -1,7 +1,7 @@
 ﻿using API.DTO;
 using API.Mappers;
+using Application.DTO.Reservation;
 using Application.Interfaces;
-using Application.Reservations;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;

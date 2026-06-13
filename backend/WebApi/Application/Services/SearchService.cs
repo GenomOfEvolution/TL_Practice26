@@ -1,7 +1,7 @@
 using Application.DTO;
+using Application.DTO.Search;
 using Application.Interfaces;
 using Application.Mappers;
-using Application.Search;
 using Domain.Entities;
 using Domain.Repositories;
 

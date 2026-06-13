@@ -1,4 +1,4 @@
-using Application.Reservations;
+using Application.DTO.Reservation;
 
 namespace Application.Interfaces;
 
