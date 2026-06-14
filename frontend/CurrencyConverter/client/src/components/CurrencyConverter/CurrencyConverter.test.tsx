@@ -5,15 +5,15 @@ import type { CurrencyDto, PriceChangeDto } from '../../models/dto';
 import currenciesJson from '../../mocks/2_hw_mock_currencies.json';
 import priceChangesJson from '../../mocks/2_hw_mock_price_changes.json';
 
-vi.mock('../../api/currencyApi', () => ({
-  fetchCurrencies: vi.fn(),
-  fetchPriceChanges: vi.fn()
+const { mockedFetchCurrencies, mockedFetchPriceChanges } = vi.hoisted(() => ({
+  mockedFetchCurrencies: vi.fn(),
+  mockedFetchPriceChanges: vi.fn(),
 }));
 
-import { fetchCurrencies, fetchPriceChanges } from '../../api/currencyApi';
-
-const mockedFetchCurrencies = vi.mocked(fetchCurrencies);
-const mockedFetchPriceChanges = vi.mocked(fetchPriceChanges);
+vi.mock('../../api/currencyApi', () => ({
+  fetchCurrencies: mockedFetchCurrencies,
+  fetchPriceChanges: mockedFetchPriceChanges,
+}));
 
 const mockCurrenciesDto = currenciesJson as CurrencyDto[];
 const mockPriceChangesMap = priceChangesJson as Record<string, Record<string, PriceChangeDto>>;

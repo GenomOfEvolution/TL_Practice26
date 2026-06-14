@@ -47,8 +47,8 @@ export const CurrencyConverter = () => {
   if (currenciesError) {
     return (
       <div className={styles.exchanger}>
-        <div className={styles.errorBlock}>
-          <h2>Server is not available</h2>
+        <div className={styles.error}>
+          <h2 className={styles.errorTitle}>Server is not available</h2>
           <p>{currenciesError}</p>
           <p>Please try again later.</p>
         </div>
