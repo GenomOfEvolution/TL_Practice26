@@ -1,0 +1,38 @@
+.toast {
+  position: fixed;
+  inset-block-start: 16px;
+  inset-inline-start: 50%;
+  z-index: 1000;
+
+  display: flex;
+  gap: 12px;
+  align-items: center;
+
+  padding: 12px 20px;
+
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+
+  color: #721c24;
+
+  transform: translateX(-50%);
+}
+
+.message {
+  flex: 1;
+}
+
+.close {
+  padding: 0;
+
+  background: none;
+  border: none;
+
+  color: #721c24;
+  font-size: 20px;
+  line-height: 1;
+
+  cursor: pointer;
+}

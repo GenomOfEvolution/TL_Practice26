@@ -1,52 +1,123 @@
-import { useState, useMemo, useCallback } from 'react';
-import type { Currency } from '../models';
-import { currencies, priceChanges } from '../mocks';
+import { useState, useEffect, useReducer } from 'react';
+import type { Currency, PriceChange } from '../models';
+import { dataReducer, createInitialState } from './dataReducer';
+import { fetchCurrencies, fetchPriceChanges } from '../api/currencyApi';
+import { mapCurrency, mapPriceChange } from '../models/mappers';
 
-const findFirstDifferent = (code: string): Currency => {
-  const found = currencies.find((c) => c.code !== code);
+const findFirstDifferent = (list: Currency[], code: string): Currency => {
+  const found = list.find((c) => c.code !== code);
 
-  return found ? found : currencies[0];
+  return found ? found : list[0];
 };
 
 export const useCurrencyConverter = () => {
-  const [from, setFromState] = useState<Currency>(currencies[0]);
-  const [to, setToState] = useState<Currency>(currencies[1]);
+  const [currenciesState, dispatchCurrencies] = useReducer(dataReducer<Currency[]>, createInitialState<Currency[]>());
+
+  const [pricesState, dispatchPrices] = useReducer(dataReducer<PriceChange[]>, createInitialState<PriceChange[]>());
+
+  const [from, setFromState] = useState<Currency | undefined>(undefined);
+  const [to, setToState] = useState<Currency | undefined>(undefined);
   const [amount, setAmount] = useState('1');
 
-  const setFrom = useCallback((code: string) => {
-    const currency = currencies.find((c) => c.code === code);
-    if (!currency) return;
-    setFromState(currency);
-    setToState((prevTo) => (code === prevTo.code ? findFirstDifferent(code) : prevTo));
+  useEffect(() => {
+    const abortController = new AbortController();
+
+    const load = async () => {
+      dispatchCurrencies({ type: 'LOADING' });
+      try {
+        const response = await fetchCurrencies(abortController.signal);
+        const mapped = response.map(mapCurrency);
+
+        dispatchCurrencies({ type: 'SUCCESS', payload: mapped });
+        setFromState(mapped[0]);
+        setToState(mapped[1]);
+      } catch (err) {
+        if (err instanceof DOMException && err.name === 'AbortError') return;
+
+        dispatchCurrencies({
+          type: 'ERROR',
+          payload: err instanceof Error ? err.message : 'Unknown error'
+        });
+      }
+    };
+
+    load();
+
+    return () => {
+      abortController.abort();
+    };
   }, []);
 
-  const setTo = useCallback((code: string) => {
-    const currency = currencies.find((c) => c.code === code);
-    if (!currency) return;
-    setToState(currency);
-    setFromState((prevFrom) => (code === prevFrom.code ? findFirstDifferent(code) : prevFrom));
-  }, []);
+  useEffect(() => {
+    if (!from || !to) return;
 
-  const swap = useCallback(() => {
-    setFromState(to);
-    setToState(from);
+    const abortController = new AbortController();
+
+    const load = async () => {
+      dispatchPrices({ type: 'LOADING' });
+      try {
+        const response = await fetchPriceChanges(
+          from.code,
+          to.code,
+          new Date(0).toISOString(),
+          undefined,
+          abortController.signal
+        );
+        const mapped = response.map(mapPriceChange);
+        dispatchPrices({ type: 'SUCCESS', payload: mapped });
+      } catch (err) {
+        if (err instanceof Error && err.name === 'AbortError') return;
+
+        dispatchPrices({
+          type: 'ERROR',
+          payload: err instanceof Error ? err.message : 'Unknown error'
+        });
+      }
+    };
+
+    load();
+
+    return () => {
+      abortController.abort();
+    };
   }, [from, to]);
 
-  const result = useMemo(() => {
-    const rate = priceChanges[from.code]?.[to.code]?.price;
+  const currencies = currenciesState.data ?? [];
+  const priceChanges = pricesState.data ?? [];
 
-    if (rate === null) {
-      return '';
+  const setFrom = (currency: Currency) => {
+    if (!to) return;
+    setFromState(currency);
+    if (currency.code === to.code) {
+      setToState(findFirstDifferent(currencies, currency.code));
     }
+  };
+
+  const setTo = (currency: Currency) => {
+    if (!from) return;
+    setToState(currency);
+    if (currency.code === from.code) {
+      setFromState(findFirstDifferent(currencies, currency.code));
+    }
+  };
+
+  const swap = () => {
+    if (!from || !to) return;
+    setFromState(to);
+    setToState(from);
+  };
+
+  const latestPriceChange = priceChanges[priceChanges.length - 1];
+
+  const result = (() => {
+    if (!latestPriceChange) return '';
 
     const numAmount = Number(amount);
 
-    if (Number.isNaN(numAmount) || amount === '') {
-      return '';
-    }
+    if (Number.isNaN(numAmount) || amount === '') return '';
 
-    return String(numAmount * rate);
-  }, [from, to, amount]);
+    return String(numAmount * latestPriceChange.price);
+  })();
 
   return {
     from,
@@ -55,6 +126,9 @@ export const useCurrencyConverter = () => {
     result,
     currencies,
     priceChanges,
+    currenciesLoading: currenciesState.loading,
+    currenciesError: currenciesState.error,
+    pricesError: pricesState.error,
     setFrom,
     setTo,
     setAmount,
