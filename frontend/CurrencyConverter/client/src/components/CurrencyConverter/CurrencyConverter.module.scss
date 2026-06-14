@@ -29,10 +29,10 @@
   color: #721c24;
   font-family: 'Inter Variable', sans-serif;
   text-align: center;
-}
 
-.error-title {
-  margin-block-end: 8px;
+  &-title {
+    margin-block-end: 8px;
+  }
 }
 
 .loader {
