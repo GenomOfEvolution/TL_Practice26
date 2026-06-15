@@ -3,6 +3,8 @@ import { useCurrencyConverter } from '../../hooks/useCurrencyConverter';
 import { ConversionHeader } from '../ConversionHeader/ConversionHeader';
 import { CurrencyInput } from '../CurrencyInput/CurrencyInput';
 import { MoreAboutSection } from '../MoreAboutSection/MoreAboutSection';
+import { PeriodSelector } from '../PeriodSelector/PeriodSelector';
+import { PriceChart } from '../PriceChart/PriceChart';
 import { SwapButton } from './SwapButton';
 import { Toast } from '../Toast/Toast';
 import styles from './CurrencyConverter.module.scss';
@@ -17,16 +19,20 @@ export const CurrencyConverter = () => {
     priceChanges,
     currenciesLoading,
     currenciesError,
+    pricesLoading,
     pricesError,
+    period,
     setFrom,
     setTo,
     setAmount,
+    setPeriod,
     swap
   } = useCurrencyConverter();
 
   const [dismissedError, setDismissedError] = useState<string | null>(null);
 
-  const toastMessage = pricesError && pricesError !== dismissedError ? pricesError : null;
+  const hasExistingData = priceChanges.length > 0;
+  const toastMessage = pricesError && hasExistingData && pricesError !== dismissedError ? pricesError : null;
 
   const closeToast = useCallback(() => {
     if (pricesError) {
@@ -70,25 +76,33 @@ export const CurrencyConverter = () => {
   return (
     <div className={styles.exchanger}>
       {toastMessage && <Toast message={toastMessage} onClose={closeToast} />}
-      <ConversionHeader from={from} to={to} amount={amount} result={result} dateTime={dateTime} />
-      <CurrencyInput
-        value={amount}
-        currency={from}
-        currencies={currencies}
-        onAmountChange={setAmount}
-        onCurrencyChange={setFrom}
-      />
-      <div className={styles.swapWrapper}>
-        <SwapButton onClick={swap} />
+      <div className={styles.columns}>
+        <div className={styles.columnLeft}>
+          <ConversionHeader from={from} to={to} amount={amount} result={result} dateTime={dateTime} />
+          <CurrencyInput
+            value={amount}
+            currency={from}
+            currencies={currencies}
+            onAmountChange={setAmount}
+            onCurrencyChange={setFrom}
+          />
+          <div className={styles.swapWrapper}>
+            <SwapButton onClick={swap} />
+          </div>
+          <CurrencyInput
+            value={result}
+            currency={to}
+            currencies={currencies}
+            onAmountChange={setAmount}
+            onCurrencyChange={setTo}
+            readOnly
+          />
+        </div>
+        <div className={styles.columnRight}>
+          <PeriodSelector period={period} onPeriodChange={setPeriod} />
+          <PriceChart data={priceChanges} loading={pricesLoading} error={pricesError} />
+        </div>
       </div>
-      <CurrencyInput
-        value={result}
-        currency={to}
-        currencies={currencies}
-        onAmountChange={setAmount}
-        onCurrencyChange={setTo}
-        readOnly
-      />
       <MoreAboutSection key={`${from.code}-${to.code}`} from={from} to={to} />
     </div>
   );
