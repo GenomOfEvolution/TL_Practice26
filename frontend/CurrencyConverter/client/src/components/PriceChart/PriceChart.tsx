@@ -15,12 +15,12 @@ type ChartPoint = {
 };
 
 const formatTime = (iso: string): string => {
-  const d = new Date(iso);
+  const date = new Date(iso);
 
-  return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+  return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
 };
 
-const toChartData = (items: PriceChange[]): ChartPoint[] =>
+const mapToChartData = (items: PriceChange[]): ChartPoint[] =>
   items.map((item) => ({ time: formatTime(item.dateTime), price: item.price }));
 
 export const PriceChart = ({ data, loading, error }: PriceChartProps) => {
@@ -53,7 +53,7 @@ export const PriceChart = ({ data, loading, error }: PriceChartProps) => {
     );
   }
 
-  const chartData = toChartData(data);
+  const chartData = mapToChartData(data);
 
   return (
     <div className={styles['chart-box']} data-testid="price-chart">
@@ -63,7 +63,14 @@ export const PriceChart = ({ data, loading, error }: PriceChartProps) => {
           <XAxis dataKey="time" tick={{ fontSize: 12, fontFamily: "'Inter Variable', sans-serif" }} />
           <YAxis domain={['auto', 'auto']} tick={{ fontSize: 12, fontFamily: "'Inter Variable', sans-serif" }} />
           <Tooltip content={<CustomTooltip />} />
-          <Line type="monotone" dataKey="price" stroke="#3b82f6" strokeWidth={2} dot={{ r: 3 }} isAnimationActive={false} />
+          <Line
+            type="monotone"
+            dataKey="price"
+            stroke="#3b82f6"
+            strokeWidth={2}
+            dot={{ r: 3 }}
+            isAnimationActive={false}
+          />
         </LineChart>
       </ResponsiveContainer>
     </div>
