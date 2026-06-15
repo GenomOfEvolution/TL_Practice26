@@ -1,4 +1,5 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { PeriodSelector } from './PeriodSelector';
 
@@ -9,19 +10,19 @@ describe('PeriodSelector', () => {
   it('renders all 5 period buttons', () => {
     render(<PeriodSelector period={DEFAULT_PERIOD} onPeriodChange={() => {}} />);
 
-    expect(screen.getByTestId('period-1')).toBeInTheDocument();
-    expect(screen.getByTestId('period-2')).toBeInTheDocument();
-    expect(screen.getByTestId('period-3')).toBeInTheDocument();
-    expect(screen.getByTestId('period-4')).toBeInTheDocument();
-    expect(screen.getByTestId('period-5')).toBeInTheDocument();
+    expect(screen.getByText('1 MIN')).toBeInTheDocument();
+    expect(screen.getByText('2 MIN')).toBeInTheDocument();
+    expect(screen.getByText('3 MIN')).toBeInTheDocument();
+    expect(screen.getByText('4 MIN')).toBeInTheDocument();
+    expect(screen.getByText('5 MIN')).toBeInTheDocument();
   });
 
-  it('calls onPeriodChange with correct period on click', () => {
+  it('calls onPeriodChange with correct period on click', async () => {
     const onPeriodChange = vi.fn();
 
     render(<PeriodSelector period={DEFAULT_PERIOD} onPeriodChange={onPeriodChange} />);
 
-    fireEvent.click(screen.getByTestId('period-3'));
+    await userEvent.click(screen.getByText('3 MIN'));
 
     expect(onPeriodChange).toHaveBeenCalledWith(CLICKED_PERIOD);
   });

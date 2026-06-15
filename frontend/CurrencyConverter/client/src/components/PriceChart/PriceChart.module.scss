@@ -69,17 +69,17 @@
   border: 1px solid #d1d5db;
   border-radius: 6px;
   box-shadow: 0 2px 6px rgb(0 0 0 / 10%);
-}
 
-.tooltip-time {
-  margin: 0;
-  color: #6b7280;
-  font-size: 12px;
-}
+  &-time {
+    margin: 0;
+    color: #6b7280;
+    font-size: 12px;
+  }
 
-.tooltip-price {
-  margin: 4px 0 0;
-  color: #111827;
-  font-size: 14px;
-  font-weight: 600;
+  &-price {
+    margin: 4px 0 0;
+    color: #111827;
+    font-size: 14px;
+    font-weight: 600;
+  }
 }

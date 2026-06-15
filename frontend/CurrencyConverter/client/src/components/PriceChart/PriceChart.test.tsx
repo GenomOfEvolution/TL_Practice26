@@ -16,7 +16,6 @@ describe('PriceChart', () => {
   it('shows error when error with no data', () => {
     render(<PriceChart data={[]} loading={false} error="Server error" />);
 
-    expect(screen.getByTestId('price-chart-error')).toBeInTheDocument();
     expect(screen.getByText('Failed to load chart data.')).toBeInTheDocument();
     expect(screen.getByText('Server error')).toBeInTheDocument();
   });
@@ -24,7 +23,6 @@ describe('PriceChart', () => {
   it('shows empty state when no data and not loading', () => {
     render(<PriceChart data={[]} loading={false} />);
 
-    expect(screen.getByTestId('price-chart-empty')).toBeInTheDocument();
     expect(screen.getByText('No data for the selected period.')).toBeInTheDocument();
   });
 
