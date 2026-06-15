@@ -1,0 +1,14 @@
+[
+  {
+    "purchasedCurrencyCode": "CAD",
+    "paymentCurrencyCode": "PLN",
+    "price": 2.95,
+    "dateTime": "2026-05-29T10:00:00.000Z"
+  },
+  {
+    "purchasedCurrencyCode": "CAD",
+    "paymentCurrencyCode": "PLN",
+    "price": 2.96,
+    "dateTime": "2026-05-29T10:01:00.000Z"
+  }
+]

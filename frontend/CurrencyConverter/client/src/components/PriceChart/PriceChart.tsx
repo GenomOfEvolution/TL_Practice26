@@ -48,7 +48,7 @@ export const PriceChart = ({ data, loading, error }: PriceChartProps) => {
 
   if (error && data.length === 0) {
     return (
-      <div className={styles['chart-box']}>
+      <div className={styles['chart-box']} data-testid="price-chart-error">
         <div className={styles.error}>
           <p>Failed to load chart data.</p>
           <p>{error}</p>
@@ -59,7 +59,7 @@ export const PriceChart = ({ data, loading, error }: PriceChartProps) => {
 
   if (data.length === 0) {
     return (
-      <div className={styles['chart-box']}>
+      <div className={styles['chart-box']} data-testid="price-chart-empty">
         <p className={styles.empty}>No data for the selected period.</p>
       </div>
     );
@@ -68,7 +68,7 @@ export const PriceChart = ({ data, loading, error }: PriceChartProps) => {
   const chartData = toChartData(data);
 
   return (
-    <div className={styles['chart-box']}>
+    <div className={styles['chart-box']} data-testid="price-chart">
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={chartData} margin={{ top: 8, right: 16, left: 8, bottom: 8 }}>
           <CartesianGrid strokeDasharray="3 3" />
