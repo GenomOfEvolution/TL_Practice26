@@ -1,8 +1,11 @@
 import { useState, useEffect, useReducer } from 'react';
-import type { Currency, PriceChange } from '../models';
+import type { Currency } from '../models';
 import { dataReducer, createInitialState } from './dataReducer';
-import { fetchCurrencies, fetchPriceChanges } from '../api/currencyApi';
-import { mapCurrency, mapPriceChange } from '../models/mappers';
+import { fetchCurrencies } from '../api/currencyApi';
+import { mapCurrency } from '../models/mappers';
+import { usePriceHistory } from './usePriceHistory';
+
+const DEFAULT_PERIOD = 5;
 
 const findFirstDifferent = (list: Currency[], code: string): Currency => {
   const found = list.find((c) => c.code !== code);
@@ -13,11 +16,11 @@ const findFirstDifferent = (list: Currency[], code: string): Currency => {
 export const useCurrencyConverter = () => {
   const [currenciesState, dispatchCurrencies] = useReducer(dataReducer<Currency[]>, createInitialState<Currency[]>());
 
-  const [pricesState, dispatchPrices] = useReducer(dataReducer<PriceChange[]>, createInitialState<PriceChange[]>());
-
   const [from, setFromState] = useState<Currency | undefined>(undefined);
   const [to, setToState] = useState<Currency | undefined>(undefined);
   const [amount, setAmount] = useState('1');
+  const [period, setPeriod] = useState(DEFAULT_PERIOD);
+  const pricesState = usePriceHistory(from, to, period);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -47,40 +50,6 @@ export const useCurrencyConverter = () => {
       abortController.abort();
     };
   }, []);
-
-  useEffect(() => {
-    if (!from || !to) return;
-
-    const abortController = new AbortController();
-
-    const load = async () => {
-      dispatchPrices({ type: 'LOADING' });
-      try {
-        const response = await fetchPriceChanges(
-          from.code,
-          to.code,
-          new Date(0).toISOString(),
-          undefined,
-          abortController.signal
-        );
-        const mapped = response.map(mapPriceChange);
-        dispatchPrices({ type: 'SUCCESS', payload: mapped });
-      } catch (err) {
-        if (err instanceof Error && err.name === 'AbortError') return;
-
-        dispatchPrices({
-          type: 'ERROR',
-          payload: err instanceof Error ? err.message : 'Unknown error'
-        });
-      }
-    };
-
-    load();
-
-    return () => {
-      abortController.abort();
-    };
-  }, [from, to]);
 
   const currencies = currenciesState.data ?? [];
   const priceChanges = pricesState.data ?? [];
@@ -128,10 +97,13 @@ export const useCurrencyConverter = () => {
     priceChanges,
     currenciesLoading: currenciesState.loading,
     currenciesError: currenciesState.error,
+    pricesLoading: pricesState.loading,
     pricesError: pricesState.error,
+    period,
     setFrom,
     setTo,
     setAmount,
+    setPeriod,
     swap
   };
 };

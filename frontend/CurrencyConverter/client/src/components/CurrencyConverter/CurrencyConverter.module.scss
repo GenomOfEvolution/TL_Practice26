@@ -12,6 +12,22 @@
   border-radius: 30px;
 }
 
+.columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+}
+
+.column-left {
+  flex: 1;
+  min-inline-size: 550px;
+}
+
+.column-right {
+  flex: 1;
+  min-inline-size: 550px;
+}
+
 .loading-state {
   display: flex;
   justify-content: center;
